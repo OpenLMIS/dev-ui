@@ -4,11 +4,17 @@ WORKDIR /root
 RUN apk update && \
   apk add git && \
   npm install -g bower && \
-  npm install -g grunt && \
-  bower install jquery --allow-root && \
-  apk del git
-WORKDIR /app
+  npm install -g grunt
 
-VOLUME ["/app"]
+WORKDIR /build
+VOLUME ["/build"]
+
 EXPOSE 8080
-CMD ["bash"]
+
+# add sass in alpine
+ADD sass.sh /build
+RUN /bin/bash -c '/build/sass.sh'
+
+CMD npm install --no-optional
+CMD bash
+
