@@ -4,7 +4,8 @@ WORKDIR /root
 RUN apk update && \
   apk add git && \
   npm install -g bower && \
-  npm install -g grunt
+  npm install -g grunt && \
+  npm install -g phantomjs-prebuilt
 
 WORKDIR /build
 VOLUME ["/build"]
@@ -15,6 +16,5 @@ EXPOSE 8080
 ADD sass.sh /build
 RUN /bin/bash -c '/build/sass.sh'
 
-CMD npm install --no-optional
 CMD bash
 
