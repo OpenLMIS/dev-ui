@@ -1,20 +1,20 @@
-FROM openlmis/dev
+FROM node:6-alpine
 
-WORKDIR /root
 RUN apk update && \
-  apk add git && \
-  npm install -g bower && \
-  npm install -g grunt
+  apk add --no-cache git build-base python py-pip && \
+  pip install --upgrade pip && \
+  pip install transifex-client && \
+  npm install -g bower grunt-cli
 
-WORKDIR /build
-VOLUME ["/build"]
+# for phantomjs on alpine
+RUN apk add --no-cache fontconfig curl bash && \
+  mkdir -p /usr/share && \
+  cd /usr/share \
+  && curl -L https://github.com/Overbryd/docker-phantomjs-alpine/releases/download/2.11/phantomjs-alpine-x86_64.tar.bz2 | tar xj \
+  && ln -s /usr/share/phantomjs/phantomjs /usr/local/bin/phantomjs
 
-EXPOSE 8080
+WORKDIR /app
+VOLUME ["/app"]
+EXPOSE 9000
 
-# add sass in alpine
-ADD sass.sh /build
-RUN /bin/bash -c '/build/sass.sh'
-
-CMD npm install --no-optional
-CMD bash
-
+CMD ["sh"]
