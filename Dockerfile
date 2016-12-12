@@ -1,20 +1,17 @@
-FROM openlmis/dev
+FROM node:6-slim
 
-WORKDIR /root
-RUN apk update && \
-  apk add git && \
-  npm install -g bower && \
-  npm install -g grunt
+RUN apt-get update && \
+  apt-get install -y  build-essential libfontconfig transifex-client git curl bzip2  && \
+  apt-get clean && \
+  npm install -g bower grunt-cli
 
-WORKDIR /build
-VOLUME ["/build"]
+ADD package.json .
+ADD bower.json .
+RUN npm install --no-optional && \
+  bower install --allow-root --config.interactive=false
 
-EXPOSE 8080
+WORKDIR /app
+VOLUME ["/app"]
+EXPOSE 9000
 
-# add sass in alpine
-ADD sass.sh /build
-RUN /bin/bash -c '/build/sass.sh'
-
-CMD npm install --no-optional
-CMD bash
-
+CMD ["sh"]
