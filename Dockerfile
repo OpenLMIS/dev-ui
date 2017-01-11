@@ -1,20 +1,20 @@
-FROM openlmis/dev
+FROM debian:jessie
 
 WORKDIR /root
-RUN apk update && \
-  apk add git && \
-  npm install -g bower && \
-  npm install -g grunt && \
-  npm install -g phantomjs-prebuilt
 
-WORKDIR /build
-VOLUME ["/build"]
+# NOTE bzip2 is required by PhantomJS-prebuilt
+# NOTE buildessential is needed for node-sass (installed by gulp-sass)
+RUN apt-get update && apt-get install -y bash build-essential libfontconfig transifex-client git curl bzip2
 
-EXPOSE 8080
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
+RUN apt-get install -y nodejs
 
-# add sass in alpine
-ADD sass.sh /build
-RUN /bin/bash -c '/build/sass.sh'
+RUN npm install -g bower grunt-cli phantomjs-prebuilt
 
-CMD bash
+WORKDIR /app
+VOLUME ["/app"] 
 
+# Port 9000 used for dev server
+EXPOSE 9000
+
+CMD rm -rf node_modules/ bower_components/ && npm install --no-optional && bower install --allow-root --config.interactive=false && bash
