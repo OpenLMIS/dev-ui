@@ -1,55 +1,35 @@
-# OpenLMIS Dockerized Development Image
+# OpenLMIS-UI Dockerized Development Image
 
-Image for launching (non-)interactive containers with gradle suitable for developing OpenLMIS v3+ Services.
+Image that contains tooling and core packages for OpenLMIS-UI generation. The OpenLMIS-UI is a single page application that is built with NPM processes.
 
-Based off of alpine-java.
+Based off of debain-jesse.
 
 ## Volumes
 
-- `/app` expects a Gradle project to be mounted in.  It is also the default working directory.
-- `/gradle` is a volume for sharing a common Gradle cache.  Apart from the project-level cache that will be stored
-in the `/app` volume, this one is useful for the typical startup of gradle and for sharing that startup in the
-build step of other OpenLMIS Services when appropriate.  This should reduce frequent downloads.
+- `/app` is where NPM expects the primary config.json file to be located.
+- `/build` is the volume where NPM will create build artifacts, including the finalized single page application.
 
 ## Ports
 
-- 8080 - typical HTTP port
-- 8000 - typical JVM debug port
-
-# Environment, EntryPoint & Command
-
-- GRADLE_OPTS enables the daemon and that's all.  This is left intentionally short as other environments (e.g. CI)
-will want to disable the daemon.
-- EntryPoint is, like alpine-java, undefined
-- command is bash
+- 9000 - HTTP port where development server runs
+- 9876 - Karma test runner debugging port
 
 ## Examples
 
-Build a gradle application (and throw container away when done):
 ```shell
-> docker run -it --rm --entrypoint gradle -v $(pwd):/app openlmis/dev build
-```
-
-Use interactively:
-```shell
-> docker run -it --rm -v $(pwd):/app openlmis/dev
-```
-
-Interactive using a named volume for the gradle cache:
-```shell
-> docker run -it --rm -v gradlecache:/gradle -v $(pwd):/app openlmis/dev
+> docker run -it --rm -v $(pwd):/app openlmis/dev-ui
 ```
 
 Typical development day:
 ```shell
-> docker run -it --rm -p 8080:8080 -v gradlecache:/gradle -v $(pwd):/app openlmis/dev
-$ gradle clean build
+> docker run -it --rm -p 8080:8080 -v buildcache:/build -v $(pwd):/app openlmis/dev-ui
+$ npm build run --watch
 ```
 Most interactions should occur through docker-compose.
 
 ## Tech
 
-- JDK 1.8
-- Gradle 2.13
 - Node 6.2
-- PSQL 9+
+- NPM
+- Bower
+- AngularJS 1.6.x
