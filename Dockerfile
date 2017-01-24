@@ -11,10 +11,10 @@ RUN apt-get install -y nodejs
 
 RUN npm install -g bower grunt-cli phantomjs-prebuilt
 
-WORKDIR /app
-VOLUME ["/app"] 
+RUN mkdir -p /openlmis/dev-ui
+VOLUME ["/openlmis/dev-ui"]
+
+WORKDIR /openlmis/dev-ui
 
 # Port 9000 used for dev server
 EXPOSE 9000
-
-CMD rm -rf node_modules/ bower_components/ && npm install --no-optional && bower install --allow-root --config.interactive=false && bash
