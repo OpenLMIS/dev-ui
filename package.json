@@ -1,0 +1,17 @@
+{
+  "name": "dev-ui",
+  "version": "1.0.0",
+  "description": "Grunt-based build process for the openlmis-UI",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt": "^1.0.1"
+  },
+  "devDependencies": {
+    "grunt-appcache": "^0.2.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}

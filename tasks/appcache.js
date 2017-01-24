@@ -1,4 +1,5 @@
 module.exports = function(grunt){
+    grunt.loadNpmTasks('grunt-appcache');
 
     grunt.config('appcache', {
         options: {
