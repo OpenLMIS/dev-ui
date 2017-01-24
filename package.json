@@ -5,10 +5,9 @@
     "type": "git",
     "url": "https://github.com/OpenLMIS/dev-ui"
   },
-  "devDependencies": {
+  "dependencies": {
     "grunt": "^1.0.1",
     "grunt-appcache": "^0.2.0"
   },
-  "dependencies": {},
   "license": "AGPL-3.0"
 }
