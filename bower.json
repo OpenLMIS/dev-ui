@@ -1,25 +1,62 @@
 {
-  "name": "dev-ui",
-  "description": "Grunt-based build process for the openlmis-UI",
-  "main": "Gruntfile.js",
-  "authors": [
-    "Nick Reid <nickreid@nickreid.com>"
-  ],
-  "license": "ISC",
-  "homepage": "",
-  "private": true,
+  "name": "openlmis-ui",
+  "version": "3.0.0-beta-SNAPSHOT",
   "ignore": [
     "**/.*",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "bower_components"
   ],
   "dependencies": {
-    "jquery": "^3.1.1",
-    "angular": "^1.6.1",
-    "font-awesome": "^4.7.0",
+    "angular": "^1.6",
+    "angular-animate": "*",
+    "angular-cookies": "*",
+    "angular-loader": "*",
+    "angular-resource": "*",
+    "angular-route": "*",
+    "angular-sanitize": "*",
+    "angular-ui": "0.4.0",
+    "jquery": "^3",
+    "angular-local-storage": "*",
+    "underscore": "*",
+    "angular-bootstrap": "*",
+    "angular-ui-sortable": "*",
+    "jquery-ui": "^1",
+    "angular-ui-router": "*",
     "bootstrap-sass": "^3.3.7",
-    "offline": "^0.7.18"
+    "font-awesome": "^4.6.3",
+    "bootbox": "4.4.0",
+    "ngBootbox": "0.1.3",
+    "offline": "^0.7",
+    "angular-filter": "^0.5",
+    "angular-http-auth": "^1.5",
+    "angular-drag-and-drop-lists": "*",
+    "ngstorage": "^0.3.11"
+  },
+  "overrides": {
+    "jquery": {
+      "main": [
+        "dist/jquery.js"
+      ]
+    },
+    "jquery-ui": {
+      "main": [
+        "jquery-ui.js"
+      ]
+    },
+    "angular-mocks": {
+      "main": []
+    },
+    "angular-ui": {
+      "main": [
+        "build/angular-ui.js",
+        "build/angular-ui.css"
+      ]
+    }
+  },
+  "devDependencies": {
+    "angular-mocks": "^1.6"
+  },
+  "resolutions": {
+    "angular": "1.6.0"
   }
 }

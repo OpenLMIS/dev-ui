@@ -16,5 +16,9 @@ VOLUME ["/openlmis/dev-ui"]
 
 WORKDIR /openlmis/dev-ui
 
+COPY package.json .
+COPY bower.json .
+COPY tasks/* ./tasks/
+
 # Port 9000 used for dev server
 EXPOSE 9000
