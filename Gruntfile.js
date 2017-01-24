@@ -1,8 +1,12 @@
 module.exports = function(grunt){
 	
 	grunt.initConfig({
-		// item configurations are in ./tasks
+		// ... nothing here ...
 	});
+
+	grunt.option('applicationDirectories', [
+		'/openlmis/dev-ui'
+		]);
 
 	grunt.loadTasks('./tasks');
 }
