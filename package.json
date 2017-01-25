@@ -11,6 +11,9 @@
     "fs-extra": "^2.0.0",
     "grunt": "^1.0.1",
     "grunt-appcache": "^0.2.0",
+    "node-bourbon": "^4.2.8",
+    "node-sass": "^4.3.0",
+    "replace": "^0.3.0",
     "wiredep": "^4.0.0"
   },
   "license": "AGPL-3.0"

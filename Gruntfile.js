@@ -5,5 +5,7 @@ module.exports = function(grunt){
 		tmp: '.tmp',
 		build: 'build',
 		src: 'src'
-	})
+	});
+
+	grunt.registerTask('default', ['build:openlmis.js']);
 }
