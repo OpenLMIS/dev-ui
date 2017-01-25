@@ -46,6 +46,7 @@ module.exports = function(grunt){
         var inlineSourceMap = convertSourceMap.fromJSON(concat.sourceMap).toComment();
         concat.add(null, inlineSourceMap);
         
+        fs.mkdirSync('build');
         fs.writeFileSync('build/openlmis.js', concat.content);
     });
 }
