@@ -5,48 +5,19 @@ module.exports = function(grunt){
     Concat = require('concat-with-sourcemaps'),
     convertSourceMap = require('convert-source-map'),
     wiredep = require('wiredep'),
-    glob = require('glob');
+    glob = require('glob'),
+    inEachAppDir = require('../ordered-application-directory');
+    
+    var tmpDir = 'js';
+    var fileName = 'openlmis.js';
 
-    var inEachAppDir = require('../ordered-application-directory');
-    var tmpDir = path.join(process.cwd(), '.tmp', 'js');
+    grunt.registerTask('openlmis.js', ['openlmis.js:copy', 'openlmis.js:build', 'openlmis.js:replace', 'openlmis.js:uglify']);
 
-    grunt.registerTask('build:openlmis.js', function(){
+    grunt.registerTask('openlmis.js:copy', function(){
+        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
 
-        copyFiles(tmpDir);
-        buildJs('openlmis.js', path.join(process.cwd(), 'build'));
-
-        // replaceSettings
-        // Uglify
-
-
-    // replace: {
-    //   serverurl: {
-    //     src: [config.app.dest + '/webapp/**/*.js'],
-    //     overwrite: true,
-    //     replacements: [{
-    //       from: '@@OPENLMIS_SERVER_URL',
-    //       to: makeURL('openlmisServerURL')
-    //     },{
-    //       from: '@@AUTH_SERVICE_URL',
-    //       to: makeURL('authServiceURL')
-    //     },{
-    //       from: '@@REQUISITION_SERVICE_URL',
-    //       to: makeURL('requisitionServiceURL')
-    //     },{
-    //       from: '@@FULFILLMENT_SERVICE_URL',
-    //       to: makeURL('fulfillmentServiceURL')
-    //     },{
-    //       from: '@@PAGE_SIZE',
-    //       to: config['pageSize']
-    //     }]
-    //   }
-
-        
-    });
-
-    function copyFiles(dest){
         inEachAppDir(function(dir){
-            var src = 'src';
+            var src = grunt.option('app.src');
             var config = grunt.file.readJSON(path.join(dir, 'config.json'));
             if(config && config.app && config.app.src) src = config.app.src;
 
@@ -54,19 +25,24 @@ module.exports = function(grunt){
                 cwd: path.join(dir, src),
                 ignore: ['**/*.spec.js']
             }).forEach(function(file){
-                fs.copySync(path.join(dir, src, file), path.join(dest, file));
+                fs.copySync(path.join(dir, src, file), path.join(tmp, file));
             });
+
+            if(!fs.existsSync(path.join(dir, 'bower_components'))){
+                return ;
+            }
 
             var bowerFiles = wiredep().js || [];
             bowerFiles.forEach(function(file){
                 // copy each file into a directory called bower_components
                 var bowerPath = file.substring(file.indexOf("bower_components"));
-                fs.copySync(file, path.join(dest, bowerPath));
+                fs.copySync(file, path.join(tmp, bowerPath));
             });
         });
-    }
+    });
 
-    function buildJs(fileName, dir){
+    grunt.registerTask('openlmis.js:build', function(){
+
         var concat = new Concat(true, fileName, '\n');
 
         // Set general file patterns we want to ignore
@@ -77,10 +53,10 @@ module.exports = function(grunt){
         // Helper function to keep ordered file adding clear
         function addFiles(pattern){
             glob.sync(pattern, {
-                cwd: tmpDir,
+                cwd: path.join(process.cwd(), grunt.option('app.tmp'), tmpDir),
                 ignore: ignorePatterns
             }).forEach(function(file){
-                var filePath = path.join(tmpDir, file);
+                var filePath = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, file);
 
                 // Don't let previously added patterns be added again
                 ignorePatterns.push(pattern);
@@ -105,6 +81,35 @@ module.exports = function(grunt){
         var inlineSourceMap = convertSourceMap.fromJSON(concat.sourceMap).toComment();
         concat.add(null, inlineSourceMap);
         
-        fs.writeFileSync(path.join(dir, fileName), concat.content);
-    }
+        fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), concat.content);
+    });
+
+    grunt.registerTask('openlmis.js:replace', function(){
+    // replace: {
+    //   serverurl: {
+    //     src: [config.app.dest + '/webapp/**/*.js'],
+    //     overwrite: true,
+    //     replacements: [{
+    //       from: '@@OPENLMIS_SERVER_URL',
+    //       to: makeURL('openlmisServerURL')
+    //     },{
+    //       from: '@@AUTH_SERVICE_URL',
+    //       to: makeURL('authServiceURL')
+    //     },{
+    //       from: '@@REQUISITION_SERVICE_URL',
+    //       to: makeURL('requisitionServiceURL')
+    //     },{
+    //       from: '@@FULFILLMENT_SERVICE_URL',
+    //       to: makeURL('fulfillmentServiceURL')
+    //     },{
+    //       from: '@@PAGE_SIZE',
+    //       to: config['pageSize']
+    //     }]
+    //   }
+    });
+
+    grunt.registerTask('openlmis.js:uglify', function(){
+
+    });
+
 }

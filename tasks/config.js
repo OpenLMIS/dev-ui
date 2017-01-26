@@ -10,12 +10,28 @@ module.exports = function(grunt){
             config = extend(true, config, json);
         }
     });
-    console.log(config);
-    for(var key in config){
-        // Don't set values that are already set,
-        // they might be from the command line
-        if(!grunt.option[key]){ 
-            grunt.option(key, config[key]);
+    
+    setGruntOptions(config);
+
+    function setGruntOptions(config, prefix){
+        var configKey = '';
+        for(var key in config){
+            if (prefix) {
+                configKey = [prefix, key].join('.');
+            } else {
+                configKey = key;
+            }
+
+            if(config[key] !== null && typeof config[key] === 'object' && !Array.isArray(config[key])){
+                setGruntOptions(config[key], configKey);
+            } else {
+                // Don't set values that are already set,
+                // they might be from the command line
+                if(!grunt.option(configKey)){ 
+                    grunt.option(configKey, config[key]);
+                }    
+            }
+            
         }
-    } 
+    }
 }

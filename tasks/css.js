@@ -7,19 +7,49 @@ module.exports = function(grunt){
     convertSourceMap = require('convert-source-map'),
     wiredep = require('wiredep'),
     glob = require('glob'),
-    sass = require('node-sass');
+    sass = require('node-sass')
+    inEachAppDir = require('../ordered-application-directory');
 
-    var inEachAppDir = require('../ordered-application-directory');
-    var tmpDir = path.join(process.cwd(), '.tmp', 'scss');
+    var tmpDir = 'css';
 
-    grunt.registerTask('build:openlmis.css', function(){
-        var dest = path.join(process.cwd(), 'build');
+    grunt.registerTask('openlmis.css', ['openlmis.css:copy', 'openlmis.css:build']);
 
-        copyFiles(tmpDir);
-        buildScss('openlmis.scss', tmpDir);
+    grunt.registerTask('openlmis.css:copy', function(){
+        var dest = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
+
+        inEachAppDir(function(dir){
+            var src = grunt.option('app.src');
+            var config = grunt.file.readJSON(path.join(dir, 'config.json'));
+            if(config && config.app && config.app.src) src = config.app.src;
+
+            glob.sync('**/*.scss', {
+                cwd: path.join(dir, src)
+            }).forEach(function(file){
+                fs.copySync(path.join(dir, src, file), path.join(dest, file));
+            });
+
+            if(!fs.existsSync(path.join(dir, 'bower_components'))){
+                return ;
+            }
+            
+            var bowerCss = wiredep().css || [];
+            var bowerScss = wiredep().scss || [];
+            bowerCss.concat(bowerScss).forEach(function(file){
+                // copy each file into a directory called bower_components
+                var bowerPath = file.substring(file.indexOf("bower_components"));
+                fs.copySync(file, path.join(dest, bowerPath));
+            });
+        });
+    });
+
+    grunt.registerTask('openlmis.css:build', function(){
+        var dest = grunt.option('app.dest');
+        var tmp = path.join(grunt.option('app.tmp'), tmpDir);
+
+        buildScss('openlmis.scss', tmp);
 
         var sassResult = sass.renderSync({
-            file: path.join(tmpDir, 'openlmis.scss'),
+            file: path.join(tmp, 'openlmis.scss'),
             includePaths: getIncludePaths()
         });
 
@@ -33,29 +63,9 @@ module.exports = function(grunt){
         });
     });
 
-    function copyFiles(dest){
-        inEachAppDir(function(dir){
-            var src = 'src';
-            var config = grunt.file.readJSON(path.join(dir, 'config.json'));
-            if(config && config.app && config.app.src) src = config.app.src;
-
-            glob.sync('**/*.scss', {
-                cwd: path.join(dir, src)
-            }).forEach(function(file){
-                fs.copySync(path.join(dir, src, file), path.join(dest, file));
-            });
-
-            var bowerCss = wiredep().css || [];
-            var bowerScss = wiredep().scss || [];
-            bowerCss.concat(bowerScss).forEach(function(file){
-                // copy each file into a directory called bower_components
-                var bowerPath = file.substring(file.indexOf("bower_components"));
-                fs.copySync(file, path.join(dest, bowerPath));
-            });
-        });
-    }
-
     function buildScss(fileName, dest){
+        var tmp = grunt.option('app.tmp');
+
         var concat = new Concat(true, fileName, '\n');
         // Set general file patterns we want to ignore
         var ignorePatterns = [];
@@ -64,10 +74,10 @@ module.exports = function(grunt){
             if (!extraIgnore) extraIgnore = [];
 
             glob.sync(pattern, {
-                cwd: tmpDir,
+                cwd: tmp,
                 ignore: ignorePatterns.concat(extraIgnore)
             }).forEach(function(file){
-                var filePath = path.join(tmpDir, file);
+                var filePath = path.join(tmp, file);
 
                 // Don't let previously added patterns be added again
                 ignorePatterns.push(pattern);
@@ -95,7 +105,11 @@ module.exports = function(grunt){
         // Include paths are the directories imported sass files live in
         // so that import statements in the files will work correctly
         var includePaths = require('node-bourbon').includePaths; // because this is an array, we start here
-        inEachAppDir(function(){
+        inEachAppDir(function(dir){
+            if(!fs.existsSync(path.join(dir, 'bower_components'))){
+                return ;
+            }
+
             var bowerScss = wiredep().scss || [];
             bowerScss.forEach(function(filePath){
                 var fileDirectory = filePath.substring(0, filePath.lastIndexOf("/"));

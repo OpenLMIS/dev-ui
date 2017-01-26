@@ -6,8 +6,8 @@ module.exports = function(grunt){
 
     var inEachAppDir = require('../ordered-application-directory');
 
-    grunt.registerTask('build:assets', function(){
-        var dest = path.join(process.cwd(), 'build');
+    grunt.registerTask('assets', function(){
+        var dest = grunt.option('app.dest');
 
         var imageExtentions = ['png', 'jpg', 'gif', 'svg', 'ico'],
         fontExtentions = ['eot', 'woff', 'woff2', 'ttf', 'otf'],
@@ -30,6 +30,10 @@ module.exports = function(grunt){
 
         // Get bower fonts
         inEachAppDir(function(dir){
+            if(!fs.existsSync(path.join(dir, 'bower_components'))){
+                return ;
+            }
+
             mainFilesFromBower(fontExtentions).forEach(function(file){
                 var fileName = file.substring(file.lastIndexOf("/"))
                 fs.copySync(file, path.join(dest, 'fonts', fileName));

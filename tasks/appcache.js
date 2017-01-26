@@ -1,21 +1,20 @@
 module.exports = function(grunt){
+    var path = require('path');
+
     grunt.loadNpmTasks('grunt-appcache');
+
+    var dest = grunt.option('app.dest');
 
     grunt.config('appcache', {
         options: {
-            basePath: './build/webapp'
+            basePath: dest
         },
         all: {
-            dest: "./build/webapp/manifest.appcache",
+            dest: path.join(dest, "manifest.appcache"),
             cache: {
                 patterns: [
-                    './build/webapp/openlmis.js',
-                    './build/webapp/common/**/*',
-                    './build/webapp/dashboard/**/*',
-                    './build/webapp/fonts/**/*',
-                    './build/webapp/*.css',
-                    './build/webapp/images/**/*',
-                    './build/webapp/messages/**/*'
+                    path.join(dest, '*'),
+                    path.join(dest, '**/*')
                 ],
             literals: '/'
         },

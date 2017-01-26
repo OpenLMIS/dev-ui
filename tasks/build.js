@@ -2,9 +2,10 @@ module.exports = function(grunt){
 
     grunt.registerTask('build', [
         'clean',
-        'build:html',
-        'build:openlmis.js',
-        'build:openlmis.css',
+        'html',
+        'openlmis.js',
+        'openlmis.css',
+        'assets',
         'index.html',
         'appcache'
     ]);
