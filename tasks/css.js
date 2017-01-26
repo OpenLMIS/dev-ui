@@ -9,30 +9,65 @@ module.exports = function(grunt){
     glob = require('glob'),
     sass = require('node-sass');
 
+    var inEachAppDir = require('../ordered-application-directory');
+    var tmpDir = path.join(process.cwd(), '.tmp', 'openlmisScss');
+
     grunt.registerTask('build:openlmis.css', function(){
-        var concat = new Concat(true, 'openlmis.css', '\n');
+        var dest = path.join(process.cwd(), 'build');
 
-        var bowerCss = wiredep().css || [];
-        var bowerScss = wiredep().scss || [];
+        copyFiles(tmpDir);
+        buildScss('openlmis.scss', tmpDir);
 
-        // Include paths are the directories imported sass files live in
-        // so that import statements in the files will work correctly
-        var includePaths = require('node-bourbon').includePaths; // because this is an array, we start here
-        bowerScss.forEach(function(filePath){
-            var fileDirectory = filePath.substring(0, filePath.lastIndexOf("/"));
-            includePaths.push(fileDirectory);
+        var sassResult = sass.renderSync({
+            file: path.join(tmpDir, 'openlmis.scss'),
+            includePaths: getIncludePaths()
         });
 
-        
+        fs.writeFileSync(path.join(dest,'openlmis.css'), sassResult.css);
+
+        // remove non-relative strings
+        replace({
+            regex: '../',
+            replacement: '',
+            paths:['build/openlmis.css']
+        });
+    });
+
+    function copyFiles(dest){
+        inEachAppDir(function(dir){
+            var src = 'src';
+            var config = grunt.file.readJSON(path.join(dir, 'config.json'));
+            if(config && config.app && config.app.src) src = config.app.src;
+
+            glob.sync('**/*.scss', {
+                cwd: path.join(dir, src)
+            }).forEach(function(file){
+                fs.copySync(path.join(dir, src, file), path.join(dest, file));
+            });
+
+            var bowerCss = wiredep().css || [];
+            var bowerScss = wiredep().scss || [];
+            bowerCss.concat(bowerScss).forEach(function(file){
+                // copy each file into a directory called bower_components
+                var bowerPath = file.substring(file.indexOf("bower_components"));
+                fs.copySync(file, path.join(dest, bowerPath));
+            });
+        });
+    }
+
+    function buildScss(fileName, dest){
+        var concat = new Concat(true, fileName, '\n');
         // Set general file patterns we want to ignore
         var ignorePatterns = [];
         // Helper function to keep ordered file adding clear
-        function addFiles(pattern){
+        function addFiles(pattern, extraIgnore){
+            if (!extraIgnore) extraIgnore = [];
+
             glob.sync(pattern, {
-                cwd: path.join(process.cwd(), 'src/main/webapp'),
-                ignore: ignorePatterns
+                cwd: tmpDir,
+                ignore: ignorePatterns.concat(extraIgnore)
             }).forEach(function(file){
-                var filePath = path.join(process.cwd(), 'src/main/webapp', file);
+                var filePath = path.join(tmpDir, file);
 
                 // Don't let previously added patterns be added again
                 ignorePatterns.push(pattern);
@@ -42,12 +77,10 @@ module.exports = function(grunt){
             });
         }
 
-        addFiles('**/*variables.scss');
+        addFiles('**/*variables.scss', ['bower_components/**/*']);
 
-        bowerCss.concat(bowerScss).forEach(function(file){
-            var contentBuffer = fs.readFileSync(file);
-            concat.add(file, contentBuffer);
-        });
+        addFiles('bower_components/**/*.scss');
+        addFiles('bower_components/**/*.css');
 
         addFiles('**/mixins.scss');
         addFiles('**/*.scss');
@@ -55,20 +88,21 @@ module.exports = function(grunt){
 
         // TODO: Write/add sourcemaps
 
-        fs.writeFileSync('build/openlmis.scss', concat.content);
+        fs.writeFileSync(path.join(dest, fileName), concat.content);
+    }
 
-        var sassResult = sass.renderSync({
-            data: concat.content.toString(),
-            includePaths: includePaths
+    function getIncludePaths(){
+        // Include paths are the directories imported sass files live in
+        // so that import statements in the files will work correctly
+        var includePaths = require('node-bourbon').includePaths; // because this is an array, we start here
+        inEachAppDir(function(){
+            var bowerScss = wiredep().scss || [];
+            bowerScss.forEach(function(filePath){
+                var fileDirectory = filePath.substring(0, filePath.lastIndexOf("/"));
+                includePaths.push(fileDirectory);
+            });
         });
 
-        fs.writeFileSync('build/openlmis.css', sassResult.css);
-
-        // remove non-relative strings
-        replace({
-            regex: '../',
-            replacement: '',
-            paths:['build/openlmis.css']
-        });
-    });
+        return includePaths;
+    }
 }
