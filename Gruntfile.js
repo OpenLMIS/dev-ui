@@ -1,18 +1,6 @@
 module.exports = function(grunt){
 	grunt.loadTasks('./tasks');
 
-    grunt.registerTask('build', [
-        'build:clean',
-        'build:bower',
-        'build:html',
-        'build:openlmis.js',
-        'build:openlmis.css'
-    ]);
-
-	grunt.registerTask('default', [
-        'build'
-    ]);
-
 
 
   // grunt.registerTask('serve', ['serve:proxy', 'connect:server']);
