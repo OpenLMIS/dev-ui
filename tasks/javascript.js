@@ -8,7 +8,7 @@ module.exports = function(grunt){
     glob = require('glob');
 
     var inEachAppDir = require('../ordered-application-directory');
-    var tmpDir = path.join(process.cwd(), '.tmp', 'openlmisJs');
+    var tmpDir = path.join(process.cwd(), '.tmp', 'js');
 
     grunt.registerTask('build:openlmis.js', function(){
 

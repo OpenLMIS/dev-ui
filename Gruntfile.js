@@ -1,11 +1,16 @@
 module.exports = function(grunt){
 	grunt.loadTasks('./tasks');
 
+    grunt.registerTask('build', [
+        'build:clean',
+        'build:bower',
+        'build:html',
+        'build:openlmis.js',
+        'build:openlmis.css'
+    ]);
+
 	grunt.registerTask('default', [
-		'build:clean',
-    'build:bower',
-		'build:openlmis.js',
-		'build:openlmis.css'
+        'build'
     ]);
 
 

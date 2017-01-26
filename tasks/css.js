@@ -10,7 +10,7 @@ module.exports = function(grunt){
     sass = require('node-sass');
 
     var inEachAppDir = require('../ordered-application-directory');
-    var tmpDir = path.join(process.cwd(), '.tmp', 'openlmisScss');
+    var tmpDir = path.join(process.cwd(), '.tmp', 'scss');
 
     grunt.registerTask('build:openlmis.css', function(){
         var dest = path.join(process.cwd(), 'build');
