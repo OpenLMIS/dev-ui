@@ -1,7 +1,11 @@
 
 module.exports = function(grunt){
     var fs = require('fs-extra'),
+    readline = require('readline'),
+    stream = require('stream'),
     path = require('path'),
+    replace = require('replace'),
+    changeCase = require('change-case'),
     Concat = require('concat-with-sourcemaps'),
     convertSourceMap = require('convert-source-map'),
     wiredep = require('wiredep'),
@@ -85,27 +89,44 @@ module.exports = function(grunt){
     });
 
     grunt.registerTask('openlmis.js:replace', function(){
-    // replace: {
-    //   serverurl: {
-    //     src: [config.app.dest + '/webapp/**/*.js'],
-    //     overwrite: true,
-    //     replacements: [{
-    //       from: '@@OPENLMIS_SERVER_URL',
-    //       to: makeURL('openlmisServerURL')
-    //     },{
-    //       from: '@@AUTH_SERVICE_URL',
-    //       to: makeURL('authServiceURL')
-    //     },{
-    //       from: '@@REQUISITION_SERVICE_URL',
-    //       to: makeURL('requisitionServiceURL')
-    //     },{
-    //       from: '@@FULFILLMENT_SERVICE_URL',
-    //       to: makeURL('fulfillmentServiceURL')
-    //     },{
-    //       from: '@@PAGE_SIZE',
-    //       to: config['pageSize']
-    //     }]
-    //   }
+        var done = this.async();
+
+        var re = new RegExp(/@@[\w.]+/g);
+        var matches = [];
+
+        var instream = fs.createReadStream(path.join(grunt.option('app.dest'), fileName));
+        var outstream = new stream;
+        var rl = readline.createInterface(instream, outstream);
+
+        rl.on('line', function(line) {
+            var results;
+            while((results = re.exec(line)) !== null){
+                var match = results[0];
+                if(matches.indexOf(match) == -1) matches.push(match);
+
+                line = line.substring(re.lastIndex);
+            }
+        });
+
+        rl.on('close', function() {
+            matches.forEach(function(match){
+                var optionName = changeCase.camelCase(match.substring(2));
+                var option = grunt.option(optionName);
+                if(option){
+                    replace({
+                        regex: match,
+                        repalce: option,
+                        paths: [path.join(grunt.option('app.dest'), fileName)],
+                        silent: true
+                    });
+                } else {
+                    grunt.log.error("Missing config option: " + optionName);
+                }
+            });
+
+            // Tell grunt this task is done
+            done();
+        });
     });
 
     grunt.registerTask('openlmis.js:uglify', function(){

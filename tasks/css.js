@@ -59,6 +59,7 @@ module.exports = function(grunt){
         replace({
             regex: '../',
             replacement: '',
+            silent: true,
             paths:[path.join(dest, 'openlmis.css')]
         });
     });
