@@ -1,0 +1,15 @@
+{
+  "app": {
+    "src": "./src",
+    "dest": "./build/webapp",
+    "tmp": "./.tmp"
+  },
+  "styleguide": {
+  	"src": "./src",
+  	"dest": "./build/styleguide"
+  },
+  "docs": {
+    "src": "./docs",
+    "dest": "./build/docs"
+  }
+}
