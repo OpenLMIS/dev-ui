@@ -20,4 +20,10 @@ module.exports = function(grunt){
             title: "API"
         }
     });
+
+    grunt.registerTask('docs', function(){
+        if(!grunt.option('appOnly') && !grunt.option('noDocs')){
+            grunt.task.run('ngdocs');
+        }
+    });
 }
