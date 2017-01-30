@@ -6,7 +6,8 @@
   },
   "styleguide": {
   	"src": "./src",
-  	"dest": "./build/styleguide"
+  	"dest": "./build/styleguide",
+    "title": "OpenLMIS-UI Styleguide"
   },
   "docs": {
     "src": "./docs",

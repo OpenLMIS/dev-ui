@@ -1,51 +1,58 @@
+module.exports = function(grunt){
+    var path = require('path'),
+    fs = require('fs-extra'),
+    glob = require('glob'),
+    inEachAppDir = require('../ordered-application-directory');
 
+    grunt.loadNpmTasks('grunt-kss');
 
+    var dest = path.join(process.cwd(), grunt.option('styleguide.dest'));
+    var tmpDir = path.join(process.cwd(), grunt.option('app.tmp'), 'styleguide');
+    var title = grunt.option('styleguide.title');
+    var src = path.join(grunt.option('app.tmp'), 'css');
 
+    grunt.config('kss', {
+        options: {
+            title: 'OpenLMIS-UI Styleguide',
+            homepage: '../../../styleguide/homepage.md',
+            builder: '.tmp/styleguide/'
+        },
+        dist: {
+            src: [src],
+            dest: dest
+        }
+    });
 
-  // grunt.registerTask('kssSetup', function(){
-  //   var done = this.async();
-  //   var fse = require('fs-extra');
+    grunt.registerTask('styleguide', function(){
+        if(!grunt.option('appOnly') && !grunt.option('noStyleguide')){
+            grunt.task.run(['styleguide:copy', 'kss']);
+        }
+    });
 
-  //   fse.removeSync('build/styleguide');
-  //   fse.removeSync('.tmp/styleguide');
-  //   fse.mkdirsSync('.tmp/styleguide');
-  //   fse.copySync('node_modules/kss/builder/handlebars', '.tmp/styleguide');
-  //   fse.copySync('styleguide/index.hbs', '.tmp/styleguide/index.hbs', {
-  //     clobber: true
-  //   });
-  //   fse.mkdirsSync('build/styleguide');
+    grunt.registerTask('styleguide:copy', function(){
+        fs.mkdirsSync(tmpDir);
+        fs.mkdirsSync(dest);
 
-  //   done();
-  // });
+        fs.copySync('/openlmis/dev-ui/node_modules/kss/builder/handlebars', tmpDir);
+        inEachAppDir(function(dir){
+            indexHbs = path.join(dir, 'styleguide/index.hbs');
+            if(fs.existsSync(indexHbs)){
+                fs.copySync(indexHbs, path.join(tmpDir, 'index.hbs'), {
+                   clobber: true
+                });
+            }
+        });
 
-  //   kss: {
-  //     options: {
-  //       title: 'OpenLMIS-UI Styleguide',
-  //       homepage: '../../../styleguide/homepage.md',
-  //       builder: '.tmp/styleguide/'
-  //     },
-  //     dist: {
-  //       src: [config.styleguide.src],
-  //       dest: config.styleguide.dest
-  //     }
-  //   }
-  // });
+        glob.sync('**/*', {
+            ignore: [
+                'index.html',
+                'manifest.appcache'
+            ],
+            nodir: true,
+            cwd: path.join(process.cwd(), grunt.option('app.dest'))
+        }).forEach(function(filePath){
+            fs.copySync(path.join(process.cwd(), grunt.option('app.dest'), filePath), path.join(dest, filePath));
+        });
 
-    //   kssCopyAppAssets: {
-    //     expand: true,
-    //     cwd: path.join(config.app.dest, 'webapp'),
-    //     src: [
-    //       'openlmis.js',
-    //       'openlmis.js.map',
-    //       'favicon.ico',
-    //       '*.css',
-    //       '**/*.png',
-    //       '**/*.gif',
-    //       '**/*.json',
-    //       'fonts/**/*',
-    //       'images/**/*',
-    //       'messages/**/*'
-    //     ],
-    //     dest: config.styleguide.dest
-    //   }
-    // },
+    });
+}

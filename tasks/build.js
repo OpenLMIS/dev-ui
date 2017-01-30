@@ -8,6 +8,7 @@ module.exports = function(grunt){
         'assets',
         'index.html',
         'appcache',
-        'docs'
+        'docs',
+        'styleguide'
     ]);
 }
