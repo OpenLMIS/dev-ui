@@ -7,6 +7,7 @@ module.exports = function(grunt){
         'openlmis.css',
         'assets',
         'index.html',
-        'appcache'
+        'appcache',
+        'ngdocs'
     ]);
 }

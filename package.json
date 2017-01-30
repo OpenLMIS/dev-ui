@@ -15,6 +15,7 @@
     "grunt-angular-templates": "^1.1.0",
     "grunt-appcache": "^0.2.0",
     "grunt-karma": "^2.0.0",
+    "grunt-ngdocs": "^0.2.10",
     "karma": "^1",
     "karma-coverage": "^1",
     "karma-htmlfile-reporter": "^0.3",

@@ -1,16 +1,23 @@
+module.exports = function(grunt){
+    var path = require('path');
 
+    grunt.loadNpmTasks('grunt-ngdocs');
 
+    var dest = grunt.option('docs.dest');
+    var title = grunt.option('docs.title');
+    var src = path.join(grunt.option('app.tmp'), 'js');
 
-
-   // ngdocs: {
-   //    options:{
-   //      dest: "./build/docs",
-   //      title: "OpenLMIS-UI Documentation"
-   //    },
-   //    api: {
-   //      src: [
-   //        path.join(config.app.src, "**/*.js"),
-   //        "!" + path.join(config.app.src, "**/*.spec.js")
-   //      ],
-   //      title: "API"
-   //    }
+    grunt.config('ngdocs', {
+        options:{
+            dest: dest,
+            title: title
+        },
+        api: {
+            src: [
+                path.join(src, "**/*.js"),
+                "!" + path.join(src, "bower_components/**/*")
+            ],
+            title: "API"
+        }
+    });
+}

@@ -10,6 +10,7 @@
   },
   "docs": {
     "src": "./docs",
-    "dest": "./build/docs"
+    "dest": "./build/docs",
+    "title": "OpenLMIS-UI Documentation"
   }
 }
