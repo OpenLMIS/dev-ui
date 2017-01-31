@@ -1,4 +1,8 @@
 {
+  "serve":{
+    "dev": "./build",
+    "prod": "./build/webapp"
+  },
   "app": {
     "src": "./src",
     "dest": "./build/webapp",

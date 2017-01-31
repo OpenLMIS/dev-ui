@@ -1,24 +1,60 @@
+module.exports = function(grunt){
+    var request = require('request');
 
+    grunt.loadNpmTasks('grunt-contrib-connect');
 
-// connect: {
-//   server: {
-//     options: {
-//       keepalive: true,
-//       debug: true,
-//       port: 9000,
-//       base: config.app.dest
-//     }
-//   }
-// },
+    // Keep track of proxies on this scope
+    var proxies = {};
 
-  // grunt.registerTask('serve:proxy', 'Start proxy server', function(){
-  //   var host = '127.0.0.1';
-  //   var port = 3030;
+    if(grunt.option('proxy')){
+        findProxies();
+    }
 
-  //   if (grunt.option('addProxyService')){
-  //     grunt.log.writeln('starting proxy server at ' + host + ':' + port);
-  //     cors_proxy.createServer().listen(port, host);
-  //   }
-  // });
+    grunt.registerTask('serve', ['connect:server']);
 
-  // grunt.registerTask('serve', ['serve:proxy', 'connect:server']);
+    grunt.registerTask('serve:proxy', findProxies);
+
+    grunt.config('connect', {
+        server: {
+            options: {
+                keepalive: true,
+                debug: true,
+                hostname: '0.0.0.0',
+                port: 9000,
+                base: grunt.option('serve.dev'),
+                middleware: function(connect, options, middlewares) {
+                    middlewares.unshift(getProxy);
+                    return middlewares;
+                }
+            }         
+        }
+    });
+
+    function getProxy(req, res, next){
+        console.log(proxies);
+        for(var path in proxies){
+            if(req.url.indexOf(path) === 0){
+                var url = proxies[path] + req.url.substring(path.length);
+                return req.pipe(request(url)).pipe(res);
+            }
+        }
+        return next();
+    }
+
+    function findProxies(){
+        grunt.option.flags().forEach(function(flag){
+            var key = flag.substring(2, flag.indexOf('='));
+            var value = flag.substring(flag.indexOf('=')+1);
+
+            var keySuffix = key.substring(key.length-3).toLowerCase();
+            var valuePrefix = value.substring(0, 4).toLowerCase();
+            
+            if(keySuffix == 'url' && valuePrefix == 'http'){
+                var proxyPath = '/' + key.substring(0, key.length-3);
+                
+                proxies[proxyPath] = value;
+                grunt.option(key, proxyPath);
+            }
+        });
+    }
+}
