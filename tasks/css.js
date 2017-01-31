@@ -1,7 +1,7 @@
 
 module.exports = function(grunt){
     var fs = require('fs-extra'),
-    replace = require('replace'),
+    replace = require('replace-in-file'),
     path = require('path'),
     Concat = require('concat-with-sourcemaps'),
     convertSourceMap = require('convert-source-map'),
@@ -56,11 +56,10 @@ module.exports = function(grunt){
         fs.writeFileSync(path.join(dest,'openlmis.css'), sassResult.css);
 
         // remove non-relative strings
-        replace({
-            regex: '../',
-            replacement: '',
-            silent: true,
-            paths:[path.join(dest, 'openlmis.css')]
+        replace.sync({
+            files: path.join(dest,'openlmis.css'),
+            replace: /\.\.\//g,
+            with: ''
         });
     });
 
