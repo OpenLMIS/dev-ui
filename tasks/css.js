@@ -55,7 +55,7 @@ module.exports = function(grunt){
 
         fs.writeFileSync(path.join(dest,'openlmis.css'), sassResult.css);
 
-        // remove non-relative strings
+        // remove non-relative strings because our file structure is flatter
         replace.sync({
             files: path.join(dest,'openlmis.css'),
             replace: /\.\.\//g,
