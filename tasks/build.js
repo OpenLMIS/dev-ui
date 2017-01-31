@@ -1,5 +1,7 @@
 module.exports = function(grunt){
 
+    grunt.loadNpmTasks('grunt-concurrent');
+
     var buildTasks = [
         'clean',
         'messages',
@@ -14,10 +16,12 @@ module.exports = function(grunt){
         'styleguide'
     ];
 
-    if(grunt.option('serve')){
-        buildTasks.unshift('serve:proxy');
-        buildTasks.push('serve');
-    }
+    grunt.registerTask('build', function(){
+        if(grunt.option('serve')){
+            buildTasks.unshift('serve:proxy');
+            buildTasks.push('serve');
+        }
 
-    grunt.registerTask('build', buildTasks);
+        grunt.task.run(buildTasks);
+    });
 }
