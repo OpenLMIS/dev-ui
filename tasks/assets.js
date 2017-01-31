@@ -7,7 +7,7 @@ module.exports = function(grunt){
     var inEachAppDir = require('../ordered-application-directory');
 
     grunt.registerTask('assets', function(){
-        var dest = grunt.option('app.dest');
+        var dest = path.join(process.cwd(), grunt.option('app.dest'));
 
         var imageExtentions = ['png', 'jpg', 'gif', 'svg', 'ico'],
         fontExtentions = ['eot', 'woff', 'woff2', 'ttf', 'otf'],
