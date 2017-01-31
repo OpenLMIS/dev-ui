@@ -2,6 +2,7 @@ module.exports = function(grunt){
 
     var buildTasks = [
         'clean',
+        'messages',
         'html',
         'openlmis.js',
         'openlmis.css',
