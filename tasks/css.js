@@ -92,6 +92,8 @@ module.exports = function(grunt){
         addFiles('bower_components/**/*.scss');
         addFiles('bower_components/**/*.css');
 
+        concat.add(null, "@import 'bourbon';"); // Make bourbon available everywhere!
+
         addFiles('**/mixins.scss');
         addFiles('**/*.scss');
         addFiles('**/*.css');

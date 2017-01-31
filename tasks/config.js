@@ -10,7 +10,7 @@ module.exports = function(grunt){
             config = extend(true, config, json);
         }
     });
-    
+
     setGruntOptions(config);
 
     function setGruntOptions(config, prefix){

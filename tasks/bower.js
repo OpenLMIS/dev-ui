@@ -1,6 +1,6 @@
 module.exports = function(grunt){
 	const exec = require('child_process').execSync;
-	var eachAppDir = require('/openlmis/dev-ui/ordered-application-directory.js');
+	var eachAppDir = require('../ordered-application-directory.js');
 
 	grunt.registerTask('bower', function(){
 		eachAppDir(function(dir){

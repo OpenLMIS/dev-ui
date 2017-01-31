@@ -1,10 +1,11 @@
 {
-  "name": "openlmis-ui",
+  "name": "dev-ui",
   "version": "3.0.0-beta-SNAPSHOT",
   "repository": {
     "type": "git",
     "url": "https://github.com/OpenLMIS/dev-ui"
   },
+  "main": "Gruntfile.js",
   "dependencies": {
     "change-case": "^3.0.1",
     "concat-with-sourcemaps": "^1.0.4",

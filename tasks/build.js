@@ -1,7 +1,5 @@
 module.exports = function(grunt){
 
-    grunt.loadNpmTasks('grunt-concurrent');
-
     var buildTasks = [
         'clean',
         'messages',

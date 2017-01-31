@@ -33,7 +33,7 @@ module.exports = function(grunt){
         fs.mkdirsSync(tmpDir);
         fs.mkdirsSync(dest);
 
-        fs.copySync('/openlmis/dev-ui/node_modules/kss/builder/handlebars', tmpDir);
+        fs.copySync(path.join(process.cwd(), 'node_modules/kss/builder/handlebars'), tmpDir);
         inEachAppDir(function(dir){
             indexHbs = path.join(dir, 'styleguide/index.hbs');
             if(fs.existsSync(indexHbs)){
