@@ -7,7 +7,7 @@ Based off of debain-jesse.
 ## Volumes
 
 - `/app` is where NPM expects the primary config.json file to be located. *This should be the directory you are building your application in.* All downloaded files, build processes, and other artifacts will be exposed here.
-- `/dev-ui` is where the dev tools live. Mount this volume if you are working on this image and it's tooling. Check out `npm link` to make you development process more streamlined.
+- `/dev-ui` is where the dev tools live. Mount this volume if you are working on this image and it's tooling. Check out `npm link` to make your development process more streamlined.
 
 ## Ports
 
@@ -57,7 +57,7 @@ Here is a short list of all the commands you might need to know, these commands 
 - `grunt watch` will start a process that waits for changes to files, and then rebuilds the UI
 - `grunt serve` will run the development server, which serves the `./build/` directory
 - `grunt clean` empties the build and temporary directories
-- `grunt bower` will loop through all application build directories and install the bower packages defined in each directories `bower.json` file
+- `grunt bower` will loop through all application build directories and install the bower packages defined in each directory’s `bower.json` file
 - `grunt karma:unit` to run Jasmine unit tests.
 - `grunt karma:tdd` run Jasmine unit tests in test driven development mode, where test will automatically rerun when openlmis.js is rebuilt or any test file is updated.
 
@@ -76,13 +76,15 @@ Working with OpenLMIS servers or services will require CORS Headers to get data 
 Within the OpenLMIS-UI, there are strings that are prefixed with '@@' which are automatically replaced by a matching configuration option. The variables in a file are written in CONSTANT_CASE, but configuration options are written in camelCase.
 
 *Example*
-You can set the url back to the OpenLMIS sever, which is located here by:
+You can set the url back to the OpenLMIS server, which is located here by:
 ```
 // Adding the following to your config.json
-openlmisServerUrl: "http://somewhere.over.the/rainbow/"
+{
+    "openlmisServerUrl": "http://somewhere.over.the/rainbow/"
+}
 
 //or passing the following flag to your build command
-grunt build --openlmisServerUrl=http://somewhere.over.the/rainbow
+> grunt build --openlmisServerUrl=http://somewhere.over.the/rainbow
 ```
 
 
@@ -92,3 +94,5 @@ grunt build --openlmisServerUrl=http://somewhere.over.the/rainbow
 - NPM
 - Bower
 - AngularJS 1.6.x
+
+
