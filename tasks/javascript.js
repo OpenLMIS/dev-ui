@@ -4,7 +4,7 @@ module.exports = function(grunt){
     readline = require('readline'),
     stream = require('stream'),
     path = require('path'),
-    replace = require('replace'),
+    replace = require('replace-in-file'),
     changeCase = require('change-case'),
     Concat = require('concat-with-sourcemaps'),
     convertSourceMap = require('convert-source-map'),
@@ -15,7 +15,7 @@ module.exports = function(grunt){
     var tmpDir = 'js';
     var fileName = 'openlmis.js';
 
-    grunt.registerTask('openlmis.js', ['openlmis.js:copy', 'openlmis.js:build', 'openlmis.js:replace', 'openlmis.js:uglify']);
+    grunt.registerTask('openlmis.js', ['openlmis.js:copy', 'openlmis.js:build']);
 
     grunt.registerTask('openlmis.js:copy', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
@@ -51,8 +51,7 @@ module.exports = function(grunt){
 
         // Set general file patterns we want to ignore
         var ignorePatterns = [
-            'app.js', // must be last
-            'app.routes.js' // must be last
+            'app.js' // must be last
         ];
         // Helper function to keep ordered file adding clear
         function addFiles(pattern){
@@ -82,55 +81,13 @@ module.exports = function(grunt){
         addFiles('**/*.routes.js');
         addFiles('**/*.js');
 
+        ignorePatterns = [];
+        addFiles('app.js');
+
         var inlineSourceMap = convertSourceMap.fromJSON(concat.sourceMap).toComment();
         concat.add(null, inlineSourceMap);
         
         fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), concat.content);
-    });
-
-    grunt.registerTask('openlmis.js:replace', function(){
-        var done = this.async();
-
-        var re = new RegExp(/@@[\w.]+/g);
-        var matches = [];
-
-        var instream = fs.createReadStream(path.join(grunt.option('app.dest'), fileName));
-        var outstream = new stream;
-        var rl = readline.createInterface(instream, outstream);
-
-        rl.on('line', function(line) {
-            var results;
-            while((results = re.exec(line)) !== null){
-                var match = results[0];
-                if(matches.indexOf(match) == -1) matches.push(match);
-
-                line = line.substring(re.lastIndex);
-            }
-        });
-
-        rl.on('close', function() {
-            matches.forEach(function(match){
-                var optionName = changeCase.camelCase(match.substring(2));
-                var option = grunt.option(optionName);
-                if(option){
-                    replace({
-                        regex: match,
-                        repalce: option,
-                        paths: [path.join(grunt.option('app.dest'), fileName)],
-                        silent: true
-                    });
-                } else {
-                    grunt.log.error("Missing config option: " + optionName);
-                }
-            });
-
-            // Tell grunt this task is done
-            done();
-        });
-    });
-
-    grunt.registerTask('openlmis.js:uglify', function(){
-
     });
 
 }

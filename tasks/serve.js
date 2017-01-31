@@ -53,6 +53,7 @@ module.exports = function(grunt){
                 
                 proxies[proxyPath] = value;
                 grunt.option(key, proxyPath);
+                console.log('Proxy:' + proxyPath + ' TO ' + value);
             }
         });
     }
