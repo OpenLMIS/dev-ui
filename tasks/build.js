@@ -1,6 +1,6 @@
 module.exports = function(grunt){
 
-    grunt.registerTask('build', [
+    var buildTasks = [
         'clean',
         'html',
         'openlmis.js',
@@ -10,5 +10,12 @@ module.exports = function(grunt){
         'appcache',
         'docs',
         'styleguide'
-    ]);
+    ];
+
+    if(grunt.option('serve')){
+        buildTasks.unshift('serve:proxy');
+        buildTasks.push('serve');
+    }
+
+    grunt.registerTask('build', buildTasks);
 }

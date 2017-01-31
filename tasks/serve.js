@@ -31,7 +31,6 @@ module.exports = function(grunt){
     });
 
     function getProxy(req, res, next){
-        console.log(proxies);
         for(var path in proxies){
             if(req.url.indexOf(path) === 0){
                 var url = proxies[path] + req.url.substring(path.length);
