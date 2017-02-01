@@ -70,7 +70,7 @@ Passing flags in with the grunt command will overwrite base options set within.
 - `--serve` will run the development server along with any other command (and will keep the process alive). When this command is used, any URL configurations that start with `http` will be replaced with a proxy URL which will add CORS headers to the actual requested URL.
 
 ### Proxy URLs
-Working with OpenLMIS servers or services will require CORS Headers to get data across domains, to ease development the OpenLMIS-UI dev server will create a local proxy URL and replace the variable with a foreign URL.
+Working with OpenLMIS servers or services will require CORS Headers to get data across domains. To ease development the OpenLMIS-UI dev server will create a local proxy URL and replace the variable with a foreign URL.
 
 ### Dynamic Configuration Variables
 Within the OpenLMIS-UI, there are strings that are prefixed with '@@' which are automatically replaced by a matching configuration option. The variables in a file are written in CONSTANT_CASE, but configuration options are written in camelCase.
