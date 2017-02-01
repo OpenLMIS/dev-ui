@@ -50,7 +50,7 @@ Since the OpenLMIS-UI is built from different pieces, we use a configuration var
 - The current directory (most likely `/app`) is always included last (unless already specified in the config.json).
  
 ### Commands
-Here is a short list of all the commands you might need to know, these commands are built from smaller commands defined in `dev-ui/tasks` which you can reuse, overwrite, or repackage in your own build process (which you can modify by defining your own Gruntfile.
+Here is a short list of all the commands you might need to know. These commands are built from smaller commands defined in `dev-ui/tasks` which you can reuse, overwrite, or repackage in your own build process (which you can modify by defining your own Gruntfile).
 
 - `grunt` will call the follow commands `bower` `build` and `karma:unit`
 - `grunt build` will build the OpenLMIS-UI
