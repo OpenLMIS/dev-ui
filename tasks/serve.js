@@ -1,34 +1,24 @@
 module.exports = function(grunt){
+    var path = require('path');
+
     var request = require('request');
+    var connect = require('connect');
+
+    var serveStatic = require('serve-static');
 
     grunt.loadNpmTasks('grunt-contrib-connect');
 
     // Keep track of proxies on this scope
     var proxies = {};
 
-    if(grunt.option('proxy')){
+    if(grunt.option('serve')){
         findProxies();
+
+        var app = connect();
+        app.use(getProxy);
+        app.use(serveStatic(path.join(process.cwd(), 'build')));
+        app.listen(9000);
     }
-
-    grunt.registerTask('serve', ['connect:server']);
-
-    grunt.registerTask('serve:proxy', findProxies);
-
-    grunt.config('connect', {
-        server: {
-            options: {
-                keepalive: true,
-                debug: true,
-                hostname: '0.0.0.0',
-                port: 9000,
-                base: grunt.option('serve.dev'),
-                middleware: function(connect, options, middlewares) {
-                    middlewares.unshift(getProxy);
-                    return middlewares;
-                }
-            }         
-        }
-    });
 
     function getProxy(req, res, next){
         for(var path in proxies){

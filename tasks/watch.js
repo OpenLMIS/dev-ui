@@ -9,7 +9,7 @@ module.exports = function(grunt){
             path.join(grunt.option('app.src'), '/**/*'),
             path.join(grunt.option('app.src'), '/*')
             ],
-        tasks: ['build', 'notify:watch'],
+        tasks: ['build:app', 'notify:watch'],
         options: {
             spawn: false
         }
