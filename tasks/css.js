@@ -15,7 +15,7 @@ module.exports = function(grunt){
     grunt.registerTask('openlmis.css', ['openlmis.css:copy', 'openlmis.css:build']);
 
     grunt.registerTask('openlmis.css:copy', function(){
-        var dest = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
+        var dest = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
 
         inEachAppDir(function(dir){
             var src = grunt.option('app.src');
@@ -64,7 +64,7 @@ module.exports = function(grunt){
     });
 
     function buildScss(fileName, dest){
-        var tmp = grunt.option('app.tmp');
+        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
 
         var concat = new Concat(true, fileName, '\n');
         // Set general file patterns we want to ignore

@@ -9,7 +9,7 @@ module.exports = function(grunt){
     var dest = path.join(process.cwd(), grunt.option('styleguide.dest'));
     var tmpDir = path.join(process.cwd(), grunt.option('app.tmp'), 'styleguide');
     var title = grunt.option('styleguide.title');
-    var src = path.join(grunt.option('app.tmp'), 'css');
+    var src = path.join(grunt.option('app.tmp'), 'css', 'src');
 
     grunt.config('kss', {
         options: {
