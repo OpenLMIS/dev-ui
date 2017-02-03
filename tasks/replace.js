@@ -11,17 +11,23 @@ module.exports = function(grunt){
         var applause = Applause.create({
             patterns: getPatterns()
         })
-        var dir = grunt.option('app.dest');
-
-        glob.sync('{*.js, *.css, *.html}',{
+        var replaceCount = 0;
+        
+        var dir = path.join(process.cwd(), grunt.option('app.dest'));
+        
+        var files = glob.sync('*.{html,js,css}',{
             cwd: dir
-        }).forEach(function(file){
+        });
+        files.forEach(function(file){
             var filePath = path.join(dir, file);
 
             var contents = grunt.file.read(filePath);
             result = applause.replace(contents);
+            replaceCount += result.count;
             grunt.file.write(filePath, result.content);
         });
+        
+        console.log('- Replaced ' + replaceCount + ' strings in ' + files.length + ' files');
     });
 
     function getPatterns(){
