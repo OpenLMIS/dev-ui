@@ -49,7 +49,7 @@
       "main": [
         "assets/stylesheets/_bootstrap.scss",
         "assets/javascripts/bootstrap.js",
-        "assets/fonts/*"
+        "assets/fonts/bootstrap/*"
       ]
     },
     "font-awesome": {
