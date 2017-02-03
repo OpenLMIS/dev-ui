@@ -1,4 +1,5 @@
 {
+  "build": "./build",
   "serve":{
     "dev": "./build",
     "prod": "./build/webapp"

@@ -38,11 +38,11 @@ module.exports = function(grunt){
             /* REPORTERS */
             reporters: ['progress', 'coverage', 'junit'],
             junitReporter: {
-                outputDir: path.join(grunt.option('app.dest'),'test/test-results')
+                outputDir: path.join(grunt.option('build'),'test/test-results')
             },
             coverageReporter: {
                 type: 'html',
-                dir: path.join(grunt.option('app.dest'), 'test/coverage/')
+                dir: path.join(grunt.option('build'), 'test/coverage/')
             },
             /* KARMA PROCESS */
             port: 9876,
@@ -51,7 +51,7 @@ module.exports = function(grunt){
             logLevel: 'INFO',
 
             browsers: ['PhantomJS']
-        }, 
+        },
         unit: {
             files: files,
             singleRun: true,
