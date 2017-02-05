@@ -35,14 +35,20 @@ module.exports = function(grunt){
             if(!fs.existsSync(path.join(dir, 'bower_components'))){
                 return ;
             }
-
-            var bowerFiles = wiredep().js || [];
-            bowerFiles.forEach(function(file){
-                // copy each file into a directory called bower_components
-                var bowerPath = file.substring(file.indexOf("bower_components"));
-                fs.copySync(file, path.join(tmp, bowerPath));
-            });
         });
+
+        var cwd = process.cwd();
+        process.chdir(grunt.option('app.tmp'));
+
+        var bowerFiles = wiredep().js || [];
+        bowerFiles.forEach(function(file){
+            // copy each file into a directory called bower_components
+            var bowerPath = file.substring(file.indexOf("bower_components"));
+            fs.copySync(file, path.join(tmp, bowerPath));
+        });
+
+        process.chdir(cwd);
+
     });
 
     grunt.registerTask('openlmis.js:build', function(){

@@ -25,6 +25,7 @@ module.exports = function(grunt){
         ];
 
         if(firstRun){
+            buildTasks.unshift('bower');
             buildTasks.unshift('clean');
             firstRun = false;
         }

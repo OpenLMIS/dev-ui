@@ -31,15 +31,19 @@ module.exports = function(grunt){
             if(!fs.existsSync(path.join(dir, 'bower_components'))){
                 return ;
             }
-            
-            var bowerCss = wiredep().css || [];
-            var bowerScss = wiredep().scss || [];
-            bowerCss.concat(bowerScss).forEach(function(file){
-                // copy each file into a directory called bower_components
-                var bowerPath = file.substring(file.indexOf("bower_components"));
-                fs.copySync(file, path.join(dest, bowerPath));
-            });
         });
+
+        var cwd = process.cwd();
+        process.chdir(grunt.option('app.tmp'));
+
+        var bowerCss = wiredep().css || [];
+        var bowerScss = wiredep().scss || [];
+        bowerCss.concat(bowerScss).forEach(function(file){
+            var bowerPath = file.substring(file.indexOf("bower_components"));
+            fs.copySync(file, path.join(dest, bowerPath));
+        });
+
+        process.chdir(cwd);
     });
 
     grunt.registerTask('openlmis.css:build', function(){
@@ -107,18 +111,17 @@ module.exports = function(grunt){
         // Include paths are the directories imported sass files live in
         // so that import statements in the files will work correctly
         var includePaths = require('node-bourbon').includePaths; // because this is an array, we start here
-        inEachAppDir(function(dir){
-            if(!fs.existsSync(path.join(dir, 'bower_components'))){
-                return ;
-            }
+        
+        var cwd = process.cwd();
+        process.chdir(grunt.option('app.tmp'));
 
-            var bowerScss = wiredep().scss || [];
-            bowerScss.forEach(function(filePath){
-                var fileDirectory = filePath.substring(0, filePath.lastIndexOf("/"));
-                includePaths.push(fileDirectory);
-            });
+        var bowerScss = wiredep().scss || [];
+        bowerScss.forEach(function(filePath){
+            var fileDirectory = filePath.substring(0, filePath.lastIndexOf("/"));
+            includePaths.push(fileDirectory);
         });
 
+        process.chdir(cwd);
         return includePaths;
     }
 }
