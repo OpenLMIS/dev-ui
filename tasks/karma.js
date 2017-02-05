@@ -20,7 +20,7 @@ module.exports = function(grunt){
     var files = [{
         src: [
             path.join(grunt.option('app.dest'), 'openlmis.js'),
-            '/dev-ui/bower_components/angular-mocks/angular-mocks.js' // Would be nice not to hardcode this
+            path.join(grunt.option('app.tmp'), 'bower_components/angular-mocks/angular-mocks.js')
         ].concat(testFiles)
     }];
 
