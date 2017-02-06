@@ -6,7 +6,7 @@ module.exports = function(grunt){
     path = require('path'),
     replace = require('replace-in-file'),
     changeCase = require('change-case'),
-    Concat = require('concat-with-sourcemaps'),
+    UglifyJS = require("uglify-js"),
     convertSourceMap = require('convert-source-map'),
     wiredep = require('wiredep'),
     glob = require('glob'),
@@ -52,28 +52,12 @@ module.exports = function(grunt){
     });
 
     grunt.registerTask('openlmis.js:build', function(){
-
-        var concat = new Concat(true, fileName, '\n');
-
-        // Set general file patterns we want to ignore
-        var ignorePatterns = [
+        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir),
+        toplevel = null, // container for UglifyJS
+        source_map = UglifyJS.SourceMap(),
+        ignorePatterns = [ // storing patterns to ignore
             'app.js' // must be last
         ];
-        // Helper function to keep ordered file adding clear
-        function addFiles(pattern){
-            glob.sync(pattern, {
-                cwd: path.join(process.cwd(), grunt.option('app.tmp'), tmpDir),
-                ignore: ignorePatterns
-            }).forEach(function(file){
-                var filePath = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, file);
-
-                // Don't let previously added patterns be added again
-                ignorePatterns.push(pattern);
-                
-                var contentBuffer = fs.readFileSync(filePath);
-                concat.add(file, contentBuffer);
-            });
-        }
 
         // Since we copied all bower components over across bower files,
         // we don't have wiredep's dependency order — so we are just
@@ -90,10 +74,37 @@ module.exports = function(grunt){
         ignorePatterns = [];
         addFiles('app.js');
 
-        var inlineSourceMap = convertSourceMap.fromJSON(concat.sourceMap).toComment();
-        concat.add(null, inlineSourceMap);
+        toplevel.figure_out_scope();
+        var compressed_ast = toplevel.transform(UglifyJS.Compressor());
+        var stream = UglifyJS.OutputStream({
+            source_map: source_map
+        });
+        compressed_ast.print(stream);
+
+        var compressedJS = stream.toString() // compressed version of openlmis.js
+
+        if(!grunt.option('production')){
+            compressedJS += "\n" + convertSourceMap.fromJSON(source_map.toString()).toComment();
+        }
         
-        fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), concat.content);
+        fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), compressedJS);
+
+        // Helper function to keep ordered file adding clear
+        function addFiles(pattern){
+            glob.sync(pattern, {
+                cwd: tmp,
+                ignore: ignorePatterns
+            }).forEach(function(file){
+                var code = fs.readFileSync(path.join(tmp, file), "utf8");
+                toplevel = UglifyJS.parse(code, {
+                    filename: file,
+                    toplevel:toplevel
+                });
+                source_map.get().setSourceContent(file, code);
+            });
+            // Don't let previously added patterns be added again
+            ignorePatterns.push(pattern);
+        }
     });
 
 }
