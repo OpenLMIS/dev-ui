@@ -4,9 +4,8 @@ module.exports = function(grunt){
     var request = require('request');
     var connect = require('connect');
 
+    var serveIndex = require('serve-index')
     var serveStatic = require('serve-static');
-
-    grunt.loadNpmTasks('grunt-contrib-connect');
 
     // Keep track of proxies on this scope
     var proxies = {};
@@ -17,6 +16,8 @@ module.exports = function(grunt){
         var app = connect();
         app.use(getProxy);
         app.use(serveStatic(path.join(process.cwd(), 'build')));
+        
+        app.use('/', serveIndex(path.join(process.cwd(), 'build'), {'icons': true}))
         app.listen(9000);
     }
 
