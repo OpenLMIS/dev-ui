@@ -36,7 +36,7 @@ Since the OpenLMIS-UI is built from different pieces, we use a configuration var
 
 ```
 // Example config.json
-"applicationBuildDirectories": [
+"orderedBuildDirectories": [
     "/openlmis-ui-base",
     "/openlmis-ui-styles",
     "/openlmis-requisition-ui",
