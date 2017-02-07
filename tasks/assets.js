@@ -29,16 +29,15 @@ module.exports = function(grunt){
         });
 
         // Get bower fonts
-        inEachAppDir(function(dir){
-            if(!fs.existsSync(path.join(dir, 'bower_components'))){
-                return ;
-            }
+        var cwd = process.cwd();
+        process.chdir(grunt.option('app.tmp'));
 
-            mainFilesFromBower(fontExtentions).forEach(function(file){
-                var fileName = file.substring(file.lastIndexOf("/"))
-                fs.copySync(file, path.join(dest, 'fonts', fileName));
-            });
+        mainFilesFromBower(fontExtentions).forEach(function(file){
+            var fileName = file.substring(file.lastIndexOf("/"))
+            fs.copySync(file, path.join(dest, 'fonts', fileName));
         });
+
+        process.chdir(cwd);
     });
 
     // Get non-standard files from wiredep
