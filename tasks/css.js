@@ -96,8 +96,6 @@ module.exports = function(grunt){
         addFiles('bower_components/**/*.scss');
         addFiles('bower_components/**/*.css');
 
-        concat.add(null, "@import 'bourbon';"); // Make bourbon available everywhere!
-
         addFiles('**/mixins.scss');
         addFiles('**/*.scss');
         addFiles('**/*.css');
@@ -110,7 +108,7 @@ module.exports = function(grunt){
     function getIncludePaths(){
         // Include paths are the directories imported sass files live in
         // so that import statements in the files will work correctly
-        var includePaths = require('node-bourbon').includePaths; // because this is an array, we start here
+        var includePaths = [];
         
         var cwd = process.cwd();
         process.chdir(grunt.option('app.tmp'));
