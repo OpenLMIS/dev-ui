@@ -20,7 +20,6 @@ module.exports = function(grunt){
             'openlmis.css',
             'assets',
             'index.html',
-            'replace',
             'appcache'
         ];
 

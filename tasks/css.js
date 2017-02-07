@@ -8,7 +8,8 @@ module.exports = function(grunt){
     wiredep = require('wiredep'),
     glob = require('glob'),
     sass = require('node-sass')
-    inEachAppDir = require('../ordered-application-directory');
+    inEachAppDir = require('../ordered-application-directory'),
+    fileReplace = require('./replace.js')(grunt);
 
     var tmpDir = 'css';
 
@@ -44,6 +45,11 @@ module.exports = function(grunt){
         });
 
         process.chdir(cwd);
+    });
+
+    grunt.registerTask('openlmis.css:replace', function(){
+        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
+        fileReplace('**/*.{scss,css}', tmp);
     });
 
     grunt.registerTask('openlmis.css:build', function(){

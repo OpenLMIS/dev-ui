@@ -1,12 +1,13 @@
 module.exports = function(grunt){
     var fs = require('fs-extra'),
     path = require('path'),
-    glob = require('glob');
+    glob = require('glob'),
+    fileReplace = require('./replace.js')(grunt);
 
     var inEachAppDir = require('../ordered-application-directory');
     var tmpDir = 'index-html'
 
-    grunt.registerTask('index.html', ['index.html:copy', 'index.html:build']);
+    grunt.registerTask('index.html', ['index.html:copy', 'index.html:replace', 'index.html:build']);
 
     grunt.registerTask('index.html:copy', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
@@ -22,6 +23,11 @@ module.exports = function(grunt){
                 fs.copySync(path.join(dir, src, file), path.join(tmp, file));
             });
         });
+    });
+
+    grunt.registerTask('index.html:replace', function(){
+        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
+        fileReplace('index.html', tmp);
     });
 
     grunt.registerTask('index.html:build', function(){

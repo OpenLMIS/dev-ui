@@ -10,12 +10,13 @@ module.exports = function(grunt){
     convertSourceMap = require('convert-source-map'),
     wiredep = require('wiredep'),
     glob = require('glob'),
-    inEachAppDir = require('../ordered-application-directory');
+    inEachAppDir = require('../ordered-application-directory'),
+    fileReplace = require('./replace.js')(grunt);
     
     var tmpDir = 'js';
     var fileName = 'openlmis.js';
 
-    grunt.registerTask('openlmis.js', ['openlmis.js:copy', 'openlmis.js:build']);
+    grunt.registerTask('openlmis.js', ['openlmis.js:copy', 'openlmis.js:replace', 'openlmis.js:build']);
 
     grunt.registerTask('openlmis.js:copy', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
@@ -49,6 +50,11 @@ module.exports = function(grunt){
 
         process.chdir(cwd);
 
+    });
+
+    grunt.registerTask('openlmis.js:replace', function(){
+        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
+        fileReplace('**/*.js', tmp);
     });
 
     grunt.registerTask('openlmis.js:build', function(){
