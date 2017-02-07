@@ -1,3 +1,4 @@
+
 {
   "build": "./build",
   "serve":{
@@ -18,5 +19,6 @@
     "src": "./docs",
     "dest": "./build/docs",
     "title": "OpenLMIS-UI Documentation"
-  }
+  },
+  "applicationTitle": "OpenLMIS"
 }
