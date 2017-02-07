@@ -12,10 +12,11 @@ module.exports = function(grunt){
     fileReplace = require('./replace.js')(grunt);
 
     var tmpDir = 'css';
+    var fileName = 'openlmis.css';
 
-    grunt.registerTask('openlmis.css', ['openlmis.css:copy', 'openlmis.css:build']);
+    grunt.registerTask('css', ['css:copy', 'css:replace', 'css:build']);
 
-    grunt.registerTask('openlmis.css:copy', function(){
+    grunt.registerTask('css:copy', function(){
         var dest = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
 
         inEachAppDir(function(dir){
@@ -47,12 +48,12 @@ module.exports = function(grunt){
         process.chdir(cwd);
     });
 
-    grunt.registerTask('openlmis.css:replace', function(){
+    grunt.registerTask('css:replace', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
         fileReplace('**/*.{scss,css}', tmp);
     });
 
-    grunt.registerTask('openlmis.css:build', function(){
+    grunt.registerTask('css:build', function(){
         var dest = grunt.option('app.dest');
         var tmp = path.join(grunt.option('app.tmp'), tmpDir);
 
@@ -63,11 +64,11 @@ module.exports = function(grunt){
             includePaths: getIncludePaths()
         });
 
-        fs.writeFileSync(path.join(dest,'openlmis.css'), sassResult.css);
+        fs.writeFileSync(path.join(dest, fileName), sassResult.css);
 
-        // remove non-relative strings because our file structure is flatter
+        // remove non-relative strings because our file structure is flat
         replace.sync({
-            files: path.join(dest,'openlmis.css'),
+            files: path.join(dest, fileName),
             replace: /\.\.\//g,
             with: ''
         });
@@ -111,9 +112,9 @@ module.exports = function(grunt){
         fs.writeFileSync(path.join(dest, fileName), concat.content);
     }
 
+    // Include paths are the directories imported sass files live in
+    // so that import statements in the files will work correctly
     function getIncludePaths(){
-        // Include paths are the directories imported sass files live in
-        // so that import statements in the files will work correctly
         var includePaths = [];
         
         var cwd = process.cwd();

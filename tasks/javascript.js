@@ -16,9 +16,9 @@ module.exports = function(grunt){
     var tmpDir = 'js';
     var fileName = 'openlmis.js';
 
-    grunt.registerTask('openlmis.js', ['openlmis.js:copy', 'openlmis.js:replace', 'openlmis.js:build']);
+    grunt.registerTask('javascript', ['javascript:copy', 'javascript:replace', 'javascript:build']);
 
-    grunt.registerTask('openlmis.js:copy', function(){
+    grunt.registerTask('javascript:copy', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
 
         inEachAppDir(function(dir){
@@ -52,12 +52,12 @@ module.exports = function(grunt){
 
     });
 
-    grunt.registerTask('openlmis.js:replace', function(){
+    grunt.registerTask('javascript:replace', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
         fileReplace('**/*.js', tmp);
     });
 
-    grunt.registerTask('openlmis.js:build', function(){
+    grunt.registerTask('javascript:build', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir),
         toplevel = null, // container for UglifyJS
         source_map = UglifyJS.SourceMap(),

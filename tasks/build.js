@@ -16,8 +16,8 @@ module.exports = function(grunt){
         var buildTasks = [
             'messages',
             'html',
-            'openlmis.js',
-            'openlmis.css',
+            'javascript',
+            'css',
             'assets',
             'index.html',
             'appcache'
