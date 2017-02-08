@@ -21,4 +21,5 @@ COPY ordered-application-directory.js .
 COPY tasks/* ./tasks/
 
 # Port 9000 used for dev server
-EXPOSE 9000
+# Port 9876 user for karma debugger
+EXPOSE 9000 9876
