@@ -4,17 +4,52 @@ Image that contains tooling and core packages for OpenLMIS-UI generation. The Op
 
 Based off of debain-jesse.
 
-## Volumes
+## Exposed Docker Items
 
+### Volumes
+- `/dev-ui` is where the build tool source code is exposed. Explicitly add this volume if you are working on the build tools from this repository. See the section about developing the dev-ui to understand how to best develop this image.
 - `/app` is where NPM expects the primary config.json file to be located. *This should be the directory you are building your application in.* All downloaded files, build processes, and other artifacts will be exposed here.
-- `/dev-ui` is where the dev tools live. Mount this volume if you are working on this image and it's tooling. Check out `npm link` to make your development process more streamlined.
 
-## Ports
+### Ports
 
-- 9000 - HTTP port where development server runs
-- 9876 - Karma test runner debugging port
+- `9000` HTTP port where development server runs
+- `9876` Karma test runner debugging port
 
-## Examples
+## Developing the Dev-UI
+To run a version of the dev-ui image that updated from your file system, use the following 
+```
+// From your local version of this repository
+// Build a local docker image (optional)
+> docker build -t openlmis/dev-ui .
+
+// <dev-ui> location of dev-ui files, use $(pwd)
+// <app-dir> location of example application files (optional)
+> docker run --it --rm -v <dev-ui>:/dev-ui -v <app-dir>:/app openlmis/dev-ui
+
+// If you are working with an application, you will want to install the dev-ui package into the application directory
+$ cd /app
+$ npm install
+
+// Run grunt commands to build and test the UI, outlined below
+```
+When developing and testing changes to the build process, you will want to see changes without running `npm install` repetatively. To do this, use [npm's link command](https://docs.npmjs.com/cli/link)
+
+Starting from a running dev-ui image
+```
+$ cd /app
+
+// Since the node_modules packages get screwed up often, remove it and start over
+$ rm -rf node_modules
+$ npm install
+
+// Use npm link to create an alais to see changes as you make them
+$ npm link /dev-ui
+
+// Edit the grunt tasks, and when they are run you will see live changes
+```
+
+## Developing an Application with the Dev-UI
+*Most interactions should occur through docker-compose, which will be documented in other repositories, this explains the raw usage.*
 
 ```shell
 > docker run -it --rm -v $(pwd):/app openlmis/dev-ui
@@ -23,10 +58,10 @@ Based off of debain-jesse.
 Typical development day:
 ```shell
 > docker run -it --rm -p 9000:9000 -v $(pwd):/app openlmis/dev-ui
+$ cd /app
+$ npm install
 $ grunt build --serve
-```
-
-Most interactions should occur through docker-compose.
+``` 
 
 ## Building & Testing
 The OpenLMIS-UI designed to be built from multiple repositories, enforcing a modular and extensible code base. To enable this, we use docker-compose to pull together different modules, and the dev-ui build process stitches these repositories together and configures tooling for development or production.
@@ -94,5 +129,3 @@ You can set the url back to the OpenLMIS server, which is located here by:
 - NPM
 - Bower
 - AngularJS 1.6.x
-
-
