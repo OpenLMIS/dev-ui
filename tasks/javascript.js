@@ -60,7 +60,8 @@ module.exports = function(grunt){
     grunt.registerTask('javascript:build', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir),
         toplevel = null, // container for UglifyJS
-        source_map = UglifyJS.SourceMap(),
+        sourceMap = UglifyJS.SourceMap(),
+        sourceMapGenerator = sourceMap.get(),
         ignorePatterns = [ // storing patterns to ignore
             'app.js' // must be last
         ];
@@ -81,19 +82,21 @@ module.exports = function(grunt){
         addFiles('app.js');
 
         toplevel.figure_out_scope();
-        var compressed_ast = toplevel.transform(UglifyJS.Compressor());
+        var compressed_ast = toplevel.transform(UglifyJS.Compressor({
+            warnings: false
+        }));
         var stream = UglifyJS.OutputStream({
-            source_map: source_map
+            source_map: sourceMap
         });
         compressed_ast.print(stream);
-
-        var compressedJS = stream.toString() // compressed version of openlmis.js
-
+        
+        var javascript = stream.toString();
         if(!grunt.option('production')){
-            compressedJS += "\n" + convertSourceMap.fromJSON(source_map.toString()).toComment();
+            javascript += "\n" + "//# sourceMappingURL=" + fileName + '.map';
         }
         
-        fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), compressedJS);
+        fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), javascript);
+        fs.writeFileSync(path.join(grunt.option('app.dest'), fileName + '.map'), sourceMap.toString());
 
         // Helper function to keep ordered file adding clear
         function addFiles(pattern){
@@ -106,7 +109,7 @@ module.exports = function(grunt){
                     filename: file,
                     toplevel:toplevel
                 });
-                source_map.get().setSourceContent(file, code);
+                sourceMapGenerator.setSourceContent(file, code);
             });
             // Don't let previously added patterns be added again
             ignorePatterns.push(pattern);
