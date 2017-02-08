@@ -24,7 +24,8 @@ To run a version of the dev-ui image that updated from your file system, use the
 
 // <dev-ui> location of dev-ui files, use $(pwd)
 // <app-dir> location of example application files (optional)
-> docker run --it --rm -v <dev-ui>:/dev-ui -v <app-dir>:/app openlmis/dev-ui
+// NOTE: This command doesn't include port mapping
+> docker run -it --rm -v <dev-ui>:/dev-ui -v <app-dir>:/app openlmis/dev-ui
 
 // If you are working with an application, you will want to install the dev-ui package into the application directory
 $ cd /app
