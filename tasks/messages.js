@@ -1,7 +1,9 @@
 module.exports = function(grunt){
     var path = require('path'),
     glob = require('glob'),
-    fs = require('fs-extra');
+    fs = require('fs-extra'),
+    extend = require('extend'),
+    eachAppDir = require('../ordered-application-directory.js');
 
     grunt.registerTask('messages', ['messages:make']);
 
@@ -10,22 +12,26 @@ module.exports = function(grunt){
         fs.emptyDir(tmpDir);
 
         var messages = {};
-        glob.sync('messages*', {
-            cwd: 'src/main/resources/'
-        }).forEach(function(filename){
-            var filepath = path.join(process.cwd(), 'src/main/resources', filename);
-            var messageObj = grunt.file.readJSON(filepath);
-            var fileLanguage = filename.substr(filename.lastIndexOf('.')-2, 2);
-            messages[fileLanguage] = messageObj;
+        eachAppDir(function(dir) {
+            dir += '/src/main/webapp/';
+
+            glob.sync('**/messages*', {
+                cwd: dir
+            }).forEach(function (filename) {
+                var filepath = path.join(dir, filename);
+                var messageObj = grunt.file.readJSON(filepath);
+                var fileLanguage = filename.substr(filename.lastIndexOf('.') - 2, 2);
+                messages[fileLanguage] = extend(true, messages[fileLanguage], messageObj);
+            });
         });
 
         var fileContents = '(function(){' + '\n';
         fileContents += 'angular.module("openlmis-config").constant("OPENLMIS_MESSAGES", ' + JSON.stringify(messages) + ');' + '\n';
-        fileContents += '})();'
+        fileContents += '})();';
 
         grunt.file.write(path.join(tmpDir, 'messages.js'), fileContents, {
             encoding: 'utf8'
         });
 
     });
-}
+};
