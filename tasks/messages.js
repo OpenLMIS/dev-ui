@@ -6,7 +6,6 @@ module.exports = function(grunt){
     grunt.registerTask('messages', ['messages:make']);
 
     grunt.registerTask('messages:make', function(){
-        var fse = require('fs-extra');
         var tmpDir = path.join(process.cwd(), '.tmp', 'js');
         fs.emptyDir(tmpDir);
 
