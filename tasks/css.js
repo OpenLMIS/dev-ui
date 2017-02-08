@@ -3,20 +3,16 @@ module.exports = function(grunt){
     var fs = require('fs-extra'),
     replace = require('replace-in-file'),
     path = require('path'),
-    Concat = require('concat-with-sourcemaps'),
-    convertSourceMap = require('convert-source-map'),
     wiredep = require('wiredep'),
     glob = require('glob'),
-    sass = require('node-sass')
-    inEachAppDir = require('../ordered-application-directory'),
-    fileReplace = require('./replace.js')(grunt);
+    sass = require('node-sass'),
+    inEachAppDir = require('../ordered-application-directory');
 
     var tmpDir = 'css';
-    var fileName = 'openlmis.css';
 
-    grunt.registerTask('css', ['css:copy', 'css:replace', 'css:build']);
+    grunt.registerTask('openlmis.css', ['openlmis.css:copy', 'openlmis.css:build']);
 
-    grunt.registerTask('css:copy', function(){
+    grunt.registerTask('openlmis.css:copy', function(){
         var dest = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
 
         inEachAppDir(function(dir){
@@ -48,41 +44,47 @@ module.exports = function(grunt){
         process.chdir(cwd);
     });
 
-    grunt.registerTask('css:replace', function(){
-        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
-        fileReplace('**/*.{scss,css}', tmp);
-    });
-
-    grunt.registerTask('css:build', function(){
+    grunt.registerTask('openlmis.css:build', function(){
         var dest = grunt.option('app.dest');
         var tmp = path.join(grunt.option('app.tmp'), tmpDir);
+        var generateSrcMap = !grunt.option('production');
 
         buildScss('openlmis.scss', tmp);
 
         var sassResult = sass.renderSync({
             file: path.join(tmp, 'openlmis.scss'),
+	        sourceMap: generateSrcMap,
+            sourceMapContents: generateSrcMap,
+            outFile: 'openlmis.css',
+            outputStyle: 'compressed',
             includePaths: getIncludePaths()
         });
 
-        fs.writeFileSync(path.join(dest, fileName), sassResult.css);
+        var sourceMap = cleanTmpSourceMapPaths(sassResult.map, tmp);
 
-        // remove non-relative strings because our file structure is flat
+        fs.writeFileSync(path.join(dest, 'openlmis.css'), sassResult.css);
+        fs.writeFileSync(path.join(dest, 'openlmis.css.map'), sourceMap);
+
+        // remove non-relative strings because our file structure is flatter
         replace.sync({
-            files: path.join(dest, fileName),
-            replace: /\.\.\//g,
-            with: ''
+           files: [path.join(dest, 'openlmis.css'), path.join(dest, 'openlmis.css.map')],
+           replace: /\.\.\//g,
+           with: ''
         });
+
     });
 
     function buildScss(fileName, dest){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
 
-        var concat = new Concat(true, fileName, '\n');
+        var imports = '';
         // Set general file patterns we want to ignore
         var ignorePatterns = [];
         // Helper function to keep ordered file adding clear
         function addFiles(pattern, extraIgnore){
-            if (!extraIgnore) extraIgnore = [];
+            if (!extraIgnore) {
+                extraIgnore = [];
+            }
 
             glob.sync(pattern, {
                 cwd: tmp,
@@ -93,8 +95,7 @@ module.exports = function(grunt){
                 // Don't let previously added patterns be added again
                 ignorePatterns.push(pattern);
                 
-                var contentBuffer = fs.readFileSync(filePath);
-                concat.add(file, contentBuffer);
+                imports += '@import "' + filePath + '";\n';
             });
         }
 
@@ -107,14 +108,12 @@ module.exports = function(grunt){
         addFiles('**/*.scss');
         addFiles('**/*.css');
 
-        // TODO: Write/add sourcemaps
-
-        fs.writeFileSync(path.join(dest, fileName), concat.content);
+        fs.writeFileSync(path.join(dest, fileName), imports);
     }
 
-    // Include paths are the directories imported sass files live in
-    // so that import statements in the files will work correctly
     function getIncludePaths(){
+        // Include paths are the directories imported sass files live in
+        // so that import statements in the files will work correctly
         var includePaths = [];
         
         var cwd = process.cwd();
@@ -129,4 +128,20 @@ module.exports = function(grunt){
         process.chdir(cwd);
         return includePaths;
     }
+
+    function cleanTmpSourceMapPaths(sassMap, tmp) {
+        var map = JSON.parse(sassMap);
+
+        for (var i = 0; i < map.sources.length; i++) {
+            var source = map.sources[i];
+            // Remove .tmp/, .tmp/css and .tmp/css/src
+            source = source.replace(path.join(tmp, "src/"), "");
+            source = source.replace(path.join(tmp, "/"), "");
+            source = source.replace(path.join(grunt.option('app.tmp'), "/"), "");
+            map.sources[i] = source;
+        }
+
+        return JSON.stringify(map);
+    }
 }
+
