@@ -5,8 +5,8 @@ module.exports = function(grunt){
     grunt.registerTask('languages', ['languages:make']);
 
     grunt.registerTask('languages:make', function(){
-        var jsDir = path.join(process.cwd(), '.tmp', 'js');
-        var messagesDir = path.join(process.cwd(), 'src/main/resources/');
+        var jsDir = path.join(process.cwd(), grunt.option('app.tmp'), 'js');
+        var messagesDir = path.join(process.cwd(), grunt.option('app.tmp'), 'messages');
 
         var languages = {};
         glob.sync('messages*', {

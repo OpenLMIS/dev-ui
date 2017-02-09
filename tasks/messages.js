@@ -7,8 +7,9 @@ module.exports = function(grunt){
 
     grunt.registerTask('messages', ['messages:merge', 'messages:make']);
 
-    grunt.registerTask('messages:merge', function(){ // step 1
-        var tmpDir = path.join(process.cwd(), '.tmp', 'messages');
+    var tmpDir = path.join(process.cwd(), '.tmp', 'messages');
+
+    grunt.registerTask('messages:merge', function(){
         fs.emptyDir(tmpDir);
 
         var messages = {};
@@ -16,8 +17,10 @@ module.exports = function(grunt){
             dir = path.join(dir, grunt.option('app.src'));
             if(!fs.existsSync(dir))
                 return;
-            glob.sync('*/messages_en.json', {
-                cwd: dir
+            glob.sync('messages_en.json', {
+                cwd: dir,
+                matchBase: true,
+                ignore: [path.join(tmpDir, '*')]
             }).forEach(function (filename) {
                 var filepath = path.join(dir, filename);
                 var messageObj = grunt.file.readJSON(filepath);
@@ -31,15 +34,15 @@ module.exports = function(grunt){
 
     });
 
-    grunt.registerTask('messages:make', function(){ // step 3
-        var tmpDir = path.join(process.cwd(), '.tmp', 'js');
-        fs.emptyDir(tmpDir);
+    grunt.registerTask('messages:make', function(){
+        var jsDir = path.join(process.cwd(), '.tmp', 'js');
+        fs.emptyDir(jsDir);
 
         var messages = {};
         glob.sync('messages*', {
-            cwd: 'src/main/resources/'
+            cwd: tmpDir
         }).forEach(function(filename){
-            var filepath = path.join(process.cwd(), 'src/main/resources', filename);
+            var filepath = path.join(tmpDir, filename);
             var messageObj = grunt.file.readJSON(filepath);
             var fileLanguage = filename.substr(filename.lastIndexOf('.')-2, 2);
             messages[fileLanguage] = messageObj;
@@ -49,7 +52,7 @@ module.exports = function(grunt){
         fileContents += 'angular.module("openlmis-config").constant("OPENLMIS_MESSAGES", ' + JSON.stringify(messages) + ');' + '\n';
         fileContents += '})();';
 
-        grunt.file.write(path.join(tmpDir, 'messages.js'), fileContents, {
+        grunt.file.write(path.join(jsDir, 'messages.js'), fileContents, {
             encoding: 'utf8'
         });
 
