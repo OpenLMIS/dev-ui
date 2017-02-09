@@ -16,7 +16,7 @@ module.exports = function(grunt){
         });
 
         var fileContents = '(function(){' + '\n';
-        fileContents += 'angular.module("openlmis-config").constant("OPENLMIS_LANGUAGES", ' + '[\'en\']' + ');' + '\n';
+        fileContents += 'angular.module("openlmis-config").constant("OPENLMIS_LANGUAGES", ' +  JSON.stringify(languages) + ');' + '\n';
         fileContents += '})();';
 
         grunt.file.write(path.join(tmpDir, 'languages.js'), fileContents, {
