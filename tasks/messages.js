@@ -14,9 +14,6 @@ module.exports = function(grunt){
 
         var messages = {};
         eachAppDir(function(dir) {
-            dir = path.join(dir, grunt.option('app.src'));
-            if(!fs.existsSync(dir))
-                return;
             glob.sync('messages_en.json', {
                 cwd: dir,
                 matchBase: true,
