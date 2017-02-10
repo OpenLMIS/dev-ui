@@ -3,7 +3,8 @@ module.exports = function(grunt){
         glob = require('glob'),
         fs = require('fs-extra'),
         extend = require('extend'),
-        eachAppDir = require('../ordered-application-directory.js');
+        eachAppDir = require('../ordered-application-directory.js'),
+        execSync = require('child_process').execSync;
 
     grunt.registerTask('messages', ['messages:merge', 'messages:make']);
 
@@ -29,6 +30,9 @@ module.exports = function(grunt){
             encoding: 'utf8'
         });
 
+        execSync('./sync_transifex.sh', {
+            stdio: 'inherit'
+        });
     });
 
     grunt.registerTask('messages:make', function(){
@@ -49,7 +53,7 @@ module.exports = function(grunt){
         fileContents += 'angular.module("openlmis-config").constant("OPENLMIS_MESSAGES", ' + JSON.stringify(messages) + ');' + '\n';
         fileContents += '})();';
 
-        grunt.file.write(path.join(jsDir, 'messages.js'), fileContents, {
+        grunt.file.write('messages.js', fileContents, {
             encoding: 'utf8'
         });
 
