@@ -124,6 +124,7 @@ module.exports = function(grunt){
         addFiles('bower_components/**/*.css');
 
         addFiles('**/mixins.scss');
+        addFiles('**/*.mixins.scss');
         addFiles('**/*.scss');
         addFiles('**/*.css');
 
