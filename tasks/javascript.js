@@ -82,21 +82,37 @@ module.exports = function(grunt){
         addFiles('app.js');
 
         toplevel.figure_out_scope();
-        var compressed_ast = toplevel.transform(UglifyJS.Compressor({
-            warnings: false
-        }));
-        var stream = UglifyJS.OutputStream({
-            source_map: sourceMap
-        });
-        compressed_ast.print(stream);
-        
-        var javascript = stream.toString();
-        if(!grunt.option('production')){
+        if(grunt.option('production')){
+            // Compress code
+            var compressed_ast = toplevel.transform(UglifyJS.Compressor({
+                warnings: false
+            }));
+            // Mangle code (which just breaks currently)
+            // compressed_ast.figure_out_scope();
+            // compressed_ast.compute_char_frequency();
+            // compressed_ast.mangle_names();
+            
+            // Print code as small as possible
+            var stream = UglifyJS.OutputStream({}); // not the debug settings
+            compressed_ast.print(stream);
+
+            fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), stream.toString());
+        } else {
+            var stream = UglifyJS.OutputStream({
+                source_map: sourceMap,
+                beautify: true,
+                comments: true
+            });
+            toplevel.print(stream);
+            
+            var javascript = stream.toString();
             javascript += "\n" + "//# sourceMappingURL=" + fileName + '.map';
+
+            fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), javascript);
+            fs.writeFileSync(path.join(grunt.option('app.dest'), fileName + '.map'), sourceMap.toString());
         }
+
         
-        fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), javascript);
-        fs.writeFileSync(path.join(grunt.option('app.dest'), fileName + '.map'), sourceMap.toString());
 
         // Helper function to keep ordered file adding clear
         function addFiles(pattern){
