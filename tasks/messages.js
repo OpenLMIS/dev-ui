@@ -53,7 +53,7 @@ module.exports = function(grunt){
         fileContents += 'angular.module("openlmis-config").constant("OPENLMIS_MESSAGES", ' + JSON.stringify(messages) + ');' + '\n';
         fileContents += '})();';
 
-        grunt.file.write('messages.js', fileContents, {
+        grunt.file.write(path.join(jsDir, 'messages_en.js'), fileContents, {
             encoding: 'utf8'
         });
 
