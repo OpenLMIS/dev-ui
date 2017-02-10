@@ -6,7 +6,7 @@ module.exports = function(grunt){
         eachAppDir = require('../ordered-application-directory.js'),
         execSync = require('child_process').execSync;
 
-    grunt.registerTask('messages', ['messages:merge', 'messages:make']);
+    grunt.registerTask('messages', ['messages:merge', 'messages:transifex', 'messages:make']);
 
     var tmpDir = path.join(process.cwd(), '.tmp', 'messages');
 
@@ -29,12 +29,14 @@ module.exports = function(grunt){
         grunt.file.write(path.join(tmpDir, 'messages_en.json'), JSON.stringify(messages), {
             encoding: 'utf8'
         });
-
+    });
+    
+    grunt.registerTask('messages:transifex', function(){
         execSync('./sync_transifex.sh', {
             stdio: 'inherit'
         });
     });
-
+    
     grunt.registerTask('messages:make', function(){
         var jsDir = path.join(process.cwd(), '.tmp', 'js');
         fs.emptyDir(jsDir);

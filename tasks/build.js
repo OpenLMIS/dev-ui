@@ -1,5 +1,5 @@
 module.exports = function(grunt){
-
+    grunt.loadNpmTasks('grunt-force-task');
     var keepAlive = false;
 
     grunt.registerTask('build', function(){
@@ -14,7 +14,7 @@ module.exports = function(grunt){
     var firstRun = true;
     grunt.registerTask('build:app', function(){
         var buildTasks = [
-            'messages',
+            'force:messages',
             'languages',
             'html',
             'javascript',
