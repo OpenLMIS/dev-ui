@@ -93,6 +93,7 @@ module.exports = function(grunt){
         // Set general file patterns we want to ignore
         var ignorePatterns = [];
         // Helper function to keep ordered file adding clear
+        // We are creating an SCSS file that imports all the others
         function addFiles(pattern, extraIgnore){
             if (!extraIgnore) {
                 extraIgnore = [];
@@ -106,8 +107,14 @@ module.exports = function(grunt){
 
                 // Don't let previously added patterns be added again
                 ignorePatterns.push(pattern);
-                
-                imports += '@import "' + filePath + '";\n';
+
+                // regular css files have to be imported without the extension (to be embedded)
+                var fileToInclude = filePath;
+                if (fileToInclude.endsWith('.css')) {
+                    fileToInclude = fileToInclude.substring(0, fileToInclude.length - 4);
+                }
+
+                imports += '@import "' + fileToInclude + '";\n';
             });
         }
 
