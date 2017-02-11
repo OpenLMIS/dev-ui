@@ -10,9 +10,11 @@ module.exports = function(grunt){
             buildTasks.unshift('build:clean');
         }
 
-        // If the serve command was passed
+        // If the serve command was passed,
+        // don't let the task end, because
+        // the serve will end...
         if(grunt.option('serve')){
-            this.async();
+            buildTasks.push('build:keepAlive');
         }
 
         grunt.task.run(buildTasks);
@@ -49,6 +51,10 @@ module.exports = function(grunt){
 
         grunt.task.run(buildTasks);
 
+    });
+
+    grunt.registerTask('build:keepAlive', function(){
+        this.async();
     });
 
 }
