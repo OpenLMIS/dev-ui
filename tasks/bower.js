@@ -18,7 +18,7 @@ module.exports = function(grunt){
 		var cwd = process.cwd();
 		process.chdir(grunt.option('app.tmp'));
 
-		grunt.file.write('bower.json', JSON.stringify(bowerObj));
+		grunt.file.write('bower.json', JSON.stringify(bowerObj, null, 2));
 
 		exec('rm -rf bower_components');
 		exec('bower install --allow-root', {
