@@ -21,7 +21,9 @@ module.exports = function(grunt){
 		grunt.file.write('bower.json', JSON.stringify(bowerObj));
 
 		exec('rm -rf bower_components');
-		exec('bower install --allow-root');
+		exec('bower install --allow-root', {
+			stdio: 'inherit' // Shows output as its generated
+		});
 
 		process.chdir(cwd);
 	});
