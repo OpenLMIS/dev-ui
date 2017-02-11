@@ -6,9 +6,16 @@ module.exports = function(grunt){
         eachAppDir = require('../ordered-application-directory.js'),
         execSync = require('child_process').execSync;
 
-    grunt.registerTask('messages', ['messages:merge', 'messages:transifex', 'messages:make']);
+    grunt.registerTask('messages', function(){
+        if(grunt.option('syncTransifex')){
+            grunt.task.run(['messages:merge', 'messages:transifex', 'messages:make']);
+        } else {
+            grunt.task.run(['messages:merge', 'messages:make']);
+        }
+    });
 
     var tmpDir = path.join(process.cwd(), '.tmp', 'messages');
+    var jsDir = path.join(process.cwd(), grunt.option('app.tmp'), 'js');
 
     grunt.registerTask('messages:merge', function(){
         fs.emptyDir(tmpDir);
@@ -38,10 +45,9 @@ module.exports = function(grunt){
     });
     
     grunt.registerTask('messages:make', function(){
-        var jsDir = path.join(process.cwd(), '.tmp', 'js');
-        fs.emptyDir(jsDir);
-
         var messages = {};
+        var languages = {};
+
         glob.sync('messages*', {
             cwd: tmpDir
         }).forEach(function(filename){
@@ -49,9 +55,16 @@ module.exports = function(grunt){
             var messageObj = grunt.file.readJSON(filepath);
             var fileLanguage = filename.substr(filename.lastIndexOf('.')-2, 2);
             messages[fileLanguage] = messageObj;
+
+            if(messageObj && messageObj['locale.label']){
+                languages[fileLanguage] = messageObj['locale.label'];
+            } else {
+                languages[fileLanguage] = fileLanguage;
+            }
         });
 
         var fileContents = '(function(){' + '\n';
+        fileContents += 'angular.module("openlmis-config").constant("OPENLMIS_LANGUAGES", ' +  JSON.stringify(languages) + ');' + '\n';
         fileContents += 'angular.module("openlmis-config").constant("OPENLMIS_MESSAGES", ' + JSON.stringify(messages) + ');' + '\n';
         fileContents += '})();';
 
@@ -60,4 +73,5 @@ module.exports = function(grunt){
         });
 
     });
+    
 };

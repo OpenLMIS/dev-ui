@@ -22,13 +22,12 @@ module.exports = function(grunt){
 
     grunt.registerTask('build:clean', [
         'clean',
-        'bower',
-        'force:messages',
-        'languages'
+        'bower'
         ]);
 
     grunt.registerTask('build:app', function(){
         var buildTasks = [
+            'messages',
             'html',
             'javascript',
             'css',
