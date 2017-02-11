@@ -1,21 +1,32 @@
 module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-force-task');
-    var keepAlive = false;
-
+    
     grunt.registerTask('build', function(){
-        // If the serve command was passed
-        if(grunt.option('serve')){
-            keepAlive = true;
+        var buildTasks = [
+            'build:app',
+        ];
+
+        if(!grunt.option('noClean')){
+            buildTasks.unshift('build:clean');
         }
 
-        grunt.task.run('build:app');
+        // If the serve command was passed
+        if(grunt.option('serve')){
+            this.async();
+        }
+
+        grunt.task.run(buildTasks);
     });
 
-    var firstRun = true;
+    grunt.registerTask('build:clean', [
+        'clean',
+        'bower',
+        'force:messages',
+        'languages'
+        ]);
+
     grunt.registerTask('build:app', function(){
         var buildTasks = [
-            'force:messages',
-            'languages',
             'html',
             'javascript',
             'css',
@@ -23,12 +34,6 @@ module.exports = function(grunt){
             'index.html',
             'appcache'
         ];
-
-        if(firstRun){
-            buildTasks.unshift('bower');
-            buildTasks.unshift('clean');
-            firstRun = false;
-        }
 
         if(!grunt.option('noTest')){
             buildTasks.push('karma:unit');
@@ -42,16 +47,8 @@ module.exports = function(grunt){
             buildTasks.push('docs');
         }
 
-        if(keepAlive){
-            buildTasks.push('build:keepAlive');
-        }
-
         grunt.task.run(buildTasks);
 
-    });
-
-    grunt.registerTask('build:keepAlive', function(){
-        this.async();
     });
 
 }
