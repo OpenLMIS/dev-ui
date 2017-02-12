@@ -30,6 +30,7 @@ module.exports = function(grunt){
     grunt.registerTask('messages:merge', function(){
         eachAppDir(function(dir) {
             var messages = {};
+
             glob.sync('messages_en.json', {
                 cwd: dir,
                 matchBase: true,
@@ -42,7 +43,7 @@ module.exports = function(grunt){
 
             if(Object.keys(messages).length > 0){
                 grunt.file.write(
-                    path.join(tmpDir, getTransifexProjectName(dir), 'messages_en.json'),
+                    path.join(getMessageDir(dir), 'messages_en.json'),
                     JSON.stringify(messages, null, 2),
                     {
                         encoding: 'utf8'
@@ -53,17 +54,25 @@ module.exports = function(grunt){
     });
     
     grunt.registerTask('messages:transifex', function(){
-        var cwd = process.cwd();
-        fs.readdirSync(tmpDir).forEach(function(name){
-            process.chdir(path.join(tmpDir, name));
+        eachAppDir(function(dir){
+            var transifexProjectName = getTransifexProjectName(dir);
 
-            console.log('# transifex: ' + name);
-            var transifexProjectName = name; // We set the directory name to the transifex project name
+            if(!transifexProjectName){
+                console.log('- no transifex project for: ' + dir);
+                return ;
+            }
+
+            console.log('# transifex: ' + transifexProjectName);
             var filePattern = 'messages_<lang>.json';
             var sourceFile = 'messages_en.json';
 
-            var transifexUser = grunt.option('transifexUser');
-            var transifexPassword = grunt.option('transifexPassword');
+            var transifexUser = process.env.TRANSIFEX_USER || grunt.option('transifexUser');
+            var transifexPassword = process.env.TRANSIFEX_PASSWORD || grunt.option('transifexPassword');
+
+            if(!transifexUser || !transifexPassword){
+                console.log('no user or password, skipping');
+                return ;
+            }
 
             execCommands([
                 "rm -rf .tx",
@@ -73,13 +82,6 @@ module.exports = function(grunt){
                 "tx pull -a -f"
                 ]);
         });
-
-        process.chdir(cwd);
-
-
-        // execSync('./sync_transifex.sh', {
-        //     stdio: 'inherit'
-        // });
     });
 
     function execCommands(commands){
@@ -95,7 +97,7 @@ module.exports = function(grunt){
         var languages = {};
 
         eachAppDir(function(dir){
-            var messagesDir = path.join(tmpDir, getTransifexProjectName(dir));
+            var messagesDir = getMessageDir(dir);
 
             glob.sync('messages*', {
                 cwd: messagesDir
@@ -125,12 +127,21 @@ module.exports = function(grunt){
     });
 
     function getTransifexProjectName(dir){
-        var name = dir.substr(dir.lastIndexOf('/'));
-        var dirConfig = grunt.file.readJSON('config.json');
+        var dirConfig = grunt.file.readJSON(path.join(dir, 'config.json'));
         if(dirConfig && dirConfig['transifexProjectName']){
-            name = dirConfig['transifexProjectName'];
+            return dirConfig['transifexProjectName'];
+        } else {
+            return false;
         }
-        return name;
+    }
+
+    function getMessageDir(dir){
+        var transifexProjectName = getTransifexProjectName(dir);
+        if(transifexProjectName){
+            return path.join(tmpDir, transifexProjectName);
+        } else {
+            return path.join(tmpDir, dir.substr(dir.lastIndexOf('/')));
+        }
     }
 
 };
