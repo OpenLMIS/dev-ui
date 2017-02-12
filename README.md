@@ -104,6 +104,9 @@ Passing flags in with the grunt command will overwrite base options set within.
 - `--noDocs` disables the generation of the JS documentation when running `grunt build`
 - `--noStyleguide` disables the generation of the KSS styleguide when running `grunt build`
 - `--serve` will run the development server along with any other command (and will keep the process alive). When this command is used, any URL configurations that start with `http` will be replaced with a proxy URL which will add CORS headers to the actual requested URL.
+- `--syncTransifex` will extend the `grunt messages` command, and attempt to sync each the compiled messages_en.json file for each application to Transifex. The sync will only occur if:
+-- The application directory has a `transifexProjectName` defined in the `config.json`
+-- A transifex username and password are supplied either as environment variables (`TRANSIFEX_USER`, `TRANSIFEX_PASSWORD`) or command line flags (`--transifexUser=`, `--transifexPassword=`)
 
 ### Proxy URLs
 Working with OpenLMIS servers or services will require CORS Headers to get data across domains. To ease development the OpenLMIS-UI dev server will create a local proxy URL and replace the variable with a foreign URL.
