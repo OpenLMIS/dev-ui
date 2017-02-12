@@ -62,6 +62,8 @@ module.exports = function(grunt){
                 return ;
             }
 
+            process.chdir(getMessageDir(dir));
+
             console.log('# transifex: ' + transifexProjectName);
             var filePattern = 'messages_<lang>.json';
             var sourceFile = 'messages_en.json';
