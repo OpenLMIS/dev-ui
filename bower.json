@@ -18,7 +18,6 @@
     "jquery": "^3",
     "angular-local-storage": "*",
     "underscore": "*",
-    "angular-bootstrap": "*",
     "jquery-ui": "^1",
     "angular-ui-router": "*",
     "bootstrap-sass": "^3.3.7",
