@@ -12,11 +12,12 @@ module.exports = function(grunt){
     glob = require('glob'),
     inEachAppDir = require('../ordered-application-directory'),
     fileReplace = require('./replace.js')(grunt);
-    
+
     var tmpDir = 'js';
     var fileName = 'openlmis.js';
 
-    grunt.registerTask('javascript', ['javascript:copy', 'javascript:replace', 'javascript:build']);
+    grunt.registerTask('javascript', ['javascript:copyright', 'javascript:copy',
+                                      'javascript:replace', 'javascript:build']);
 
     grunt.registerTask('javascript:copy', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
@@ -91,7 +92,7 @@ module.exports = function(grunt){
             // compressed_ast.figure_out_scope();
             // compressed_ast.compute_char_frequency();
             // compressed_ast.mangle_names();
-            
+
             // Print code as small as possible
             var stream = UglifyJS.OutputStream({}); // not the debug settings
             compressed_ast.print(stream);
@@ -104,7 +105,7 @@ module.exports = function(grunt){
                 comments: true
             });
             toplevel.print(stream);
-            
+
             var javascript = stream.toString();
             javascript += "\n" + "//# sourceMappingURL=" + fileName + '.map';
 
@@ -112,7 +113,7 @@ module.exports = function(grunt){
             fs.writeFileSync(path.join(grunt.option('app.dest'), fileName + '.map'), sourceMap.toString());
         }
 
-        
+
 
         // Helper function to keep ordered file adding clear
         function addFiles(pattern){
@@ -132,4 +133,40 @@ module.exports = function(grunt){
         }
     });
 
+    grunt.registerTask('javascript:copyright', function(){
+        var copyrightFile = grunt.option('license-header');
+        if (!copyrightFile) {
+            copyrightFile = 'LICENSE-HEADER';
+        }
+
+        if (!fs.existsSync(copyrightFile)) {
+            grunt.log.writeln("No copyright header found. Skipping copyright check.");
+            return;
+        }
+
+        var copyright = fs.readFileSync(copyrightFile, "utf8");
+
+        inEachAppDir(function(dir) {
+            var src = grunt.option('app.src');
+            var cwd = path.join(dir, src);
+            var failed = false;
+
+            glob.sync('**/*.js', {
+                cwd: cwd
+            }).forEach(function(file){
+                var filePath = path.join(cwd, file);
+                var fileContents = fs.readFileSync(filePath, "utf8");
+
+                if (!fileContents.startsWith(copyright)) {
+                    failed = true;
+                    grunt.log.error(filePath + ' does not start with the copyright header.');
+                }
+            });
+
+            if (failed) {
+                grunt.fail.warn('Javascript files did not pass copyright check. '
+                    + 'Files must start with: ' + copyrightFile + '.');
+            }
+        });
+    });
 }
