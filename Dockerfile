@@ -18,6 +18,7 @@ COPY package.json .
 COPY bower.json .
 COPY config.json .
 COPY ordered-application-directory.js .
+COPY LICENSE-HEADER .
 COPY tasks/* ./tasks/
 
 # Port 9000 used for dev server

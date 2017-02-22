@@ -149,15 +149,26 @@ module.exports = function(grunt){
     });
 
     grunt.registerTask('javascript:copyright', function(){
+        if (grunt.option('ignore-copyright')) {
+            grunt.log.writeln("--ignore-copyright passed, skipping copyright check.");
+            return;
+        }
+
         var copyrightFile = grunt.option('license-header');
         if (!copyrightFile) {
             copyrightFile = 'LICENSE-HEADER';
         }
 
         if (!fs.existsSync(copyrightFile)) {
-            grunt.log.writeln("No copyright header found. Skipping copyright check.");
+            copyrightFile = 'node_modules/dev-ui/LICENSE-HEADER';
+        }
+
+        if (!fs.existsSync(copyrightFile)) {
+            grunt.fail.warn('No copyright header found.');
             return;
         }
+
+        grunt.log.writeln('Checking copyright headers against ' + copyrightFile);
 
         var copyright = fs.readFileSync(copyrightFile, "utf8");
 
