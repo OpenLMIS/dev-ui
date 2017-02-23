@@ -99,6 +99,14 @@ module.exports = function(grunt){
             with: ''
         });
 
+        // replace cache busting which breaks appcache, needed until this is fixed:
+        // https://github.com/FortAwesome/Font-Awesome/issues/3286
+        replace.sync({
+            files: [path.join(dest, cssFileName), path.join(dest, srcMapFileName)],
+            from: /(fontawesome-webfont(\.[a-zA-Z0-9]{3,5})?)\?(\#iefix\&)?v=[0-9\.]{5}(\#fontawesomeregular)?/g,
+            to: '$1'
+        });
+
     });
 
     function buildScss(fileName, dest){
@@ -150,7 +158,7 @@ module.exports = function(grunt){
     // so that import statements in the files will work correctly
     function getIncludePaths(){
         var includePaths = [];
-        
+
         var cwd = process.cwd();
         process.chdir(grunt.option('app.tmp'));
 
@@ -179,4 +187,3 @@ module.exports = function(grunt){
         return JSON.stringify(map);
     }
 }
-
