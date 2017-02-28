@@ -47,8 +47,7 @@
     "bootstrap-sass": {
       "main": [
         "assets/stylesheets/_bootstrap.scss",
-        "assets/javascripts/bootstrap.js",
-        "assets/fonts/bootstrap/*"
+        "assets/javascripts/bootstrap.js"
       ]
     },
     "font-awesome": {
