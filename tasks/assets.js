@@ -34,8 +34,12 @@ module.exports = function(grunt){
         });
 
         // Get images from each place
-        inEachAppDir(function(dir){
-            var src = path.join(dir, 'src/main/webapp');
+        inEachAppDir(function(dir, dirConfig){
+            var srcDir = grunt.option('app.src');
+            if(dirConfig && dirConfig.app && dirConfig.app.src){
+                srcDir = dirConfig.app.src;
+            }
+            var src = path.join(dir, srcDir);
             glob.sync('{' + assetPatterns.join(',') + '}', {
                 cwd: src
             }).forEach(function(file){

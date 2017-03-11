@@ -19,6 +19,7 @@
     fs = require('fs');
 
     var applicationDirectories = [];
+    var applicationDirectoryConfigurations = [];
 
     var config = require(path.join(process.cwd(), 'config.json'));
     if(config && config.orderedBuildDirectories && Array.isArray(config.orderedBuildDirectories)){
@@ -35,14 +36,32 @@
         applicationDirectories.push(process.cwd())
     }
 
+    // Get raw configuration JSON for each directory
+    inEachAppDir(function(dir){
+        var configPath = path.join(dir, 'config.json');
+        if(fs.existsSync(configPath)){
+            var dirConfig = require(configPath);
+            applicationDirectoryConfigurations[dir] = dirConfig;
+        }
+    });
+
     // A function that will call the provided function in each directory
     // that is defined in orderedBuildDirectories in config.js
-    module.exports = function(fn){
+    module.exports = inEachAppDir;
+
+    function inEachAppDir(fn){
         var cwd = process.cwd();
 
         applicationDirectories.forEach(function(dir){
+            var dirConfig = {};
             if(fs.existsSync(dir)){
-                fn(dir);
+                if(applicationDirectoryConfigurations[dir]){
+                    dirConfig = applicationDirectoryConfigurations[dir];
+                }
+                
+                process.chdir(dir);
+
+                fn(dir, dirConfig);
             }
         });
         process.chdir(cwd);
