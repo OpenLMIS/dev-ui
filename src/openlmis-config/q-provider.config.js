@@ -13,32 +13,12 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-module.exports = function(grunt){
-    var path = require('path');
+(function() {
+    'use strict';
 
-    grunt.loadNpmTasks('grunt-ngdocs');
-
-    var dest = grunt.option('docs.dest');
-    var title = grunt.option('docs.title');
-    var src = path.join(grunt.option('app.tmp'), 'javascript', 'src');
-
-    grunt.config('ngdocs', {
-        options:{
-            dest: dest,
-            title: title
-        },
-        api: {
-            src: [
-                path.join(src, "**/*.js"),
-                "!" + path.join(src, "bower_components/**/*")
-            ],
-            title: "API"
-        }
+    angular.module('openlmis-config')
+    .config(function($qProvider){
+        $qProvider.errorOnUnhandledRejections(false);
     });
 
-    grunt.registerTask('docs', function(){
-        if(!grunt.option('appOnly') && !grunt.option('noDocs')){
-            grunt.task.run('ngdocs');
-        }
-    });
-}
+})();

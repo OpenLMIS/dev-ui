@@ -103,8 +103,8 @@ module.exports = function(grunt){
         // https://github.com/FortAwesome/Font-Awesome/issues/3286
         replace.sync({
             files: [path.join(dest, cssFileName), path.join(dest, srcMapFileName)],
-            from: /(fontawesome-webfont(\.[a-zA-Z0-9]{3,5})?)\?(\#iefix\&)?v=[0-9\.]{5}(\#fontawesomeregular)?/g,
-            to: '$1'
+            replace: /(fontawesome-webfont(\.[a-zA-Z0-9]{3,5})?)\?(\#iefix\&)?v=[0-9\.]{5}(\#fontawesomeregular)?/g,
+            with: '$1'
         });
 
     });

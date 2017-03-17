@@ -28,30 +28,37 @@ module.exports = function(grunt){
     inEachAppDir = require('../ordered-application-directory'),
     fileReplace = require('./replace.js')(grunt);
 
-    var tmpDir = 'js';
+    var tmpDir = 'javascript';
     var fileName = 'openlmis.js';
 
-    grunt.registerTask('javascript', ['javascript:copyright', 'javascript:copy',
-                                      'javascript:replace', 'javascript:build']);
+    grunt.registerTask('javascript', [
+        'javascript:copyright',
+        'javascript:copy',
+        'javascript:app.js',
+        'javascript:replace',
+        'javascript:build'
+        ]);
 
     grunt.registerTask('javascript:copy', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
 
-        inEachAppDir(function(dir){
+        inEachAppDir(function(dir, dirConfig){
             var src = grunt.option('app.src');
-            var config = grunt.file.readJSON(path.join(dir, 'config.json'));
-            if(config && config.app && config.app.src) src = config.app.src;
+            if(dirConfig && dirConfig.app && dirConfig.app.src){
+                src = dirConfig.app.src;
+            }
 
             glob.sync('**/*.js', {
                 cwd: path.join(dir, src),
                 ignore: ['**/*.spec.js']
             }).forEach(function(file){
-                fs.copySync(path.join(dir, src, file), path.join(tmp, file));
+                fs.copySync(path.join(dir, src, file), path.join(tmp, 'src', file));
             });
 
-            if(!fs.existsSync(path.join(dir, 'bower_components'))){
-                return ;
-            }
+            // DELETE THIS
+            // if(!fs.existsSync(path.join(dir, 'bower_components'))){
+            //     return ;
+            // }
         });
 
         var cwd = process.cwd();
@@ -69,7 +76,7 @@ module.exports = function(grunt){
     });
 
     grunt.registerTask('javascript:replace', function(){
-        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
+        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, "src");
         fileReplace('**/*.js', tmp);
     });
 
@@ -172,8 +179,11 @@ module.exports = function(grunt){
 
         var copyright = fs.readFileSync(copyrightFile, "utf8");
 
-        inEachAppDir(function(dir) {
+        inEachAppDir(function(dir, dirConfig) {
             var src = grunt.option('app.src');
+            if(dirConfig && dirConfig.app && dirConfig.app.src){
+                src = dirConfig.app.src;
+            }
             var cwd = path.join(dir, src);
             var failed = false;
 
@@ -193,6 +203,26 @@ module.exports = function(grunt){
                 grunt.fail.warn('Javascript files did not pass copyright check. '
                     + 'Files must start with: ' + copyrightFile + '.');
             }
+        });
+    });
+
+    grunt.registerTask('javascript:app.js', function(){
+        var tmpSrc = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, "src");
+        
+        var appModules = [];
+        fs.readdirSync(tmpSrc).forEach(function(filePath){
+            var fullFilePath = path.join(tmpSrc, filePath);
+            if(fs.statSync(fullFilePath).isDirectory()){
+                appModules.push(filePath);
+            }
+        });
+
+        var fileContents = '(function(){' + '\n';
+        fileContents += 'angular.module("openlmis", ' +  JSON.stringify(appModules, null, 2) + ');' + '\n';
+        fileContents += '})();';
+
+        grunt.file.write(path.join(tmpSrc, 'app.js'), fileContents, {
+            encoding: 'utf8'
         });
     });
 }

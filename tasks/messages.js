@@ -36,7 +36,7 @@ module.exports = function(grunt){
     });
 
     var tmpDir = path.join(process.cwd(), '.tmp', 'messages');
-    var jsDir = path.join(process.cwd(), grunt.option('app.tmp'), 'js');
+    var targetDir = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript', 'src', 'openlmis-config');
 
     grunt.registerTask('messages:clean', function(){
         fs.emptyDirSync(tmpDir);
@@ -137,7 +137,9 @@ module.exports = function(grunt){
         fileContents += 'angular.module("openlmis-config").constant("OPENLMIS_MESSAGES", ' + JSON.stringify(messages, null, 2) + ');' + '\n';
         fileContents += '})();';
 
-        grunt.file.write(path.join(jsDir, 'messages.js'), fileContents, {
+
+        fs.ensureDirSync(path.join(targetDir));
+        grunt.file.write(path.join(targetDir, 'messages.js'), fileContents, {
             encoding: 'utf8'
         });
 

@@ -20,7 +20,8 @@ module.exports = function(grunt){
     inEachAppDir = require('../ordered-application-directory');
     
     var tmpDir = 'html',
-    tmpJsDir = 'js';
+    tmpJsDir = 'javascript/src',
+    templateModuleName = 'openlmis-templates';
 
     grunt.registerTask('html', ['html:copy', 'ngtemplates']);
 
@@ -29,9 +30,9 @@ module.exports = function(grunt){
         app: {
             cwd:      path.join(process.cwd(), grunt.option('app.tmp'), tmpDir),
             src:      ['**/**.html', '!index.html'],
-            dest:     path.join(process.cwd(), grunt.option('app.tmp'), tmpJsDir,'templates.module.js'),
+            dest:     path.join(process.cwd(), grunt.option('app.tmp'), tmpJsDir, templateModuleName,templateModuleName+'.module.js'),
             options: {
-              module:   'openlmis-templates',
+              module:   templateModuleName,
               standalone: true
             }
         }
