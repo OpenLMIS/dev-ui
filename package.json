@@ -31,6 +31,7 @@
     "karma-junit-reporter": "^1.1.0",
     "karma-phantomjs-launcher": "^1.0.2",
     "node-sass": "^4.3.0",
+    "phantomjs-polyfill-find": "github:ptim/phantomjs-polyfill-find",
     "replace-in-file": "^2.2.2",
     "request": "^2.79.0",
     "serve-index": "^1.8.0",

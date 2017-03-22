@@ -34,6 +34,7 @@ module.exports = function(grunt){
 
     var files = [{
         src: [
+            './node_modules/phantomjs-polyfill-find/find-polyfill.js',
             path.join(grunt.option('app.dest'), 'openlmis.js'),
             path.join(grunt.option('app.tmp'), 'bower_components/angular-mocks/angular-mocks.js')
         ].concat(testFiles)
