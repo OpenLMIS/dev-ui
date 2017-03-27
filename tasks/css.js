@@ -95,16 +95,16 @@ module.exports = function(grunt){
         // remove non-relative strings because our file structure is flat
         replace.sync({
             files: [path.join(dest, cssFileName), path.join(dest, srcMapFileName)],
-            replace: /\.\.\//g,
-            with: ''
+            from: /\.\.\//g,
+            to: ''
         });
 
         // replace cache busting which breaks appcache, needed until this is fixed:
         // https://github.com/FortAwesome/Font-Awesome/issues/3286
         replace.sync({
             files: [path.join(dest, cssFileName), path.join(dest, srcMapFileName)],
-            replace: /(fontawesome-webfont(\.[a-zA-Z0-9]{3,5})?)\?(\#iefix\&)?v=[0-9\.]{5}(\#fontawesomeregular)?/g,
-            with: '$1'
+            from: /(fontawesome-webfont(\.[a-zA-Z0-9]{3,5})?)\?(\#iefix\&)?v=[0-9\.]{5}(\#fontawesomeregular)?/g,
+            to: '$1'
         });
 
     });

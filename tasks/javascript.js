@@ -54,11 +54,6 @@ module.exports = function(grunt){
             }).forEach(function(file){
                 fs.copySync(path.join(dir, src, file), path.join(tmp, 'src', file));
             });
-
-            // DELETE THIS
-            // if(!fs.existsSync(path.join(dir, 'bower_components'))){
-            //     return ;
-            // }
         });
 
         var cwd = process.cwd();
