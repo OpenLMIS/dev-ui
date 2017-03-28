@@ -20,6 +20,7 @@ COPY config.json .
 COPY ordered-application-directory.js .
 COPY LICENSE-HEADER .
 COPY tasks/* ./tasks/
+COPY src ./src
 
 # Port 9000 used for dev server
 # Port 9876 user for karma debugger
