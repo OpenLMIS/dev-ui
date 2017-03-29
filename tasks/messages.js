@@ -77,6 +77,12 @@ module.exports = function(grunt){
                 return ;
             }
 
+            var transifexProjectDir = getMessageDir(dir);
+            if(!fs.existsSync(transifexProjectDir)){
+                console.log('- no message dir for: ' + dir);
+                return;
+            }
+
             process.chdir(getMessageDir(dir));
 
             console.log('# transifex: ' + transifexProjectName);
