@@ -18,12 +18,8 @@ module.exports = function(grunt){
     
     grunt.registerTask('build', function(){
         var buildTasks = [
-            'build:app',
+            'build:app'
         ];
-
-        if(!grunt.option('noClean')){
-            buildTasks.unshift('build:clean');
-        }
 
         // If the serve command was passed,
         // don't let the task end, because
@@ -34,11 +30,6 @@ module.exports = function(grunt){
 
         grunt.task.run(buildTasks);
     });
-
-    grunt.registerTask('build:clean', [
-        'clean',
-        'bower'
-        ]);
 
     grunt.registerTask('build:app', function(){
         var buildTasks = [
