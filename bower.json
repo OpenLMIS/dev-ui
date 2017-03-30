@@ -21,7 +21,6 @@
     "jquery-ui": "^1",
     "angular-ui-router": "*",
     "bootstrap-sass": "^3.3.7",
-    "font-awesome": "^4.6.3",
     "offline": "^0.7"
   },
   "overrides": {
@@ -49,12 +48,6 @@
         "assets/stylesheets/_bootstrap.scss",
         "assets/javascripts/bootstrap.js"
       ]
-    },
-    "font-awesome": {
-        "main": [
-          "scss/font-awesome.scss",
-          "fonts/*"
-        ]
     }
   },
   "devDependencies": {
