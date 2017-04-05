@@ -97,13 +97,22 @@ module.exports = function(grunt){
                 return ;
             }
 
-            execCommands([
+            var transifexCommands = [
                 "rm -rf .tx",
                 "tx init --host=https://www.transifex.com --user=" + transifexUser + " --pass=" + transifexPassword,
-                "tx set --auto-local -r " + transifexProjectName + ".messages '" + filePattern + "' --source-lang en --type KEYVALUEJSON --source-file " + sourceFile + " --execute",
-                "tx push -s",
-                "tx pull -a -f"
-                ]);
+                "tx set --auto-local -r " + transifexProjectName + ".messages '" + filePattern
+                + "' --source-lang en --type KEYVALUEJSON --source-file " + sourceFile + " --execute"
+            ]
+
+            if (process.env.TRANSIFEX_PUSH == true || grunt.option('transifexPush') == true) {
+                transifexCommands.push("tx push -s");
+            }
+
+            if (process.env.TRANSIFEX_PULL == true || grunt.option('transifexPull') == true) {
+                transifexCommands.push("tx pull -a -f");
+            }
+
+            execCommands(transifexCommands);
         });
     });
 
