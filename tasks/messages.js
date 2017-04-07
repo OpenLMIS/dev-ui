@@ -104,11 +104,11 @@ module.exports = function(grunt){
                 + "' --source-lang en --type KEYVALUEJSON --source-file " + sourceFile + " --execute"
             ]
 
-            if (process.env.TRANSIFEX_PUSH == "true" || grunt.option('transifexPush') === true) {
+            if (process.env.TRANSIFEX_PUSH === "true" || grunt.option('transifexPush') === true) {
                 transifexCommands.push("tx push -s");
             }
 
-            if (process.env.TRANSIFEX_PULL == "true" || grunt.option('transifexPull') === true) {
+            if (process.env.TRANSIFEX_PULL === "true" || grunt.option('transifexPull') === true) {
                 transifexCommands.push("tx pull -a -f");
             }
 
