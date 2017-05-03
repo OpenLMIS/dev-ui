@@ -19,7 +19,7 @@
     "angular-local-storage": "*",
     "underscore": "*",
     "jquery-ui": "^1",
-    "angular-ui-router": "*",
+    "angular-ui-router": "0.4.2",
     "bootstrap-sass": "^3.3.7",
     "offline": "^0.7"
   },
