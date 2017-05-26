@@ -29,7 +29,7 @@ module.exports = function(grunt){
     grunt.config('kss', {
         options: {
             title: 'OpenLMIS-UI Styleguide',
-            homepage: '/dev-ui/styleguide/homepage.md',
+            homepage: '../../../../dev-ui/docs/styleguide.md',
             builder: '.tmp/styleguide/'
         },
         dist: {
