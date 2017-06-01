@@ -19,14 +19,51 @@ module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-notify');
 
+    var watchOptions = {
+        spawn: false
+    };
+
+    var jsTasks = ['javascript'];
+    if (!grunt.option('noTest')) {
+        jsTasks.push('karma:unit');
+    }
+    addNotify(jsTasks);
+
+    var cssTasks = ['css'];
+    if (!grunt.option('noDocs')) {
+        cssTasks.push('docs');
+    }
+    addNotify(cssTasks);
+
+    var messageTasks = ['messages'];
+    messageTasks = messageTasks.concat(jsTasks);
+
+    var htmlTasks = ['html'];
+    htmlTasks = htmlTasks.concat(jsTasks);
+
     grunt.config('watch', {
-        files: [
-            path.join(grunt.option('app.src'), '/**/*'),
-            path.join(grunt.option('app.src'), '/*')
-            ],
-        tasks: ['build:app', 'notify:watch'],
-        options: {
-            spawn: false
+        javascript: {
+            files: srcFilesWithExtensions(['.js']),
+            tasks: jsTasks,
+            options: watchOptions
+        },
+        css: {
+            files: srcFilesWithExtensions(['.scss','.css']),
+            tasks: cssTasks,
+            options: watchOptions
+
+        },
+        messages: {
+            files: srcFilesWithExtensions(['.json']),
+            tasks: messageTasks,
+            options: watchOptions
+
+        },
+        html: {
+            files: srcFilesWithExtensions(['.html']),
+            tasks: htmlTasks,
+            options: watchOptions
+
         }
     });
 
@@ -39,4 +76,19 @@ module.exports = function(grunt){
         }
     });
 
+    function srcFilesWithExtensions(extensions) {
+        var i, files = [];
+        for (i = 0; i < extensions.length; i++) {
+            var ext = extensions[i];
+            files = files.concat([
+              path.join(grunt.option('app.src'), '/**/*' + ext),
+              path.join(grunt.option('app.src'), '/*' + ext)
+            ]);
+        }
+        return files;
+    }
+
+    function addNotify(tasks) {
+        tasks.push('notify:watch');
+    }
 };
