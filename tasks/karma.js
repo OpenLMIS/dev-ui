@@ -14,29 +14,35 @@
  */
 
 module.exports = function(grunt){
-    var path = require('path')
-    glob = require('glob'),
-    inEachAppDir = require('../ordered-application-directory');
+    var fs = require('fs-extra'),
+        path = require('path'),
+        glob = require('glob'),
+        inEachAppDir = require('../ordered-application-directory');
 
     grunt.loadNpmTasks('grunt-karma');
 
-    var testFiles = [];
+    var tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript', 'tests');
+
     inEachAppDir(function(dir){
         var src = grunt.option('app.src');
         var config = grunt.file.readJSON(path.join(dir, 'config.json'));
-        if(config && config.app && config.app.src) src = config.app.src;
+        if(config && config.app && config.app.src) {
+            src = config.app.src;
+        }
+
         glob.sync('**/*.spec.js',{
             cwd: path.join(dir, src)
         }).forEach(function(file){
-            testFiles.push(path.join(dir, src, file));
+            fs.copySync(path.join(dir, src, file), path.join(tmp, file));
         });
     });
 
     var files = [{
         src: [
             path.join(grunt.option('app.dest'), 'openlmis.js'),
-            path.join(grunt.option('app.tmp'), 'bower_components/angular-mocks/angular-mocks.js')
-        ].concat(testFiles)
+            path.join(grunt.option('app.tmp'), 'bower_components/angular-mocks/angular-mocks.js'),
+            path.join(tmp, '**/*.spec.js')
+        ]
     }];
 
     grunt.config('karma', {
