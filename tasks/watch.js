@@ -25,13 +25,22 @@ module.exports = function(grunt){
 
     var jsTasks = ['javascript'];
     if (!grunt.option('noTest')) {
-        jsTasks.push('karma:unit');
+        jsTasks.push('test');
+    }
+    if (!grunt.option('noDocs')) {
+        jsTasks.push('docs');
+    }
+    if(!grunt.option('noStyleguide')){
+        jsTasks.push('styleguide');
     }
     addNotify(jsTasks);
 
     var cssTasks = ['css'];
     if (!grunt.option('noDocs')) {
         cssTasks.push('docs');
+    }
+    if(!grunt.option('noStyleguide')){
+        cssTasks.push('styleguide');
     }
     addNotify(cssTasks);
 

@@ -17,23 +17,27 @@ module.exports = function(grunt){
     var fs = require('fs-extra'),
         path = require('path'),
         glob = require('glob'),
-        inEachAppDir = require('../ordered-application-directory');
+        inEachAppDir = require('../ordered-application-directory')
+        tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript', 'tests')
+        testFilePattern = '**/*.spec.js';
 
     grunt.loadNpmTasks('grunt-karma');
 
-    var tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript', 'tests');
+    grunt.registerTask('test', ['test:copy', 'karma:unit']);
 
-    inEachAppDir(function(dir){
-        var src = grunt.option('app.src');
-        var config = grunt.file.readJSON(path.join(dir, 'config.json'));
-        if(config && config.app && config.app.src) {
-            src = config.app.src;
-        }
+    grunt.registerTask('test:copy', function(){
+        inEachAppDir(function(dir){
+            var src = grunt.option('app.src');
+            var config = grunt.file.readJSON(path.join(dir, 'config.json'));
+            if(config && config.app && config.app.src) {
+                src = config.app.src;
+            }
 
-        glob.sync('**/*.spec.js',{
-            cwd: path.join(dir, src)
-        }).forEach(function(file){
-            fs.copySync(path.join(dir, src, file), path.join(tmp, file));
+            glob.sync(testFilePattern,{
+                cwd: path.join(dir, src)
+            }).forEach(function(file){
+                fs.copySync(path.join(dir, src, file), path.join(tmp, file));
+            });
         });
     });
 
@@ -41,7 +45,7 @@ module.exports = function(grunt){
         src: [
             path.join(grunt.option('app.dest'), 'openlmis.js'),
             path.join(grunt.option('app.tmp'), 'bower_components/angular-mocks/angular-mocks.js'),
-            path.join(tmp, '**/*.spec.js')
+            path.join(tmp, testFilePattern)
         ]
     }];
 

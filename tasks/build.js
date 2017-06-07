@@ -43,7 +43,7 @@ module.exports = function(grunt){
         ];
 
         if(!grunt.option('noTest')){
-            buildTasks.push('karma:unit');
+            buildTasks.push('test');
         }
 
         if(!grunt.option('noStyleguide')){

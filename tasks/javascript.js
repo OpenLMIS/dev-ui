@@ -28,7 +28,7 @@ module.exports = function(grunt){
     inEachAppDir = require('../ordered-application-directory'),
     fileReplace = require('./replace.js')(grunt);
 
-    var tmpDir = 'javascript';
+    var tmpDir = path.join('javascript', 'src');
     var fileName = 'openlmis.js';
 
     grunt.registerTask('javascript', [
@@ -38,6 +38,10 @@ module.exports = function(grunt){
         'javascript:replace',
         'javascript:build'
         ]);
+
+    grunt.registerTask('javascript:clean', function(){
+        fs.emptyDirSync(path.join(process.cwd(), grunt.option('app.tmp'), tmpDir));
+    });
 
     grunt.registerTask('javascript:copy', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
@@ -52,7 +56,7 @@ module.exports = function(grunt){
                 cwd: path.join(dir, src),
                 ignore: ['**/*.spec.js']
             }).forEach(function(file){
-                fs.copySync(path.join(dir, src, file), path.join(tmp, 'src', file));
+                fs.copySync(path.join(dir, src, file), path.join(tmp, file));
             });
         });
 
@@ -71,7 +75,7 @@ module.exports = function(grunt){
     });
 
     grunt.registerTask('javascript:replace', function(){
-        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, "src");
+        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
         fileReplace('**/*.js', tmp);
     });
 
@@ -202,12 +206,12 @@ module.exports = function(grunt){
     });
 
     grunt.registerTask('javascript:app.js', function(){
-        var tmpSrc = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, "src");
+        var tmpSrc = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
         
         var appModules = [];
         fs.readdirSync(tmpSrc).forEach(function(filePath){
             var fullFilePath = path.join(tmpSrc, filePath);
-            if(fs.statSync(fullFilePath).isDirectory()){
+            if(fs.statSync(fullFilePath).isDirectory() && filePath != 'bower_components'){
                 appModules.push(filePath);
             }
         });
