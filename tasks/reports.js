@@ -14,8 +14,14 @@
  */
 
 module.exports = function(grunt){
-    grunt.registerTask('reports', makeSonarReports);
+    var fs = require('fs-extra'),
+        json2csv = require('json2csv'),
+        path = require('path'),
+        glob = require('glob');
 
+    grunt.registerTask('reports', ['reports:sonar']);
+
+    grunt.registerTask('reports:sonar', makeSonarReports);
     function makeSonarReports() {
         var done = this.async();
         const SonarWebReporters = require('sonar-web-frontend-reporters').Reporters;
@@ -52,5 +58,62 @@ module.exports = function(grunt){
           console.log('All reporters have been processed');
           done(true);
         });
+    }
+
+    grunt.registerTask('reports:javascript', makeJavascriptReport);
+    function makeJavascriptReport() {
+        var report = {};
+
+        report['vendor'] = getFileReportFor('/app/.tmp/javascript/src/bower_components');
+
+        report['messages'] = {
+            count: 1,
+            size: getFilesizeInBytes('/app/.tmp/javascript/src/openlmis-config/messages.js')
+        };
+
+        report['html'] = getFileReportFor('/app/.tmp/javascript/src/openlmis-templates');
+
+        report['source'] = getFileReportFor('/app/.tmp/javascript/src/', [
+            'bower_components/*',
+            'openlmis-config/messages.js',
+            'openlmis-templates/*'
+            ]);
+
+        var headers = Object.keys(report).sort();
+        
+        var filesize = {};
+        headers.forEach(function(key){
+            console.log(key + ": " + report[key].size);
+            filesize[key] = report[key].size;
+        });
+
+        var csv = json2csv({ data: [filesize], fields: headers });
+        console.log(csv);
+ 
+        fs.writeFileSync('/app/build/reports/javascript-report.csv', csv);
+    }
+
+    function getFileReportFor(dir, ignorePaths) {
+        if(!ignorePaths) ignorePaths = [];
+
+        var report = {
+            count: 0,
+            size: 0
+        }
+
+        glob.sync('**/*', {
+            cwd: dir,
+            ignore: ignorePaths
+        }).forEach(function(file){
+            report.count += 1;
+            report.size += getFilesizeInBytes(path.join(dir, file));
+        });
+
+        return report;
+    }
+
+    function getFilesizeInBytes(filename) {
+        var stats = fs.statSync(filename)
+        return stats.size
     }
 };
