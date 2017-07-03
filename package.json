@@ -35,6 +35,7 @@
     "request": "^2.79.0",
     "serve-index": "^1.8.0",
     "serve-static": "^1.11.2",
+    "sonar-web-frontend-reporters": "^3.2.0",
     "wiredep": "^4.0.0"
   },
   "license": "AGPL-3.0"
