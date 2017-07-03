@@ -17,6 +17,10 @@ VOLUME ["/dev-ui", "/app"]
 COPY package.json .
 COPY bower.json .
 COPY config.json .
+COPY .csslintrc .
+COPY .eslintrc .
+COPY .htmlhintrc .
+COPY .sass-lint.yml .
 COPY ordered-application-directory.js .
 COPY LICENSE-HEADER .
 COPY tasks/* ./tasks/
