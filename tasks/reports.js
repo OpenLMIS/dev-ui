@@ -19,7 +19,7 @@ module.exports = function(grunt){
         path = require('path'),
         glob = require('glob');
 
-    grunt.registerTask('reports', ['reports:javascript']);
+    grunt.registerTask('reports', ['reports:files', 'reports:javascript', 'reports:sonar']);
 
     grunt.registerTask('reports:sonar', makeSonarReports);
     function makeSonarReports() {
@@ -60,56 +60,55 @@ module.exports = function(grunt){
         });
     }
 
+    grunt.registerTask('reports:files', makeFilesReport);
+    function makeFilesReport() {
+        var report = {};
+
+        report['openlmis.js'] = getSizeFor('/app/build/webapp/', 'openlmis.js');
+        report['openlmis.css'] = getSizeFor('/app/build/webapp/', 'openlmis.css');
+        report['images'] = getSizeFor('/app/build/webapp/', '**/*.svg');
+        report['images'] += getSizeFor('/app/build/webapp/', '**/*.png');
+        report['fonts'] = getSizeFor('/app/build/webapp/', '**/*.woff');
+
+        var headers = Object.keys(report).sort();
+        var csv = json2csv({ data: [report], fields: headers });
+        fs.writeFileSync('/app/build/reports/files-report.csv', csv);
+    }
+
+
+
     grunt.registerTask('reports:javascript', makeJavascriptReport);
     function makeJavascriptReport() {
         var report = {};
 
-        report['vendor'] = getFileReportFor('/app/.tmp/javascript/src/bower_components');
-
-        report['messages'] = {
-            count: 1,
-            size: getFilesizeInBytes('/app/.tmp/javascript/src/openlmis-config/messages.js')
-        };
-
-        report['html'] = getFileReportFor('/app/.tmp/javascript/src/openlmis-templates');
-
-        report['source'] = getFileReportFor('/app/.tmp/javascript/src/', [
-            'bower_components/*',
-            'openlmis-config/messages.js',
-            'openlmis-templates/*'
-            ]);
+        report['vendor'] = getSizeFor('/app/.tmp/javascript/src/', 'bower_components/**/*');
+        report['messages'] = getSizeFor('/app/.tmp/javascript/src/', 'openlmis-config/messages.js');
+        report['html'] = getSizeFor('/app/.tmp/javascript/src/', 'openlmis-templates/*');
+        report['source'] = getSizeFor('/app/.tmp/javascript/src/', '**/*');
 
         var headers = Object.keys(report).sort();
-        
-        var filesize = {};
-        headers.forEach(function(key){
-            console.log(key + ": " + report[key].size);
-            filesize[key] = report[key].size;
-        });
-
-        var csv = json2csv({ data: [filesize], fields: headers });
-        console.log(csv);
- 
+        var csv = json2csv({ data: [report], fields: headers });
         fs.writeFileSync('/app/build/reports/javascript-report.csv', csv);
     }
 
-    function getFileReportFor(dir, ignorePaths) {
-        if(!ignorePaths) ignorePaths = [];
-
-        var report = {
-            count: 0,
-            size: 0
+    var alreadyUsed = [],
+        lastDir;
+    function getSizeFor(dir, pattern) {
+        if(dir != lastDir) {
+            lastDir = dir;
+            alreadyUsed = [];
         }
+        var size = 0;
 
-        glob.sync('**/*', {
+        glob.sync(pattern, {
             cwd: dir,
-            ignore: ignorePaths
+            ignore: alreadyUsed
         }).forEach(function(file){
-            report.count += 1;
-            report.size += getFilesizeInBytes(path.join(dir, file));
+            size += getFilesizeInBytes(path.join(dir, file));
+            alreadyUsed.push(file);
         });
 
-        return report;
+        return size;
     }
 
     function getFilesizeInBytes(filename) {
