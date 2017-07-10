@@ -1,6 +1,6 @@
 {
   "name": "openlmis-ui",
-  "version": "3.0.0-beta-SNAPSHOT",
+  "version": "5.1.0-SNAPSHOT",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -31,7 +31,8 @@
     },
     "jquery-ui": {
       "main": [
-        "jquery-ui.js"
+        "jquery-ui.js",
+        "themes/base/jquery-ui.css"
       ]
     },
     "angular-mocks": {
