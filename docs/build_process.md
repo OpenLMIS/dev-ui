@@ -3,6 +3,40 @@ The OpenLMIS-UI functions as a single-page application that is created through a
 
 This document details the different workflows a developer might use while working on the OpenLMIS-UI.
 
+## Docker Architecture
+To create a modular single page application, we are using Docker and NodeJS to build multiple git repositories together into the working UI layer for OpenLMIS. The pattern that the OpenLMIS-UI follows is extremely similar to the micro-services architecture used in OpenLMIS, with the large difference being that the OpenLMIS-UI is compiled and does not 'discover' UI components.
+
+There are 3 types of Docker images that need to be combined to make a functional UI
+* A **tooling image** that stores core components which can compile the UI [(see OpenLMIS/Dev-UI)](https://github.com/OpenLMIS/dev-ui)
+* **Source code images** that contain Javascript, HTML, CSS/SCSS, and other assets that make up functional sections of the OpenLMIS-UI [(See OpenLMIS-Requisition-UI)](https://github.com/OpenLMIS/openlmis-requisition-refUI)
+* A **publishing image,** that compiles the source code images and builds a working web server that is included into the OpenLMIS Server. Small adjustments like branding should be made in the publishing image. [(See OpenLMIS/Reference-UI)](https://github.com/OpenLMIS/openlmis-requisition-refUI)
+ 
+When the OpenLMIS-UI is compiled, the source code images will overwrite each other, according to the order specified in the config.json file (see Dev-UI Documentation). This makes it possible to override assets or sections of behavior in a simple process.
+
+*Note:* The decision to use implicit over-writing of files rather than an explicit configuration came from Javascript's global name space which would cause problems if two Javascript objects had the same name.
+
+**Example:**
+There are 2 images being included into a publishing image, and they have files at the following paths:
+
+*OpenLMIS-UI-Common*
+* *src/common/* logo.png
+* *src/common/* header.scss
+
+*OpenLMIS-Requisition-UI*
+* *src/requisition/* requisition.js
+* *src/requisition/* requisition.routes.js
+
+*Example-UI-Distribution*
+* *src/common/* logo.png
+* *src/requisition/* requisition.routes.js
+
+When comiled the following sources will be used:
+
+* **Example-UI-Distribution/** *src/common/* logo.png (new logo)
+* **OpenLMIS-UI-Common/** *src/common/* header.scss
+* **OpenLMIS-Requisition-UI/** *src/requisition/* requisition.js
+* **Example-UI-Distribution/** *src/requisition/* requisition.routes.js (changed requisition pages that are available)
+
 ## Standard Build
 The most standard way to build the OpenLMIS-UI is to run `grunt build` which will concatinate, and compile the OpenLMIS-UI into a working set of front-end assets that are ready for development. When run, the following high level tasks will be exectuted:
 * clean the `build` directory

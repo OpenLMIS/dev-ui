@@ -8,6 +8,14 @@ This is a high-level overview of how the OpenLMIS-UI functions, for more details
 - UI extention guide
 - UI coding conventions
 
+The OpenLMIS-UI is an AngularJS browser application that is built from multiple sources into a single app. The OpenLMIS-UI works with the OpenLMIS Services using RESTful HTTP requests.
+
+**Core technologies:**
+* Javascript and [AngularJS v1.6](https://angularjs.org/)
+* [Docker](https://www.docker.com/) and NodeJS for compiling a single page application from multiple sources
+* [Sass variables and mixins](http://sass-lang.com/) for easy style extention
+* [UI-Router](https://github.com/angular-ui/ui-router) for page definition
+
 ## Page Load
 The entire OpenLMIS-UI is a single page application that is loaded in a single HTML page. The page loads a single CSS and a single Javascript file that are generated from the build process. A loading icon is shown while the HTML page waits for javascript file to load and run. 
 

@@ -447,6 +447,36 @@ In order to make directive docs appear in directives section there needs to be '
  */
 ```
 
+##### Extending a Directive
+You can extend a directive by using AngularJS's decorator pattern. Keep in mind that a directive might be applied to multiple places or have multiple directives applied to the same element name.
+
+```Javascript
+angular.module('my-module')
+    .config(extendDirective);
+
+extendDirective.$inject = ['$provide'];
+function extendDirective($provide) {
+  
+  // NOTE: This method has you put 'Directive' at the end of a directive name
+  $provide.decorator('OpenlmisInvalidDirective', directiveDecorator);
+}
+
+directiveDecorator.$inject = ['$delegate'];
+function directiveDecorator($delegate) {
+  var directive = $delegate[0], // directives are returned as an array
+      originalLink = directive.link;
+
+  directive.link = function(scope, element, attrs) {
+    // do something
+    originalLink.apply(directive, arguments); // do the original thing
+    // do something after
+  }
+
+  return $delegate;
+}
+
+```
+
 #### Modal
 A modal object isn't a 'native Angular object' — it is a service or factory that displays a modal window. This is done for convience and because it allows modal windows to not be declared in html files — and be used more easily by controllers (or even services, if appropriate).
 
@@ -671,15 +701,3 @@ result in a huge memory leaks. Here are some tips on how to use them.
 Using callback isn't the safest idea either as it can cause some function retention. AngularJS gives
 us awesome tool to bypass that - promises. They basically gives us the same behavior and are
 retention-risk free!
-
-## Patterns
-See JS Documentation for more details
-
-### List View Pattern
-
-#### Pagination Patterns
-STUB
-#### Sorting Pattern
-STUB
-
-### Offline Pattern
