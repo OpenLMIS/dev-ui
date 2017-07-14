@@ -14,11 +14,9 @@
     "angular-resource": "*",
     "angular-route": "*",
     "angular-sanitize": "*",
-    "angular-ui": "0.4.0",
     "jquery": "^3",
     "angular-local-storage": "*",
     "underscore": "*",
-    "jquery-ui": "^1",
     "angular-ui-router": "0.4.2",
     "bootstrap-sass": "^3.3.7",
     "offline": "^0.7"
@@ -29,20 +27,8 @@
         "dist/jquery.js"
       ]
     },
-    "jquery-ui": {
-      "main": [
-        "jquery-ui.js",
-        "themes/base/jquery-ui.css"
-      ]
-    },
     "angular-mocks": {
       "main": []
-    },
-    "angular-ui": {
-      "main": [
-        "build/angular-ui.js",
-        "build/angular-ui.css"
-      ]
     },
     "bootstrap-sass": {
       "main": [
