@@ -23,7 +23,10 @@ module.exports = function(grunt){
 
     grunt.registerTask('reports:setup', setupReports);
     function setupReports() {
-        fs.mkdirSync('/app/build/reports/');
+        var reportsDir = '/app/build/reports/';
+        if (!fs.existsSync(reportsDir)){
+            fs.mkdirSync(reportsDir);
+        }
     }
 
     grunt.registerTask('reports:sonar', makeSonarReports);
