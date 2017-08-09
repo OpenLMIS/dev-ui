@@ -19,7 +19,7 @@ module.exports = function(grunt){
         path = require('path'),
         glob = require('glob');
 
-    grunt.registerTask('reports', ['reports:setup', 'reports:files', 'reports:javascript', 'reports:sonar']);
+    grunt.registerTask('reports', ['reports:setup', 'reports:files', 'reports:javascript']);
 
     grunt.registerTask('reports:setup', setupReports);
     function setupReports() {
