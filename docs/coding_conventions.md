@@ -1,6 +1,6 @@
 # OpenLMIS-UI Coding Conventions
 
-This document describes the desired formatting to be used withing the OpenLMIS-UI repositories, many of the conventions are adapted from [John Papa's Angular V1 styleguide](https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md) and [SMACSS by Jonathan Snook.](https://smacss.com/)
+This document describes the desired formatting to be used withing the OpenLMIS-UI repositories, many of the conventions are adapted from [John Papa's Angular V1 styleguide,](https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md) [SMACSS by Jonathan Snook,](https://smacss.com/) and [Jens Meiert's maintainability guide.](https://meiert.com/en/blog/maintainability-guide/)
 
 ## General
 The following conventions should be applied to all sections of UI development:
