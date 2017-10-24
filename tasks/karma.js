@@ -74,6 +74,8 @@ module.exports = function(grunt){
             colors: true,
             captureTimeout: 30000,
             logLevel: 'INFO',
+            browserDisconnectTolerance: 3,
+            browserNoActivityTimeout: 20000,
 
             browsers: ['PhantomJS']
         },
