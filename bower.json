@@ -7,19 +7,21 @@
     "bower_components"
   ],
   "dependencies": {
-    "angular": "^1.6",
-    "angular-animate": "*",
-    "angular-cookies": "*",
-    "angular-loader": "*",
-    "angular-resource": "*",
-    "angular-route": "*",
-    "angular-sanitize": "*",
+    "angular": "1.6.6",
+    "angular-animate": "1.6.6",
+    "angular-cookies": "1.6.6",
+    "angular-loader": "1.6.6",
+    "angular-resource": "1.6.6",
+    "angular-route": "1.6.6",
+    "angular-sanitize": "1.6.6",
     "jquery": "^3",
     "angular-local-storage": "*",
     "underscore": "*",
     "angular-ui-router": "0.4.2",
     "bootstrap-sass": "^3.3.7",
-    "offline": "^0.7"
+    "offline": "^0.7",
+    "angular-aria": "1.6.6",
+    "angular-messages": "1.6.6"
   },
   "overrides": {
     "jquery": {
@@ -38,7 +40,7 @@
     }
   },
   "devDependencies": {
-    "angular-mocks": "^1.6"
+    "angular-mocks": "1.6.6"
   },
   "resolutions": {
     "angular": "1.6.0"
