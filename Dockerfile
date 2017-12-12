@@ -4,7 +4,9 @@ WORKDIR /root
 
 # NOTE bzip2 is required by PhantomJS-prebuilt
 # NOTE buildessential is needed for node-sass (installed by gulp-sass)
+RUN echo 'deb http://deb.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list
 RUN apt-get update && apt-get install -y bash build-essential libfontconfig transifex-client git curl bzip2
+RUN apt-get install -t jessie-backports openjdk-8-jre-headless ca-certificates-java -y
 
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs

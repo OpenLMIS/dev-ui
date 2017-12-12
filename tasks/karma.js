@@ -17,8 +17,9 @@ module.exports = function(grunt){
     var fs = require('fs-extra'),
         path = require('path'),
         glob = require('glob'),
-        inEachAppDir = require('../ordered-application-directory')
-        tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript', 'tests')
+        inEachAppDir = require('../ordered-application-directory'),
+        tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript', 'tests'),
+        //srcFiles = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript/src/**/*.js'),
         testFilePattern = '**/*.spec.js';
 
     grunt.loadNpmTasks('grunt-karma');
@@ -44,12 +45,16 @@ module.exports = function(grunt){
     var files = [{
         src: [
             path.join(grunt.option('app.dest'), 'openlmis.js'),
+            //path.join(grunt.option('app.tmp'), 'bower_components/**/jquery.js'),
+            //path.join(grunt.option('app.tmp'), 'bower_components/**/angular.js'),
+            //path.join(grunt.option('app.tmp'), 'bower_components/**/*.js'),
+            //srcFiles,
             path.join(grunt.option('app.tmp'), 'bower_components/angular-mocks/angular-mocks.js'),
             path.join(tmp, testFilePattern)
         ]
     }];
 
-    grunt.config('karma', {
+    var configuration = {
         options: {
             basePath: './',
             frameworks: ['jasmine'],
@@ -66,7 +71,7 @@ module.exports = function(grunt){
                 outputDir: path.join(grunt.option('build'),'test/test-results')
             },
             coverageReporter: {
-                type: 'html',
+                type: 'lcov',
                 dir: path.join(grunt.option('build'), 'test/coverage/')
             },
             /* KARMA PROCESS */
@@ -90,5 +95,11 @@ module.exports = function(grunt){
             autoWatch: true,
             background: true
         }
-    });
+    };
+
+    configuration.options.preprocessors = {};
+    //configuration.options.preprocessors[srcFiles] = ['coverage'];
+    configuration.options.preprocessors[path.join(grunt.option('app.dest'), 'openlmis.js')] = ['coverage'];
+
+    grunt.config('karma', configuration);
 }

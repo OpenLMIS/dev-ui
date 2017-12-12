@@ -24,6 +24,7 @@
     "grunt-ngdocs": "^0.2.10",
     "grunt-notify": "^0.4.5",
     "grunt-replace": "^1.0.1",
+    "grunt-sonar-runner": "2.4.8",
     "json2csv": "^3.8.0",
     "karma": "^1",
     "karma-coverage": "^1",
