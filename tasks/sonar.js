@@ -17,14 +17,16 @@ module.exports = function(grunt) {
 
     var path = path = require('path');
 
+    grunt.initConfig({
+        properties: 'project.properties'
+    });
+
     grunt.loadNpmTasks('grunt-sonar-runner');
-    grunt.registerTask('sonar', ['sonarRunner:analysis']);
+    grunt.loadNpmTasks('grunt-properties-reader');
+    grunt.registerTask('sonar', ['properties', 'sonarRunner:analysis']);
 
     var login = grunt.option('sonarLogin'),
-        password = grunt.option('sonarPassword'),
-        projectKey = grunt.option('projectKey'),
-        projectName = grunt.option('projectName'),
-        projectVersion = grunt.option('projectVersion');
+        password = grunt.option('sonarPassword');
 
     grunt.config('sonarRunner', {
         analysis: {
@@ -35,9 +37,9 @@ module.exports = function(grunt) {
                     },
                     login: login,
                     password: password,
-                    projectKey: 'org.sonarqube:' + projectKey,
-                    projectName: projectName,
-                    projectVersion: projectVersion,
+                    projectKey: 'org.sonarqube:' + '<%= app.projectKey %>',
+                    projectName: '<%= app.projectName %>',
+                    projectVersion: '<%= app.projectVersion %>',
                     sources: ['src'].join(','),
                     language: 'js',
                     sourceEncoding: 'UTF-8',
