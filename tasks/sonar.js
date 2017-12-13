@@ -17,8 +17,8 @@ module.exports = function(grunt) {
 
     var path = path = require('path');
 
-    grunt.initConfig({
-        properties: 'project.properties'
+    grunt.config('properties', {
+        app: 'project.properties'
     });
 
     grunt.loadNpmTasks('grunt-sonar-runner');
