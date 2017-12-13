@@ -25,9 +25,6 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-properties-reader');
     grunt.registerTask('sonar', ['properties', 'sonarRunner:analysis']);
 
-    var login = grunt.option('sonarLogin'),
-        password = grunt.option('sonarPassword');
-
     grunt.config('sonarRunner', {
         analysis: {
             options: {
@@ -35,8 +32,8 @@ module.exports = function(grunt) {
                     host: {
                         url: 'http://sonar.openlmis.org'
                     },
-                    login: login,
-                    password: password,
+                    login: grunt.option('sonarLogin'),
+                    password: grunt.option('sonarPassword'),
                     projectKey: 'org.sonarqube:' + '<%= app.projectKey %>',
                     projectName: '<%= app.projectName %>',
                     projectVersion: '<%= app.projectVersion %>',
