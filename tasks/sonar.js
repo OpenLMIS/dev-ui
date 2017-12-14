@@ -45,7 +45,8 @@ module.exports = function(grunt) {
                             reportPaths: path.join(grunt.option('build'), 'test/coverage/**/lcov.info')
                         },
                         exclusions: '**.spec.js'
-                    }
+                    },
+                    exclusions: '**.spec.js'
                 }
             }
         }
