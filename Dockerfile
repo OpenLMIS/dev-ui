@@ -16,16 +16,27 @@ RUN npm install -g bower grunt-cli phantomjs-prebuilt
 WORKDIR /dev-ui
 VOLUME ["/dev-ui", "/app"]
 
-COPY package.json .
-COPY bower.json .
-COPY config.json .
+# Default license header
+COPY LICENSE-HEADER .
+
+# Linter configuration
 COPY .csslintrc .
 COPY .eslintrc .
 COPY .htmlhintrc .
 COPY .sass-lint.yml .
-COPY ordered-application-directory.js .
-COPY LICENSE-HEADER .
+
+# Build process
+COPY sonar.sh .
+COPY build.sh .
 COPY tasks/* ./tasks/
+
+# Javascript packages
+COPY package.json .
+COPY bower.json .
+COPY config.json .
+
+# Application logic
+COPY ordered-application-directory.js .
 COPY src ./src
 COPY styleguide ./styleguide
 COPY docs ./docs
