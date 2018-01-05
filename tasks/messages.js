@@ -25,6 +25,7 @@ module.exports = function(grunt){
         var tasks = [
             'messages:clean',
             'messages:merge',
+            'messages:copy',
             'messages:make'
         ];
 
@@ -35,85 +36,87 @@ module.exports = function(grunt){
         grunt.task.run(tasks);
     });
 
-    var tmpDir = path.join(process.cwd(), '.tmp', 'messages');
-    var targetDir = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript', 'src', 'openlmis-config');
+    var tmpDir = path.join(process.cwd(), '.tmp', 'messages'),
+        buildDir = path.join(process.cwd(), grunt.option('build'), 'messages'),
+        targetDir = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript', 'src', 'openlmis-config');
 
+    /**
+     * Task cleans messages .tmp directory used to write and message JSON that
+     * is included in the OpenLMIS-UI.
+     */
     grunt.registerTask('messages:clean', function(){
         fs.emptyDirSync(tmpDir);
     });
 
+    /**
+     * Merges all messages_en.json files together to create a single temporary
+     * messages_en.json file.
+     */
     grunt.registerTask('messages:merge', function(){
-        eachAppDir(function(dir) {
-            var messages = {};
+        var messages = {},
+            dir = process.cwd();
 
-            glob.sync('messages_en.json', {
-                cwd: dir,
-                matchBase: true,
-                ignore: [path.join(tmpDir, '*')]
-            }).forEach(function (filename) {
-                var filepath = path.join(dir, filename);
-                var messageObj = grunt.file.readJSON(filepath);
-                messages = extend(messages, messageObj);
-            });
-
-            if(Object.keys(messages).length > 0){
-                grunt.file.write(
-                    path.join(getMessageDir(dir), 'messages_en.json'),
-                    JSON.stringify(messages, null, 2),
-                    {
-                        encoding: 'utf8'
-                    }
-                );
-            }
+        glob.sync('messages_en.json', {
+            cwd: dir,
+            matchBase: true,
+            ignore: [path.join(tmpDir, '*')]
+        }).forEach(function (filename) {
+            var filepath = path.join(dir, filename);
+            var messageObj = grunt.file.readJSON(filepath);
+            messages = extend(messages, messageObj);
         });
+
+        if(Object.keys(messages).length > 0){
+            grunt.file.write(
+                path.join(tmpDir, 'messages_en.json'),
+                JSON.stringify(messages, null, 2),
+                {
+                    encoding: 'utf8'
+                }
+            );
+        }
     });
     
+    /**
+     * Updates current app's merged message file to transifex.
+     */
     grunt.registerTask('messages:transifex', function(){
-        eachAppDir(function(dir){
-            var transifexProjectName = getTransifexProjectName(dir);
+        var dir = process.cwd(),
+            transifexProjectName = process.env.TRANSIFEX_PROJECT_NAME || grunt.option("transifexProjectName");
 
-            if(!transifexProjectName){
-                console.log('- no transifex project for: ' + dir);
-                return ;
-            }
+        if(!transifexProjectName){
+            console.log('- no transifex project for: ' + dir);
+            return ;
+        }
 
-            var transifexProjectDir = getMessageDir(dir);
-            if(!fs.existsSync(transifexProjectDir)){
-                console.log('- no message dir for: ' + dir);
-                return;
-            }
+        console.log('# transifex: ' + transifexProjectName);
 
-            process.chdir(getMessageDir(dir));
+        if(!fs.existsSync(tmpDir)){
+            console.log('- no message dir for: ' + dir);
+            return;
+        }
 
-            console.log('# transifex: ' + transifexProjectName);
-            var filePattern = 'messages_<lang>.json';
-            var sourceFile = 'messages_en.json';
+        var transifexUser = process.env.TRANSIFEX_USER || grunt.option('transifexUser');
+        var transifexPassword = process.env.TRANSIFEX_PASSWORD || grunt.option('transifexPassword');
 
-            var transifexUser = process.env.TRANSIFEX_USER || grunt.option('transifexUser');
-            var transifexPassword = process.env.TRANSIFEX_PASSWORD || grunt.option('transifexPassword');
+        if(!transifexUser || !transifexPassword){
+            console.log('no user or password, skipping');
+            return ;
+        }
 
-            if(!transifexUser || !transifexPassword){
-                console.log('no user or password, skipping');
-                return ;
-            }
+        var filePattern = 'messages_<lang>.json';
+        var sourceFile = 'messages_en.json';
 
-            var transifexCommands = [
-                "rm -rf .tx",
-                "tx init --host=https://www.transifex.com --user=" + transifexUser + " --pass=" + transifexPassword,
-                "tx set --auto-local -r " + transifexProjectName + ".messages '" + filePattern
-                + "' --source-lang en --type KEYVALUEJSON --source-file " + sourceFile + " --execute"
-            ]
+        process.chdir(tmpDir);
 
-            if (process.env.TRANSIFEX_PUSH === "true" || grunt.option('transifexPush') === true) {
-                transifexCommands.push("tx push -s");
-            }
-
-            if (process.env.TRANSIFEX_PULL === "true" || grunt.option('transifexPull') === true) {
-                transifexCommands.push("tx pull -a -f");
-            }
-
-            execCommands(transifexCommands);
-        });
+        execCommands([
+            "rm -rf .tx",
+            "tx init --host=https://www.transifex.com --user=" + transifexUser + " --pass=" + transifexPassword,
+            "tx set --auto-local -r " + transifexProjectName + ".messages '" + filePattern
+            + "' --source-lang en --type KEYVALUEJSON --source-file " + sourceFile + " --execute",
+            "tx push -s",
+            "tx pull -a -f"
+        ]);
     });
 
     function execCommands(commands){
@@ -123,13 +126,36 @@ module.exports = function(grunt){
             });
         });
     }
+
+    grunt.registerTask('messages:copy', function(){
+        fs.emptyDirSync(buildDir);
+
+        glob.sync('messages*', {
+            cwd: tmpDir
+        }).forEach(function(filename) {
+            fs.copySync(path.join(tmpDir, filename), path.join(buildDir, filename));
+        });
+    });
     
+    /**
+     * Gets message objects from all apps in each application directory,
+     * merges them and adds them to be built into the javascript application.
+     */
     grunt.registerTask('messages:make', function(){
-        var messages = {};
-        var languages = {};
+        var messages = {},
+            languages = {};
+
 
         eachAppDir(function(dir){
-            var messagesDir = getMessageDir(dir);
+            var messagesDir = path.join(dir, 'messages');
+
+            if(!fs.existsSync(messagesDir)) {
+                messagesDir = path.join(dir, 'build/messages');
+            }
+
+            if(!fs.existsSync(messagesDir)) {
+                return;
+            }
 
             glob.sync('messages*', {
                 cwd: messagesDir
@@ -159,23 +185,5 @@ module.exports = function(grunt){
         });
 
     });
-
-    function getTransifexProjectName(dir){
-        var dirConfig = grunt.file.readJSON(path.join(dir, 'config.json'));
-        if(dirConfig && dirConfig['transifexProjectName']){
-            return dirConfig['transifexProjectName'];
-        } else {
-            return false;
-        }
-    }
-
-    function getMessageDir(dir){
-        var transifexProjectName = getTransifexProjectName(dir);
-        if(transifexProjectName){
-            return path.join(tmpDir, transifexProjectName);
-        } else {
-            return path.join(tmpDir, dir.substr(dir.lastIndexOf('/')));
-        }
-    }
 
 };
