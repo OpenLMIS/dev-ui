@@ -15,6 +15,7 @@
 
 module.exports = function(grunt){
     var path = require('path'),
+        properties = require('properties-parser'),
         glob = require('glob'),
         fs = require('fs-extra'),
         extend = require('extend'),
@@ -77,22 +78,28 @@ module.exports = function(grunt){
      * Updates current app's merged message file to transifex.
      */
     grunt.registerTask('messages:transifex', function(){
-        var transifexProject = process.env.TRANSIFEX_PROJECT;
+        var transifexUser = process.env.TRANSIFEX_USER,
+            transifexPassword = process.env.TRANSIFEX_PASSWORD;
+
+        if(!transifexUser || !transifexPassword){
+            console.log('- no transifex user or password, skipping');
+            return ;
+        }
+
+        var projectProperties = properties.read('project.properties'),
+            transifexProject = projectProperties.transifexProject;
+
+        if(process.env.TRANSIFEX_PROJECT) {
+            transifexProject = process.env.TRANSIFEX_PROJECT;
+            console.log('- using ENV transifexProject')
+        }
 
         if(!transifexProject){
             console.log('- no transifex project, skipping');
             return ;
         }
 
-        console.log('# transifex: ' + transifexProject);
-
-        var transifexUser = process.env.TRANSIFEX_USER;
-        var transifexPassword = process.env.TRANSIFEX_PASSWORD;
-
-        if(!transifexUser || !transifexPassword){
-            console.log('- no transifex user or password, skipping');
-            return ;
-        }
+        console.log('# transifex project: ' + transifexProject);
 
         var filePattern = 'messages_<lang>.json';
         var sourceFile = 'messages_en.json';
