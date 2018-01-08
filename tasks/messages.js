@@ -77,14 +77,14 @@ module.exports = function(grunt){
      * Updates current app's merged message file to transifex.
      */
     grunt.registerTask('messages:transifex', function(){
-        var transifexProjectName = process.env.TRANSIFEX_PROJECT_NAME || grunt.option("transifexProjectName");
+        var transifexProject = process.env.TRANSIFEX_PROJECT;
 
-        if(!transifexProjectName){
+        if(!transifexProject){
             console.log('- no transifex project, skipping');
             return ;
         }
 
-        console.log('# transifex: ' + transifexProjectName);
+        console.log('# transifex: ' + transifexProject);
 
         var transifexUser = process.env.TRANSIFEX_USER;
         var transifexPassword = process.env.TRANSIFEX_PASSWORD;
@@ -105,7 +105,7 @@ module.exports = function(grunt){
         execCommands([
             "rm -rf .tx",
             "tx init --host=https://www.transifex.com --user=" + transifexUser + " --pass=" + transifexPassword,
-            "tx set --auto-local -r " + transifexProjectName + ".messages '" + filePattern
+            "tx set --auto-local -r " + transifexProject + ".messages '" + filePattern
             + "' --source-lang en --type KEYVALUEJSON --source-file " + sourceFile + " --execute",
             "tx push -s",
             "tx pull -a -f"
