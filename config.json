@@ -20,5 +20,6 @@
     "dest": "./build/docs",
     "title": "OpenLMIS-UI Documentation"
   },
-  "applicationTitle": "OpenLMIS"
+  "applicationTitle": "OpenLMIS",
+  "defaultLanguage": "en"
 }
