@@ -22,18 +22,13 @@ module.exports = function(grunt){
         execSync = require('child_process').execSync;
 
     grunt.registerTask('messages', function(){
-        var tasks = [
+        grunt.task.run([
             'messages:clean',
             'messages:merge',
+            'messages:transifex',
             'messages:copy',
             'messages:make'
-        ];
-
-        if(grunt.option('syncTransifex')){
-            tasks.splice(2, 0, 'messages:transifex');
-        }
-
-        grunt.task.run(tasks);
+        ]);
     });
 
     var tmpDir = path.join(process.cwd(), '.tmp', 'messages'),
@@ -46,6 +41,7 @@ module.exports = function(grunt){
      */
     grunt.registerTask('messages:clean', function(){
         fs.emptyDirSync(tmpDir);
+        fs.emptyDirSync(buildDir);
     });
 
     /**
@@ -81,33 +77,30 @@ module.exports = function(grunt){
      * Updates current app's merged message file to transifex.
      */
     grunt.registerTask('messages:transifex', function(){
-        var dir = process.cwd(),
-            transifexProjectName = process.env.TRANSIFEX_PROJECT_NAME || grunt.option("transifexProjectName");
+        var transifexProjectName = process.env.TRANSIFEX_PROJECT_NAME || grunt.option("transifexProjectName");
 
         if(!transifexProjectName){
-            console.log('- no transifex project for: ' + dir);
+            console.log('- no transifex project, skipping');
             return ;
         }
 
         console.log('# transifex: ' + transifexProjectName);
 
-        if(!fs.existsSync(tmpDir)){
-            console.log('- no message dir for: ' + dir);
-            return;
-        }
-
-        var transifexUser = process.env.TRANSIFEX_USER || grunt.option('transifexUser');
-        var transifexPassword = process.env.TRANSIFEX_PASSWORD || grunt.option('transifexPassword');
+        var transifexUser = process.env.TRANSIFEX_USER;
+        var transifexPassword = process.env.TRANSIFEX_PASSWORD;
 
         if(!transifexUser || !transifexPassword){
-            console.log('no user or password, skipping');
+            console.log('- no transifex user or password, skipping');
             return ;
         }
 
         var filePattern = 'messages_<lang>.json';
         var sourceFile = 'messages_en.json';
 
-        process.chdir(tmpDir);
+        if(!fs.existsSync(path.join(tmpDir, sourceFile))) {
+            console.log('- source message file does not exist, skipping');
+            return;
+        }
 
         execCommands([
             "rm -rf .tx",
@@ -116,13 +109,14 @@ module.exports = function(grunt){
             + "' --source-lang en --type KEYVALUEJSON --source-file " + sourceFile + " --execute",
             "tx push -s",
             "tx pull -a -f"
-        ]);
+        ], tmpDir);
     });
 
-    function execCommands(commands){
+    function execCommands(commands, workingDir){
         commands.forEach(function(command){
             execSync(command, {
-                stdio: 'inherit'
+                stdio: 'inherit',
+                cwd: workingDir
             });
         });
     }
