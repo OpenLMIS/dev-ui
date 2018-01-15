@@ -79,15 +79,18 @@ module.exports = function(grunt){
      */
     grunt.registerTask('messages:transifex', function(){
         var transifexUser = process.env.TRANSIFEX_USER,
-            transifexPassword = process.env.TRANSIFEX_PASSWORD;
+            transifexPassword = process.env.TRANSIFEX_PASSWORD
+            projectProperties = properties.read('project.properties'),
+            transifexProject = projectProperties.transifexProject;
+
+        if(!grunt.option('syncTransifex')) {
+            return;
+        }
 
         if(!transifexUser || !transifexPassword){
             console.log('- no transifex user or password, skipping');
             return ;
         }
-
-        var projectProperties = properties.read('project.properties'),
-            transifexProject = projectProperties.transifexProject;
 
         if(process.env.TRANSIFEX_PROJECT) {
             transifexProject = process.env.TRANSIFEX_PROJECT;
