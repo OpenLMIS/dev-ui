@@ -19,7 +19,6 @@ module.exports = function(grunt){
         glob = require('glob'),
         inEachAppDir = require('../ordered-application-directory'),
         tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript', 'tests'),
-        //srcFiles = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript/src/**/*.js'),
         testFilePattern = '**/*.spec.js';
 
     grunt.loadNpmTasks('grunt-karma');
@@ -42,18 +41,6 @@ module.exports = function(grunt){
         });
     });
 
-    var files = [{
-        src: [
-            path.join(grunt.option('app.dest'), 'openlmis.js'),
-            //path.join(grunt.option('app.tmp'), 'bower_components/**/jquery.js'),
-            //path.join(grunt.option('app.tmp'), 'bower_components/**/angular.js'),
-            //path.join(grunt.option('app.tmp'), 'bower_components/**/*.js'),
-            //srcFiles,
-            path.join(grunt.option('app.tmp'), 'bower_components/angular-mocks/angular-mocks.js'),
-            path.join(tmp, testFilePattern)
-        ]
-    }];
-
     var configuration = {
         options: {
             basePath: './',
@@ -64,7 +51,9 @@ module.exports = function(grunt){
                 'karma-phantomjs-launcher',
                 'karma-junit-reporter'
             ],
-            exclude: [],
+            exclude: [
+                'app.js'
+            ],
             /* REPORTERS */
             reporters: ['progress', 'coverage', 'junit'],
             junitReporter: {
@@ -82,15 +71,26 @@ module.exports = function(grunt){
             browserDisconnectTolerance: 3,
             browserNoActivityTimeout: 20000,
 
-            browsers: ['PhantomJS']
+            browsers: ['PhantomJS'],
+
+            files: [
+                path.join(grunt.option('app.tmp'), 'javascript/bower_components/jquery/dist/jquery.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/bower_components/angular/angular.js'),
+                path.join(grunt.option('app.tmp'), 'bower_components/angular-mocks/angular-mocks.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/bower_components/**/*.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/src/**/*.module.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/src/**/*.config.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/src/**/*.routes.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/src/**/*.js'),
+                path.join(tmp, '**/*builder.spec.js'),
+                path.join(tmp, testFilePattern)
+            ]
         },
         unit: {
-            files: files,
             singleRun: true,
             autoWatch: false
         },
         tdd: {
-            files: files,
             singleRun: false,
             autoWatch: true,
             background: true
@@ -98,8 +98,7 @@ module.exports = function(grunt){
     };
 
     configuration.options.preprocessors = {};
-    //configuration.options.preprocessors[srcFiles] = ['coverage'];
-    configuration.options.preprocessors[path.join(grunt.option('app.dest'), 'openlmis.js')] = ['coverage'];
+    configuration.options.preprocessors[path.join(grunt.option('app.tmp'), 'javascript/src/**/*.js')] = ['coverage'];
 
     grunt.config('karma', configuration);
 }

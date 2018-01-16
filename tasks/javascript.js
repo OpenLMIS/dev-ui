@@ -40,7 +40,7 @@ module.exports = function(grunt){
         ]);
 
     grunt.registerTask('javascript:clean', function(){
-        fs.emptyDirSync(path.join(process.cwd(), grunt.option('app.tmp'), tmpDir));
+        fs.emptyDirSync(path.join(process.cwd(), grunt.option('app.tmp'), 'javascript'));
     });
 
     grunt.registerTask('javascript:copy', function(){
@@ -60,6 +60,7 @@ module.exports = function(grunt){
             });
         });
 
+        tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript');
         var cwd = process.cwd();
         process.chdir(grunt.option('app.tmp'));
 
@@ -80,7 +81,7 @@ module.exports = function(grunt){
     });
 
     grunt.registerTask('javascript:build', function(){
-        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir),
+        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript'),
         toplevel = null, // container for UglifyJS
         sourceMap = UglifyJS.SourceMap(),
         sourceMapGenerator = sourceMap.get(),
@@ -95,13 +96,13 @@ module.exports = function(grunt){
         addFiles('bower_components/**/angular.js');
         addFiles('bower_components/**/*.js');
 
-        addFiles('**/*.module.js');
-        addFiles('**/*.config.js');
-        addFiles('**/*.routes.js');
-        addFiles('**/*.js');
+        addFiles('src/**/*.module.js');
+        addFiles('src/**/*.config.js');
+        addFiles('src/**/*.routes.js');
+        addFiles('src/**/*.js');
 
         ignorePatterns = [];
-        addFiles('app.js');
+        addFiles('src/app.js');
 
         toplevel.figure_out_scope();
         if(grunt.option('production')){
