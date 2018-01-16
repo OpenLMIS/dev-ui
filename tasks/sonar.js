@@ -15,15 +15,35 @@
 
 module.exports = function(grunt) {
 
-    var path = path = require('path');
-
-    grunt.config('properties', {
-        app: 'project.properties'
-    });
+    var path = require('path'),
+        fs = require('fs-extra'),
+        glob = require('glob'),
+        replace = require('replace-in-file'),
+        properties = require('properties-parser'),
+        projectProperties = properties.read('project.properties');
 
     grunt.loadNpmTasks('grunt-sonar-runner');
     grunt.loadNpmTasks('grunt-properties-reader');
-    grunt.registerTask('sonar', ['properties', 'sonarRunner:analysis']);
+    grunt.registerTask('sonar', ['sonar:lcov', 'sonarRunner:analysis']);
+
+    grunt.registerTask('sonar:lcov', function() {
+        var lcovPath;
+
+        glob.sync(path.join(process.cwd(), grunt.option('build'), 'test/coverage', '**/lcov.info'))
+        .forEach(function(file) {
+            lcovPath = file;
+        });
+
+        if(lcovPath) {
+            fs.copySync(lcovPath, path.join(grunt.option('app.tmp'), 'sonar', 'lcov.info'));
+            replace({
+                files: path.join(grunt.option('app.tmp'), 'sonar', 'lcov.info'),
+                from: /\/app\/\.tmp\/javascript\/src\//g,
+                to: 'src/'
+            });
+        }
+
+    });
 
     grunt.config('sonarRunner', {
         analysis: {
@@ -34,17 +54,16 @@ module.exports = function(grunt) {
                     },
                     login: grunt.option('sonarLogin'),
                     password: grunt.option('sonarPassword'),
-                    projectKey: 'org.sonarqube:' + '<%= app.projectKey %>',
-                    projectName: '<%= app.projectName %>',
-                    projectVersion: '<%= app.projectVersion %>',
+                    projectKey: 'org.sonarqube:' + projectProperties.projectKey,
+                    projectName: projectProperties.projectName,
+                    projectVersion: projectProperties.version,
                     sources: ['src'].join(','),
                     language: 'js',
                     sourceEncoding: 'UTF-8',
                     javascript: {
                         lcov: {
-                            reportPaths: path.join(grunt.option('build'), 'test/coverage/**/lcov.info')
-                        },
-                        exclusions: '**.spec.js'
+                            reportPaths: path.join(process.cwd(), grunt.option('app.tmp'), 'sonar/lcov.info')
+                        }
                     },
                     exclusions: '**.spec.js'
                 }
