@@ -39,7 +39,6 @@ COPY config.json .
 COPY ordered-application-directory.js .
 COPY src ./src
 COPY styleguide ./styleguide
-COPY docs ./docs
 
 # Port 9000 used for dev server
 # Port 9876 user for karma debugger
