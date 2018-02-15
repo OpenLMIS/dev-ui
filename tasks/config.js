@@ -27,6 +27,8 @@ module.exports = function(grunt){
         }
     });
 
+    config.openlmisBuildDate = new Date().toISOString();
+
     setGruntOptions(config);
 
     function setGruntOptions(config, prefix){
