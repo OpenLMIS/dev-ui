@@ -66,8 +66,5 @@ pipeline {
         fixed {
             slackSend color: 'good', message: "${env.JOB_NAME} - #${env.BUILD_NUMBER} Back to normal"
         }
-        success {
-            build job: 'OpenLMIS-reference-ui', wait: false
-        }
     }
 }
