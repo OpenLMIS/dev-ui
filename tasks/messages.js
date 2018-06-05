@@ -79,11 +79,11 @@ module.exports = function(grunt){
      */
     grunt.registerTask('messages:transifex', function(){
         var transifexUser = process.env.TRANSIFEX_USER,
-            transifexPassword = process.env.TRANSIFEX_PASSWORD
+            transifexPassword = process.env.TRANSIFEX_PASSWORD,
             projectProperties = properties.read('project.properties'),
             transifexProject = projectProperties.transifexProject;
 
-        if(!grunt.option('syncTransifex')) {
+        if(!grunt.option('pullTransifex')) {
             return;
         }
 
@@ -112,14 +112,18 @@ module.exports = function(grunt){
             return;
         }
 
-        execCommands([
+        var commands = [
             "rm -rf .tx",
             "tx init --host=https://www.transifex.com --user=" + transifexUser + " --pass=" + transifexPassword,
             "tx set --auto-local -r " + transifexProject + ".messages '" + filePattern
             + "' --source-lang en --type KEYVALUEJSON --source-file " + sourceFile + " --execute",
             "tx push -s",
             "tx pull -a -f"
-        ], tmpDir);
+        ];
+        if(!grunt.option('pushTransifex')) {
+            commands.splice(3, 1);
+        }
+        execCommands(commands, tmpDir);
     });
 
     function execCommands(commands, workingDir){
