@@ -1,8 +1,9 @@
-7.0.1 / WIP
+8.0.0 / WIP
 ==================
 
 Improvements:
 * [OLMIS-4750](https://openlmis.atlassian.net/browse/OLMIS-4750): Added Jenkinsfile
+* [OLMIS-4795](https://openlmis.atlassian.net/browse/OLMIS-4795): Replace *syncTransifex* grunt option with *pullTransifex* and *pushTransifex*
 
 7.0.0 / 2018-04-24
 ==================
