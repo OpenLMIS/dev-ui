@@ -14,11 +14,14 @@
  */
 
 module.exports = function(grunt) {
+    var fs = require('fs');
+
+    var configFile = fs.existsSync('/app/.eslintrc') ? '/app/.eslintrc' : '/dev-ui/.eslintrc';
 
     grunt.loadNpmTasks('grunt-eslint');
     grunt.config('eslint', {
         options: {
-            configFile: '/dev-ui/.eslintrc',
+            configFile: configFile,
             fix: grunt.option('fixLint')
         },
         target: [grunt.option('app.src') + '/**/*.js', '!' + grunt.option('app.src') + '/**/*.spec.js']
