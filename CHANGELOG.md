@@ -4,6 +4,9 @@
 Breaking changes:
 * [OLMIS-4795](https://openlmis.atlassian.net/browse/OLMIS-4795): Replace *syncTransifex* grunt option with *pullTransifex* and *pushTransifex*
 
+New functionality added in a backwards-compatible manner:
+* Added eslint task (disabled by default, set noLint option to false to launch it with the build and default tasks or use the "grunt eslint" task directly).
+
 Improvements:
 * [OLMIS-4750](https://openlmis.atlassian.net/browse/OLMIS-4750): Added Jenkinsfile
 

@@ -31,9 +31,8 @@ module.exports = function(grunt){
         grunt.task.run(buildTasks);
     });
 
-    grunt.registerTask('build:app', function(){
+    grunt.registerTask('build:app', function() {
         var buildTasks = [
-            'messages',
             'html',
             'javascript',
             'css',
@@ -41,6 +40,12 @@ module.exports = function(grunt){
             'index.html',
             'appcache'
         ];
+
+        if (!grunt.option('noLint')) {
+            buildTasks.unshift('eslint');
+        }
+
+        buildTasks.unshift('messages');
 
         if(!grunt.option('noTest')){
             buildTasks.push('test');
