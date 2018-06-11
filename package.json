@@ -41,7 +41,8 @@
     "serve-static": "^1.11.2",
     "sonar-web-frontend-reporters": "^3.2.0",
     "wiredep": "^4.0.0",
-    "grunt-eslint": "^20.2.0"
+    "grunt-eslint": "^20.2.0",
+    "npm-wiredep": "^0.0.4"
   },
   "license": "AGPL-3.0"
 }

@@ -24,6 +24,7 @@ module.exports = function(grunt){
     UglifyJS = require("uglify-js"),
     convertSourceMap = require('convert-source-map'),
     wiredep = require('wiredep'),
+    npmWiredep = require('npm-wiredep'),
     glob = require('glob'),
     inEachAppDir = require('../ordered-application-directory'),
     fileReplace = require('./replace.js')(grunt);
@@ -73,6 +74,15 @@ module.exports = function(grunt){
 
         process.chdir(cwd);
 
+        var npmFiles = npmWiredep().js || [];
+        npmFiles.forEach(function(file){
+            // copy each file into a directory called node_modules
+            var npmPath = file.substring(file.indexOf("node_modules"));
+            fs.copySync(file, path.join(tmp, npmPath));
+        });
+
+        process.chdir(cwd);
+
     });
 
     grunt.registerTask('javascript:replace', function(){
@@ -92,6 +102,10 @@ module.exports = function(grunt){
         // Since we copied all bower components over across bower files,
         // we don't have wiredep's dependency order — so we are just
         // guessing the order
+        addFiles('node_modules/**/jquery.js');
+        addFiles('node_modules/**/angular.js');
+        addFiles('node_modules/**/*.js');
+
         addFiles('bower_components/**/jquery.js');
         addFiles('bower_components/**/angular.js');
         addFiles('bower_components/**/*.js');
@@ -212,7 +226,7 @@ module.exports = function(grunt){
         var appModules = [];
         fs.readdirSync(tmpSrc).forEach(function(filePath){
             var fullFilePath = path.join(tmpSrc, filePath);
-            if(fs.statSync(fullFilePath).isDirectory() && filePath != 'bower_components'){
+            if(fs.statSync(fullFilePath).isDirectory() && filePath != 'bower_components' && filePath != 'node_modules'){
                 appModules.push(filePath);
             }
         });
