@@ -74,9 +74,13 @@ module.exports = function(grunt){
             browsers: ['PhantomJS'],
 
             files: [
+                path.join(grunt.option('app.tmp'), 'javascript/node_modules/jquery/dist/jquery.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/jquery/dist/jquery.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/node_modules/angular/angular.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/angular/angular.js'),
+                path.join(grunt.option('app.tmp'), 'node_modules/angular-mocks/angular-mocks.js'),
                 path.join(grunt.option('app.tmp'), 'bower_components/angular-mocks/angular-mocks.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/node_modules/**/*.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/**/*.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.module.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.config.js'),

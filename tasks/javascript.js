@@ -24,7 +24,6 @@ module.exports = function(grunt){
     UglifyJS = require("uglify-js"),
     convertSourceMap = require('convert-source-map'),
     wiredep = require('wiredep'),
-    npmWiredep = require('npm-wiredep'),
     glob = require('glob'),
     inEachAppDir = require('../ordered-application-directory'),
     fileReplace = require('./replace.js')(grunt);
@@ -61,24 +60,26 @@ module.exports = function(grunt){
             });
         });
 
-        tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript');
         var cwd = process.cwd();
+        tmp = path.join(cwd, grunt.option('app.tmp'), 'javascript');
+
         process.chdir(grunt.option('app.tmp'));
+
+        var npmFiles = wiredep(({
+            directory: 'node_modules',
+            bowerJson: require(path.join(process.cwd(), 'package.json'))
+        })).js || [];
+        npmFiles.forEach(function(file){
+            // copy each file into a directory called node_modules
+            var npmPath = file.substring(file.indexOf("node_modules"));
+            fs.copySync(file, path.join(tmp, npmPath));
+        });
 
         var bowerFiles = wiredep().js || [];
         bowerFiles.forEach(function(file){
             // copy each file into a directory called bower_components
             var bowerPath = file.substring(file.indexOf("bower_components"));
             fs.copySync(file, path.join(tmp, bowerPath));
-        });
-
-        process.chdir(cwd);
-
-        var npmFiles = npmWiredep().js || [];
-        npmFiles.forEach(function(file){
-            // copy each file into a directory called node_modules
-            var npmPath = file.substring(file.indexOf("node_modules"));
-            fs.copySync(file, path.join(tmp, npmPath));
         });
 
         process.chdir(cwd);

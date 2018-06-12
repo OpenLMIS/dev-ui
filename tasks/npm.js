@@ -37,6 +37,7 @@ module.exports = function(grunt){
         process.chdir(grunt.option('app.tmp'));
 
         grunt.file.write('package.json', JSON.stringify(npmObj, null, 2));
+
         exec('rm -rf node_modules');
         exec('npm install --production', {
             stdio: 'inherit' // Shows output as its generated
