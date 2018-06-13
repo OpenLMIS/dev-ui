@@ -23,7 +23,7 @@ module.exports = function(grunt){
     changeCase = require('change-case'),
     UglifyJS = require("uglify-js"),
     convertSourceMap = require('convert-source-map'),
-    wiredep = require('wiredep'),
+    wiredep = require('wiredep-away'),
     glob = require('glob'),
     inEachAppDir = require('../ordered-application-directory'),
     fileReplace = require('./replace.js')(grunt);
@@ -65,16 +65,6 @@ module.exports = function(grunt){
 
         process.chdir(grunt.option('app.tmp'));
 
-        var npmFiles = wiredep(({
-            directory: 'node_modules',
-            bowerJson: require(path.join(process.cwd(), 'package.json'))
-        })).js || [];
-        npmFiles.forEach(function(file){
-            // copy each file into a directory called node_modules
-            var npmPath = file.substring(file.indexOf("node_modules"));
-            fs.copySync(file, path.join(tmp, npmPath));
-        });
-
         var bowerFiles = wiredep().js || [];
         bowerFiles.forEach(function(file){
             // copy each file into a directory called bower_components
@@ -103,10 +93,6 @@ module.exports = function(grunt){
         // Since we copied all bower components over across bower files,
         // we don't have wiredep's dependency order — so we are just
         // guessing the order
-        addFiles('node_modules/**/jquery.js');
-        addFiles('node_modules/**/angular.js');
-        addFiles('node_modules/**/*.js');
-
         addFiles('bower_components/**/jquery.js');
         addFiles('bower_components/**/angular.js');
         addFiles('bower_components/**/*.js');

@@ -11,7 +11,7 @@ RUN apt-get install -t jessie-backports openjdk-8-jre-headless ca-certificates-j
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 
-RUN npm install -g bower grunt-cli phantomjs-prebuilt
+RUN npm install -g grunt-cli phantomjs-prebuilt yarn
 
 WORKDIR /dev-ui
 VOLUME ["/dev-ui", "/app"]
@@ -32,7 +32,7 @@ COPY tasks/* ./tasks/
 
 # Javascript packages
 COPY package.json .
-COPY bower.json .
+COPY package-yarn.json .
 COPY config.json .
 
 # Application logic

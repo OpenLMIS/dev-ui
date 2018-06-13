@@ -18,7 +18,7 @@ module.exports = function(grunt){
     var fs = require('fs-extra'),
     replace = require('replace-in-file'),
     path = require('path'),
-    wiredep = require('wiredep'),
+    wiredep = require('wiredep-away'),
     glob = require('glob'),
     sass = require('node-sass'),
     inEachAppDir = require('../ordered-application-directory'),
@@ -55,17 +55,6 @@ module.exports = function(grunt){
         bowerCss.concat(bowerScss).forEach(function(file){
             var bowerPath = file.substring(file.indexOf("bower_components"));
             fs.copySync(file, path.join(dest, bowerPath));
-        });
-
-        var npmWiredep = wiredep(({
-            directory: 'node_modules',
-            bowerJson: require(path.join(process.cwd(), 'package.json'))
-        }));
-        var npmCss = npmWiredep.css || [];
-        var npmScss = npmWiredep.scss || [];
-        npmCss.concat(npmScss).forEach(function(file){
-            var npmPath = file.substring(file.indexOf("node_modules"));
-            fs.copySync(file, path.join(dest, npmPath));
         });
 
         process.chdir(cwd);
@@ -153,9 +142,6 @@ module.exports = function(grunt){
         addFiles('bower_components/**/*.scss');
         addFiles('bower_components/**/*.css');
 
-        addFiles('node_modules/**/*.scss');
-        addFiles('node_modules/**/*.css');
-
         addFiles('**/mixins.scss');
         addFiles('**/*.mixins.scss');
         addFiles('**/*.scss');
@@ -177,15 +163,7 @@ module.exports = function(grunt){
             var fileDirectory = filePath.substring(0, filePath.lastIndexOf("/"));
             includePaths.push(fileDirectory);
         });
-        var npmWiredep = wiredep(({
-            directory: 'node_modules',
-            bowerJson: require(path.join(process.cwd(), 'package.json'))
-        }));
-        var npmScss = npmWiredep.scss || [];
-        npmScss.forEach(function(filePath){
-            var fileDirectory = filePath.substring(0, filePath.lastIndexOf("/"));
-            includePaths.push(path.join(process.cwd(), fileDirectory));
-        });
+
         process.chdir(cwd);
         return includePaths;
     }

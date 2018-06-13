@@ -88,12 +88,12 @@ Since the OpenLMIS-UI is built from different pieces, we use a configuration var
 ### Commands
 Here is a short list of all the commands you might need to know. These commands are built from smaller commands defined in `dev-ui/tasks` which you can reuse, overwrite, or repackage in your own build process (which you can modify by defining your own Gruntfile).
 
-- `grunt` will call the follow commands `bower` `build` and `karma:unit`
+- `grunt` will call the follow commands `yarn` `build` and `karma:unit`
 - `grunt build` will build the OpenLMIS-UI
 - `grunt watch` will start a process that waits for changes to files, and then rebuilds the UI
 - `grunt serve` will run the development server, which serves the `./build/` directory
 - `grunt clean` empties the build and temporary directories
-- `grunt bower` will loop through all application build directories and install the bower packages defined in each directory’s `bower.json` file
+- `grunt yarn` will loop through all application build directories and install the yarn packages defined in each directory’s `package-yarn.json` file
 - `grunt karma:unit` to run Jasmine unit tests.
 - `grunt karma:tdd` run Jasmine unit tests in test driven development mode, where test will automatically rerun when openlmis.js is rebuilt or any test file is updated.
 
@@ -132,5 +132,5 @@ You can set the url back to the OpenLMIS server, which is located here by:
 
 - Node 6.2
 - NPM
-- Bower
+- Yarn
 - AngularJS 1.6.x

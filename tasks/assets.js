@@ -16,7 +16,7 @@
 module.exports = function(grunt){
     var fs = require('fs-extra'),
     glob = require('glob'),
-    wiredep = require('wiredep'),
+    wiredep = require('wiredep-away'),
     path = require('path');
 
     var inEachAppDir = require('../ordered-application-directory');

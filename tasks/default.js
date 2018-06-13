@@ -16,8 +16,7 @@
 module.exports = function(grunt){
 	grunt.registerTask('default', [
 		'clean',
-		'npm',
-		'bower',
+		'yarn',
 		'build',
 		'reports'
 	]);
