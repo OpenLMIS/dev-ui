@@ -71,6 +71,11 @@ module.exports = function(grunt){
                 if(extentions.indexOf(fileExtention) >= 0) {
                     files.push(filePath);
                 }
+                // workaround to include fontawesome-webfont.woff after migrating to yarn
+                if (filePath.indexOf('scss/font-awesome.scss') !== -1) {
+                    var basePath = filePath.substring(0, filePath.indexOf('scss/'));
+                    files.push(basePath + 'fonts/fontawesome-webfont.woff');
+                }
             }
         }
         return files;
