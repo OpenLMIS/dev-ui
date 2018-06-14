@@ -39,7 +39,23 @@ module.exports = function(grunt){
         exec('yarn', {
             stdio: 'inherit' // Shows output as its generated
         });
+
+        // handle 'overrides' from package-yarn.json manually by replacing values in bower.json of each dependency
+        if (yarnObj.hasOwnProperty('overrides')) {
+            var overrides = yarnObj['overrides'];
+            for (var dependency in overrides) {
+                var bowerPath = path.join(process.cwd(), 'node_modules', dependency, 'bower.json');
+                if (grunt.file.exists(bowerPath)) {
+                    var bowerJson = grunt.file.readJSON(bowerPath);
+                    for (var key in overrides[dependency]) {
+                        bowerJson[key] = overrides[dependency][key];
+                    }
+                    grunt.file.write(bowerPath, JSON.stringify(bowerJson, null, 2));
+                }
+            }
+        }
+
         process.chdir(cwd);
     });
 
-}
+};
