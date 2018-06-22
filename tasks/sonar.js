@@ -45,7 +45,7 @@ module.exports = function(grunt) {
 
     });
 
-    grunt.config('sonarRunner', {
+    var sonarConfig = {
         analysis: {
             options: {
                 sonar: {
@@ -69,5 +69,12 @@ module.exports = function(grunt) {
                 }
             }
         }
-    });
+    };
+
+    var branch = grunt.option('sonarBranch');
+    if (branch) {
+        sonarConfig.analysis.options.sonar.branch = branch;
+    }
+
+    grunt.config('sonarRunner', sonarConfig);
 }

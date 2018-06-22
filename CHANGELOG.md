@@ -9,6 +9,7 @@ New functionality added in a backwards-compatible manner:
 
 Improvements:
 * [OLMIS-4750](https://openlmis.atlassian.net/browse/OLMIS-4750): Added Jenkinsfile
+* [OLMIS-4805](https://openlmis.atlassian.net/browse/OLMIS-4805): Enabled branch analysis in Sonar
 
 7.0.0 / 2018-04-24
 ==================
