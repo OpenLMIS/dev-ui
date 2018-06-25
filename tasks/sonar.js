@@ -72,7 +72,7 @@ module.exports = function(grunt) {
     };
 
     var branch = grunt.option('sonarBranch');
-    if (branch) {
+    if (branch && branch !== 'master') {
         sonarConfig.analysis.options.sonar.branch = branch;
     }
 
