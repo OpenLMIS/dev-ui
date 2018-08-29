@@ -56,6 +56,7 @@ pipeline {
                 }
             }
             steps {
+                sh "docker pull openlmis/dev-ui:latest"
                 sh "docker tag openlmis/dev-ui:latest openlmis/dev-ui:${VERSION}"
                 sh "docker push openlmis/dev-ui:${VERSION}"
             }
@@ -63,7 +64,7 @@ pipeline {
                 success {
                     script {
                         if (!VERSION.endsWith("SNAPSHOT")) {
-                            currentBuild.rawBuild.keepLog(true)
+                            currentBuild.setKeepLog(true)
                         }
                     }
                 }
