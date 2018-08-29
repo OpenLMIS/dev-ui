@@ -1,6 +1,6 @@
 {
   "name": "dev-ui",
-  "version": "5.1.0-SNAPSHOT",
+  "version": "8.0.1-SNAPSHOT",
   "repository": {
     "type": "git",
     "url": "https://github.com/OpenLMIS/dev-ui"
