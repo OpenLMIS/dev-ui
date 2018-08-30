@@ -1,3 +1,9 @@
+8.0.1 / Work in Progress
+========================
+
+Improvements:
+* [OLMIS-5235](https://openlmis.atlassian.net/browse/OLMIS-5235): Updated order for loading pouchdb.js and pouchdb.find.js files.
+
 8.0.0 / 2018-08-16
 ==================
 

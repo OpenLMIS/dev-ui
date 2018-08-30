@@ -95,6 +95,8 @@ module.exports = function(grunt){
         // guessing the order
         addFiles('bower_components/**/jquery.js');
         addFiles('bower_components/**/angular.js');
+        addFiles('bower_components/**/pouchdb.js');
+        addFiles('bower_components/**/pouchdb.find.js');
         addFiles('bower_components/**/*.js');
 
         addFiles('src/**/*.module.js');
