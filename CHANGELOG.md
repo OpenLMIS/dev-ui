@@ -3,6 +3,7 @@
 
 Improvements:
 * [OLMIS-5235](https://openlmis.atlassian.net/browse/OLMIS-5235): Updated order for loading pouchdb.js and pouchdb.find.js files.
+* [OLMIS-4388](https://openlmis.atlassian.net/browse/OLMIS-4833): Set up custom ESlint rule set to match our SonarQube configuration.
 
 8.0.0 / 2018-08-16
 ==================
