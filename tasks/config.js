@@ -45,7 +45,7 @@ module.exports = function(grunt){
             } else {
                 // Don't set values that are already set,
                 // they might be from the command line
-                if(grunt.option(configKey) === undefined){
+                if(grunt.option(configKey) === undefined || grunt.option(configKey) === null) {
                     constKey = changeCase.constantCase(configKey);
                     // If an environment variable matches a config.json value,
                     // the environment variable overwrites the config.json property
