@@ -47,7 +47,8 @@
   },
   "env": {
     "browser": true,
-    "jasmine": true
+    "jasmine": true,
+    "jquery": true
   },
   "globals": {
     "angular": true,
@@ -56,5 +57,9 @@
     "inject": true,
     "module": true,
     "Set": true
-  }
+  },
+  "plugins": [
+    "dollar-sign",
+    "jquery"
+  ]
 }

@@ -24,7 +24,7 @@ module.exports = function(grunt) {
             configFile: configFile,
             fix: grunt.option('fixLint')
         },
-        target: [grunt.option('app.src') + '/**/*.js', '!' + grunt.option('app.src') + '/**/*.spec.js']
+        target: [grunt.option('app.src') + '/**/*.js']
     });
 
 };
