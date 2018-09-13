@@ -43,7 +43,22 @@
     "space-infix-ops": "error",
     "line-comment-position": ["error", { "position": "above", "applyDefaultIgnorePatterns": false }],
     "complexity": ["error", 10],
-    "no-else-return": "error"
+    "no-else-return": "error",
+    "jasmine/no-focused-tests": "error",
+    "jasmine/expect-matcher": "error",
+    "jasmine/expect-single-argument": "error",
+    "jasmine/missing-expect": ["error", "expect()", "$httpBackend.expectGET()", "$httpBackend.expectDELETE()",
+      "$httpBackend.expectGET()", "$httpBackend.expectJSONP()", "$httpBackend.expectHEAD()",
+      "$httpBackend.expectPATCH()", "$httpBackend.expectPOST()", "$httpBackend.expectPUT()"
+    ],
+    "jasmine/new-line-before-expect": "error",
+    "jasmine/new-line-between-declarations": "error",
+    "jasmine/no-disabled-tests": "error",
+    "jasmine/no-global-setup": "error",
+    "jasmine/no-spec-dupes": [2, "branch"],
+    "jasmine/no-suite-dupes": [2, "branch"],
+    "jasmine/no-suite-callback-args": "error",
+    "jasmine/prefer-jasmine-matcher": "error"
   },
   "env": {
     "browser": true,
@@ -60,6 +75,7 @@
   },
   "plugins": [
     "dollar-sign",
-    "jquery"
+    "jquery",
+    "jasmine"
   ]
 }
