@@ -6,6 +6,9 @@
     "url": "https://github.com/OpenLMIS/dev-ui"
   },
   "main": "Gruntfile.js",
+  "scripts": {
+    "postinstall": "cp -nr node_modules ./../../"
+  },
   "dependencies": {
     "change-case": "^3.0.1",
     "concat-with-sourcemaps": "^1.0.4",

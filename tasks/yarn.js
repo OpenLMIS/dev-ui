@@ -13,15 +13,16 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-module.exports = function(grunt){
+module.exports = function(grunt) {
     const exec = require('child_process').execSync;
     var eachAppDir = require('../ordered-application-directory.js'),
-        extend = require('extend'),
-        path = require('path');
+    extend = require('extend'),
+    path = require('path'),
+    fs = require('fs-extra');
 
-    grunt.registerTask('yarn', function(){
+    grunt.registerTask('yarn', function() {
         var yarnObj;
-        eachAppDir(function(dir){
+        eachAppDir(function(dir) {
             var obj = grunt.file.readJSON(path.join(dir, 'package-yarn.json'));
             if (obj && !yarnObj) {
                 yarnObj = obj;
@@ -35,10 +36,14 @@ module.exports = function(grunt){
 
         grunt.file.write('package.json', JSON.stringify(yarnObj, null, 2));
 
+        if (fs.existsSync('../yarn.lock')) {
+            fs.copySync('../yarn.lock', 'yarn.lock');
+        }
         exec('rm -rf node_modules');
         exec('yarn', {
             stdio: 'inherit' // Shows output as its generated
         });
+        fs.copySync('yarn.lock', '../yarn.lock');
 
         // handle 'overrides' from package-yarn.json manually by replacing values in bower.json of each dependency
         if (yarnObj.hasOwnProperty('overrides')) {

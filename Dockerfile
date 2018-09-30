@@ -32,6 +32,7 @@ COPY tasks/* ./tasks/
 
 # Javascript packages
 COPY package.json .
+COPY npm-shrinkwrap.json .
 COPY package-yarn.json .
 COPY config.json .
 
