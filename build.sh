@@ -2,7 +2,7 @@
 
 # Update everything (just in case)
 npm rebuild
-npm install --no-optional
+npm install
 
 TX_PUSH=${TRANSIFEX_PUSH:-true}
 TX_PULL=${TRANSIFEX_PULL:-true}
