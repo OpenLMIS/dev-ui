@@ -1,10 +1,15 @@
-8.0.1 / Work in Progress
+8.1.0 / Work in Progress
 ========================
 
 Improvements:
-* [OLMIS-5235](https://openlmis.atlassian.net/browse/OLMIS-5235): Updated order for loading pouchdb.js and pouchdb.find.js files.
 * [OLMIS-4388](https://openlmis.atlassian.net/browse/OLMIS-4833): Set up custom ESLint rule set to match our SonarQube configuration.
 * [OLMIS-5389](https://openlmis.atlassian.net/browse/OLMIS-5389): Set up custom jasmine rules for ESLint.
+* [OLMIS-3696](https://openlmis.atlassian.net/browse/OLMIS-3696): Added dependency and development dependency locking.
+
+8.0.1 / 2018-10-01
+
+Improvements:
+* [OLMIS-5235](https://openlmis.atlassian.net/browse/OLMIS-5235): Updated order for loading pouchdb.js and pouchdb.find.js files.
 
 8.0.0 / 2018-08-16
 ==================
