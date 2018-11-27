@@ -49,7 +49,10 @@
     "jasmine/expect-single-argument": "error",
     "jasmine/missing-expect": ["error", "expect()", "$httpBackend.expectGET()", "$httpBackend.expectDELETE()",
       "$httpBackend.expectGET()", "$httpBackend.expectJSONP()", "$httpBackend.expectHEAD()",
-      "$httpBackend.expectPATCH()", "$httpBackend.expectPOST()", "$httpBackend.expectPUT()"
+      "$httpBackend.expectPATCH()", "$httpBackend.expectPOST()", "$httpBackend.expectPUT()",
+      "this.$httpBackend.expectGET()", "this.$httpBackend.expectDELETE()", "this.$httpBackend.expectGET()",
+      "this.$httpBackend.expectJSONP()", "this.$httpBackend.expectHEAD()", "this.$httpBackend.expectPATCH()",
+      "this.$httpBackend.expectPOST()", "this.$httpBackend.expectPUT()"
     ],
     "jasmine/new-line-before-expect": "error",
     "jasmine/new-line-between-declarations": "error",
