@@ -1,5 +1,5 @@
-8.1.0 / Work in Progress
-========================
+8.1.0 / 2018-12-12
+==================
 
 Improvements:
 * [OLMIS-4388](https://openlmis.atlassian.net/browse/OLMIS-4833): Set up custom ESLint rule set to match our SonarQube configuration.
