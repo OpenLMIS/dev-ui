@@ -13,7 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-module.exports = function(grunt){
+module.exports = function(grunt) {
     var fs = require('fs-extra'),
         path = require('path'),
         glob = require('glob'),
@@ -21,21 +21,23 @@ module.exports = function(grunt){
         tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript', 'tests'),
         testFilePattern = '**/*.spec.js';
 
+    process.env.CHROME_BIN = require('puppeteer').executablePath();
+
     grunt.loadNpmTasks('grunt-karma');
 
     grunt.registerTask('test', ['test:copy', 'karma:unit']);
 
-    grunt.registerTask('test:copy', function(){
-        inEachAppDir(function(dir){
+    grunt.registerTask('test:copy', function() {
+        inEachAppDir(function(dir) {
             var src = grunt.option('app.src');
             var config = grunt.file.readJSON(path.join(dir, 'config.json'));
-            if(config && config.app && config.app.src) {
+            if (config && config.app && config.app.src) {
                 src = config.app.src;
             }
 
-            glob.sync(testFilePattern,{
+            glob.sync(testFilePattern, {
                 cwd: path.join(dir, src)
-            }).forEach(function(file){
+            }).forEach(function(file) {
                 fs.copySync(path.join(dir, src, file), path.join(tmp, file));
             });
         });
@@ -48,7 +50,7 @@ module.exports = function(grunt){
             plugins: [
                 'karma-jasmine',
                 'karma-coverage',
-                'karma-phantomjs-launcher',
+                'karma-chrome-launcher',
                 'karma-junit-reporter'
             ],
             exclude: [
@@ -57,7 +59,7 @@ module.exports = function(grunt){
             /* REPORTERS */
             reporters: ['progress', 'coverage', 'junit'],
             junitReporter: {
-                outputDir: path.join(grunt.option('build'),'test/test-results')
+                outputDir: path.join(grunt.option('build'), 'test/test-results')
             },
             coverageReporter: {
                 type: 'lcov',
@@ -71,7 +73,13 @@ module.exports = function(grunt){
             browserDisconnectTolerance: 3,
             browserNoActivityTimeout: 20000,
 
-            browsers: ['PhantomJS'],
+            browsers: ['ChromeHeadlessNoSandbox'],
+            customLaunchers: {
+                ChromeHeadlessNoSandbox: {
+                    base: 'ChromeHeadless',
+                    flags: ['--no-sandbox']
+                }
+            },
 
             files: [
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/jquery/dist/jquery.js'),
@@ -101,4 +109,4 @@ module.exports = function(grunt){
     configuration.options.preprocessors[path.join(grunt.option('app.tmp'), 'javascript/src/**/*.js')] = ['coverage'];
 
     grunt.config('karma', configuration);
-}
+};

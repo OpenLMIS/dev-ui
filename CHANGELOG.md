@@ -1,3 +1,9 @@
+9.0.0 / Work in Progress
+========================
+
+Breaking changes:
+* [OLMIS-5837](https://openlmis.atlassian.net/browse/OLMIS-5837): Replaced PhantomJS launcher with headless Chrome.
+
 8.1.0 / 2018-12-12
 ==================
 
