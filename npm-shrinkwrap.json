@@ -4527,9 +4527,9 @@
       }
     },
     "karma-jasmine": {
-      "version": "0.1.6",
-      "resolved": "https://registry.npmjs.org/karma-jasmine/-/karma-jasmine-0.1.6.tgz",
-      "integrity": "sha1-MFRQV2mOvcvGMTLUe+Elt1svvFU="
+      "version": "0.2.3",
+      "resolved": "https://registry.npmjs.org/karma-jasmine/-/karma-jasmine-0.2.3.tgz",
+      "integrity": "sha1-xNPcETLV3cNdralVRcQs4LbpmZs="
     },
     "karma-junit-reporter": {
       "version": "1.2.0",
