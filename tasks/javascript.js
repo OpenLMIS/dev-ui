@@ -97,6 +97,8 @@ module.exports = function(grunt){
         addFiles('bower_components/**/angular.js');
         addFiles('bower_components/**/pouchdb.js');
         addFiles('bower_components/**/pouchdb.find.js');
+        addFiles('bower_components/**/moment.js');
+        addFiles('bower_components/**/moment-timezone.js');
         addFiles('bower_components/**/*.js');
 
         addFiles('src/**/*.module.js');
@@ -211,7 +213,7 @@ module.exports = function(grunt){
 
     grunt.registerTask('javascript:app.js', function(){
         var tmpSrc = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
-        
+
         var appModules = [];
         fs.readdirSync(tmpSrc).forEach(function(filePath){
             var fullFilePath = path.join(tmpSrc, filePath);

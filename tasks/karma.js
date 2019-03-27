@@ -84,12 +84,13 @@ module.exports = function(grunt) {
             files: [
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/jquery/dist/jquery.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/angular/angular.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/bower_components/moment/moment.js'),
                 path.join(grunt.option('app.tmp'), 'node_modules/angular-mocks/angular-mocks.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/**/*.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.module.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.config.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.routes.js'),
-                path.join(grunt.option('app.tmp'), 'javascript/src/**/*.js'),
+                        path.join(grunt.option('app.tmp'), 'javascript/src/**/*.js'),
                 path.join(tmp, '**/*builder.spec.js'),
                 path.join(tmp, testFilePattern)
             ]
