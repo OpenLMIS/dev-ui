@@ -77,7 +77,7 @@ module.exports = function(grunt) {
             customLaunchers: {
                 ChromeHeadlessNoSandbox: {
                     base: 'ChromeHeadless',
-                    flags: ['--no-sandbox']
+                    flags: ['--no-sandbox', '--headless', '--js-flags="--max_old_space_size=4096"']
                 }
             },
 
