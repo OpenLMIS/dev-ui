@@ -9,9 +9,9 @@ TX_PULL=${TRANSIFEX_PULL:-true}
 
 # Built and test
 if [ "$TX_PUSH" = "true" ]; then
-  grunt --production --pullTransifex --pushTransifex
+  grunt --production=false --pullTransifex --pushTransifex
 elif [ "$TX_PULL" = "true" ]; then
-  grunt --production --pullTransifex
+  grunt --production=false --pullTransifex
 else
-  grunt --production
+  grunt --production=false
 fi
