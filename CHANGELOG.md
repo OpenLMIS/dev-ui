@@ -1,3 +1,9 @@
+9.0.1 / Work in Progress
+========================
+
+Bug fixes:
+* Fixed failing unit tests because of disconnected headless Chrome.
+
 9.0.0 / 2019-05-27
 ==================
 
