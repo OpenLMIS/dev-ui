@@ -3,6 +3,7 @@
 
 Bug fixes:
 * [OLMIS-7208](https://openlmis.atlassian.net/browse/OLMIS-7208): Fixed failing unit tests because of incorrect version of jquery and bootstrap-sass.
+* Fixed failing unit tests because of micromatch version change.
 
 9.0.1 / 2019-10-17
 ==================
