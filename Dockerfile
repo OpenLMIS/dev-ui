@@ -14,7 +14,7 @@ RUN apt-get install -y -f gconf-service libasound2 libatk1.0-0 libatk-bridge2.0-
 RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 
-RUN npm install -g grunt-cli phantomjs-prebuilt yarn
+RUN npm install -g grunt-cli@1.3.2 phantomjs-prebuilt yarn
 
 WORKDIR /dev-ui
 VOLUME ["/dev-ui", "/app"]
