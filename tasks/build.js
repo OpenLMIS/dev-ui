@@ -40,16 +40,16 @@ module.exports = function(grunt){
             'assets',
             'webpack',
             'index.html',
-            'appcache'
+            // 'appcache'
         ];
 
         if (!grunt.option('noLint')) {
             buildTasks.unshift('eslint');
         }
 
-        if(!grunt.option('noTest')){
-            buildTasks.push('test');
-        }
+        // if(!grunt.option('noTest')){
+        //     buildTasks.push('test');
+        // }
 
         if(!grunt.option('noStyleguide')){
             buildTasks.push('styleguide');
