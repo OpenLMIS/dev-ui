@@ -16,17 +16,13 @@
 
 module.exports = function(grunt){
     var fs = require('fs-extra'),
-    replace = require('replace-in-file'),
     path = require('path'),
     wiredep = require('wiredep-away'),
     glob = require('glob'),
-    sass = require('node-sass'),
     inEachAppDir = require('../ordered-application-directory'),
     fileReplace = require('./replace.js')(grunt);
 
     var tmpDir = 'css';
-    var cssFileName = 'openlmis.css';
-    var srcMapFileName = 'openlmis.css.map';
 
     grunt.registerTask('css', ['css:copy', 'css:replace', 'css:build']);
 
@@ -66,42 +62,9 @@ module.exports = function(grunt){
     });
 
     grunt.registerTask('css:build', function(){
-        var dest = grunt.option('app.dest');
         var tmp = path.join(grunt.option('app.tmp'), tmpDir);
-        var generateSrcMap = !grunt.option('production');
 
         buildScss('openlmis.scss', tmp);
-
-        var sassResult = sass.renderSync({
-            file: path.join(tmp, 'openlmis.scss'),
-            sourceMap: generateSrcMap,
-            sourceMapContents: generateSrcMap,
-            outFile: cssFileName,
-            outputStyle: 'compressed',
-            includePaths: getIncludePaths()
-        });
-
-        if (generateSrcMap) {
-            var sourceMap = cleanTmpSourceMapPaths(sassResult.map, tmp);
-            fs.writeFileSync(path.join(dest, srcMapFileName), sourceMap);
-        }
-
-        fs.writeFileSync(path.join(dest, cssFileName), sassResult.css);
-
-        // remove non-relative strings because our file structure is flat
-        replace.sync({
-            files: [path.join(dest, cssFileName), path.join(dest, srcMapFileName)],
-            from: /\.\.\//g,
-            to: ''
-        });
-
-        // replace cache busting which breaks appcache, needed until this is fixed:
-        // https://github.com/FortAwesome/Font-Awesome/issues/3286
-        replace.sync({
-            files: [path.join(dest, cssFileName), path.join(dest, srcMapFileName)],
-            from: /(fontawesome-webfont(\.[a-zA-Z0-9]{3,5})?)\?(\#iefix\&)?v=[0-9\.]{5}(\#fontawesomeregular)?/g,
-            to: '$1'
-        });
 
     });
 
@@ -149,37 +112,4 @@ module.exports = function(grunt){
 
         fs.writeFileSync(path.join(dest, fileName), imports);
     }
-
-    // Include paths are the directories imported sass files live in
-    // so that import statements in the files will work correctly
-    function getIncludePaths(){
-        var includePaths = [];
-
-        var cwd = process.cwd();
-        process.chdir(grunt.option('app.tmp'));
-
-        var bowerScss = wiredep().scss || [];
-        bowerScss.forEach(function(filePath){
-            var fileDirectory = filePath.substring(0, filePath.lastIndexOf("/"));
-            includePaths.push(fileDirectory);
-        });
-
-        process.chdir(cwd);
-        return includePaths;
-    }
-
-    function cleanTmpSourceMapPaths(sassMap, tmp) {
-        var map = JSON.parse(sassMap);
-
-        for (var i = 0; i < map.sources.length; i++) {
-            var source = map.sources[i];
-            // Remove .tmp/, .tmp/css and .tmp/css/src
-            source = source.replace(path.join(tmp, "src/"), "");
-            source = source.replace(path.join(tmp, "/"), "");
-            source = source.replace(path.join(grunt.option('app.tmp'), "/"), "");
-            map.sources[i] = source;
-        }
-
-        return JSON.stringify(map);
-    }
-}
+};

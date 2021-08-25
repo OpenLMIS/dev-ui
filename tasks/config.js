@@ -31,6 +31,44 @@ module.exports = function(grunt){
 
     setGruntOptions(config);
 
+    grunt.loadNpmTasks('grunt-webpack');
+
+    var webpackConfig = require('../webpack.config');
+    var dest = path.join(process.cwd(), grunt.option('app.dest'));
+    var src = path.join(process.cwd(), grunt.option('app.tmp'));
+    var entry = path.join(src, 'javascript', 'src', 'index.js');
+
+    var MiniCssExtractPlugin = require('mini-css-extract-plugin');
+    var { CleanWebpackPlugin } = require('clean-webpack-plugin');
+    var CopyPlugin = require("copy-webpack-plugin");
+
+    grunt.initConfig({
+        webpack: {
+            conf: Object.assign(webpackConfig, {
+                mode: grunt.option('production') ? 'production' : 'development',
+                entry: entry,
+                output: {
+                    path: dest,
+                    filename: 'openlmis.js',
+                },
+                plugins: [
+                    new CleanWebpackPlugin(),
+                    new MiniCssExtractPlugin({
+                        filename: 'openlmis.css',
+                    }),
+                    new CopyPlugin({
+                        patterns: [
+                            {
+                                from: path.join(src, 'assets', 'favicon.ico'),
+                                to: dest
+                            },
+                        ],
+                    }),
+                ],
+            }, grunt.option('production') ? {} : { devtool: 'cheap-source-map' })
+        },
+    });
+
     function setGruntOptions(config, prefix){
         var configKey = '',
             constKey = '';

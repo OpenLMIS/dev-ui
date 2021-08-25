@@ -22,7 +22,7 @@ module.exports = function(grunt){
     var inEachAppDir = require('../ordered-application-directory');
 
     grunt.registerTask('assets', function(){
-        var dest = path.join(process.cwd(), grunt.option('app.dest'));
+        var tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'assets');
 
         var imageExtentions = ['png', 'jpg', 'gif', 'svg', 'ico'],
         fontExtentions = ['eot', 'woff', 'woff2', 'ttf', 'otf'],
@@ -43,7 +43,7 @@ module.exports = function(grunt){
             glob.sync('{' + assetPatterns.join(',') + '}', {
                 cwd: src
             }).forEach(function(file){
-                fs.copySync(path.join(src, file), path.join(dest, file));
+                fs.copySync(path.join(src, file), path.join(tmp, file));
             });
         });
 
@@ -52,8 +52,8 @@ module.exports = function(grunt){
         process.chdir(grunt.option('app.tmp'));
 
         mainFilesFromBower(fontExtentions).forEach(function(file){
-            var fileName = file.substring(file.lastIndexOf("/"))
-            fs.copySync(file, path.join(dest, 'fonts', fileName));
+            var fileName = file.substring(file.lastIndexOf("/"));
+            fs.copySync(file, path.join(tmp, 'fonts', fileName));
         });
 
         process.chdir(cwd);
@@ -63,7 +63,7 @@ module.exports = function(grunt){
     // adapted from: https://github.com/taptapship/wiredep/issues/200
     function mainFilesFromBower(extentions){
         var deps = wiredep().packages;
-        var files = []
+        var files = [];
         for(var i in deps) {
             for(var k in deps[i].main) {
                 var filePath = deps[i].main[k];
@@ -76,4 +76,4 @@ module.exports = function(grunt){
         return files;
     }
 
-}
+};

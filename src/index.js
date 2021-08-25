@@ -13,9 +13,17 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-module.exports = function(grunt){
-    var configSetup = require('./tasks/config.js');
-    configSetup(grunt);
+'use strict';
 
-    grunt.loadTasks('./tasks');
-};
+window.$ = require('jquery');
+window.jquery = window.$;
+window.jQuery = window.$;
+
+window._ = require('underscore');
+
+require('./vendors');
+
+require('./app');
+require('./bundle');
+
+require('./../../css/openlmis.scss');

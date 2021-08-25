@@ -15,7 +15,7 @@
 
 module.exports = function(grunt){
     grunt.loadNpmTasks('grunt-force-task');
-    
+
     grunt.registerTask('build', function(){
         var buildTasks = [
             'build:app'
@@ -35,9 +35,10 @@ module.exports = function(grunt){
         var buildTasks = [
             'messages',
             'html',
-            'javascript',
             'css',
+            'javascript',
             'assets',
+            'webpack',
             'index.html',
             'appcache'
         ];
@@ -66,4 +67,4 @@ module.exports = function(grunt){
         this.async();
     });
 
-}
+};

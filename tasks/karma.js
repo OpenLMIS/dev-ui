@@ -54,7 +54,10 @@ module.exports = function(grunt) {
                 'karma-junit-reporter'
             ],
             exclude: [
-                'app.js'
+                'app.js',
+                path.join(grunt.option('app.tmp'), 'javascript/src/index.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/src/bundle.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/src/*vendors.js')
             ],
             /* REPORTERS */
             reporters: ['progress', 'coverage', 'junit'],
@@ -82,7 +85,7 @@ module.exports = function(grunt) {
             },
 
             files: [
-                path.join(grunt.option('app.tmp'), 'javascript/bower_components/jquery/dist/jquery.js'),
+                path.join(grunt.option('app.tmp'), 'node_modules/jquery/dist/jquery.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/angular/angular.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/moment/moment.js'),
                 path.join(grunt.option('app.tmp'), 'node_modules/angular-mocks/angular-mocks.js'),
@@ -90,7 +93,7 @@ module.exports = function(grunt) {
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.module.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.config.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.routes.js'),
-                        path.join(grunt.option('app.tmp'), 'javascript/src/**/*.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/src/**/*.js'),
                 path.join(tmp, '**/*builder.spec.js'),
                 path.join(tmp, testFilePattern)
             ]

@@ -16,20 +16,13 @@
 
 module.exports = function(grunt){
     var fs = require('fs-extra'),
-    readline = require('readline'),
-    stream = require('stream'),
     path = require('path'),
-    replace = require('replace-in-file'),
-    changeCase = require('change-case'),
-    UglifyJS = require("uglify-js"),
-    convertSourceMap = require('convert-source-map'),
     wiredep = require('wiredep-away'),
     glob = require('glob'),
     inEachAppDir = require('../ordered-application-directory'),
     fileReplace = require('./replace.js')(grunt);
 
     var tmpDir = path.join('javascript', 'src');
-    var fileName = 'openlmis.js';
 
     grunt.registerTask('javascript', [
         'javascript:copyright',
@@ -83,77 +76,43 @@ module.exports = function(grunt){
 
     grunt.registerTask('javascript:build', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript'),
-        toplevel = null, // container for UglifyJS
-        sourceMap = UglifyJS.SourceMap(),
-        sourceMapGenerator = sourceMap.get(),
         ignorePatterns = [ // storing patterns to ignore
             'app.js' // must be last
         ];
 
+        var imports = '';
+
+        addFiles(tmp, 'src/*-vendors.js');
         // Since we copied all bower components over across bower files,
         // we don't have wiredep's dependency order — so we are just
         // guessing the order
-        addFiles('bower_components/**/jquery.js');
-        addFiles('bower_components/**/angular.js');
-        addFiles('bower_components/**/pouchdb.js');
-        addFiles('bower_components/**/pouchdb.find.js');
-        addFiles('bower_components/**/moment.js');
-        addFiles('bower_components/**/moment-timezone.js');
-        addFiles('bower_components/**/*.js');
+        addFiles(tmp, 'bower_components/**/angular.js');
+        addFiles(tmp, 'bower_components/**/*.js');
 
-        addFiles('src/**/*.module.js');
-        addFiles('src/**/*.config.js');
-        addFiles('src/**/*.routes.js');
-        addFiles('src/**/*.js');
+        fs.writeFileSync(path.join(tmp, 'src', 'vendors.js'), imports);
+        imports = '';
 
-        ignorePatterns = [];
-        addFiles('src/app.js');
+        addFiles(tmp, 'src/**/*.module.js');
+        addFiles(tmp, 'src/**/*.config.js');
+        addFiles(tmp, 'src/**/*.routes.js');
+        addFiles(tmp, 'src/*/**/*.js');
 
-        toplevel.figure_out_scope();
-        if(grunt.option('production')){
-            // Compress code
-            var compressed_ast = toplevel.transform(UglifyJS.Compressor({
-                warnings: false
-            }));
-            // Mangle code (which just breaks currently)
-            // compressed_ast.figure_out_scope();
-            // compressed_ast.compute_char_frequency();
-            // compressed_ast.mangle_names();
-
-            // Print code as small as possible
-            var stream = UglifyJS.OutputStream({}); // not the debug settings
-            compressed_ast.print(stream);
-
-            fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), stream.toString());
-        } else {
-            var stream = UglifyJS.OutputStream({
-                source_map: sourceMap,
-                beautify: true,
-                comments: true
-            });
-            toplevel.print(stream);
-
-            var javascript = stream.toString();
-            javascript += "\n" + "//# sourceMappingURL=" + fileName + '.map';
-
-            fs.writeFileSync(path.join(grunt.option('app.dest'), fileName), javascript);
-            fs.writeFileSync(path.join(grunt.option('app.dest'), fileName + '.map'), sourceMap.toString());
-        }
-
+        fs.writeFileSync(path.join(tmp, 'src', 'bundle.js'), imports);
 
 
         // Helper function to keep ordered file adding clear
-        function addFiles(pattern){
+        function addFiles(dir, pattern){
             glob.sync(pattern, {
-                cwd: tmp,
+                cwd: dir,
                 ignore: ignorePatterns
-            }).forEach(function(file){
-                var code = fs.readFileSync(path.join(tmp, file), "utf8");
-                toplevel = UglifyJS.parse(code, {
-                    filename: file,
-                    toplevel:toplevel
-                });
-                sourceMapGenerator.setSourceContent(file, code);
+            }).forEach(function(file) {
+                var fileToInclude = path.join(dir, file);
+
+                if (fileToInclude.endsWith('.js')) {
+                    fileToInclude = fileToInclude.substring(0, fileToInclude.length - 3);
+                }
+
+                imports += 'require("' + fileToInclude + '");\n';
             });
             // Don't let previously added patterns be added again
             ignorePatterns.push(pattern);
@@ -230,4 +189,4 @@ module.exports = function(grunt){
             encoding: 'utf8'
         });
     });
-}
+};
