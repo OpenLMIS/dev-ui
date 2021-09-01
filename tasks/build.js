@@ -47,9 +47,9 @@ module.exports = function(grunt){
             buildTasks.unshift('eslint');
         }
 
-        // if(!grunt.option('noTest')){
-        //     buildTasks.push('test');
-        // }
+        if(!grunt.option('noTest')){
+            buildTasks.push('test');
+        }
 
         if(!grunt.option('noStyleguide')){
             buildTasks.push('styleguide');
