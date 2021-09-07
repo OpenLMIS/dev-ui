@@ -76,6 +76,12 @@ module.exports = function(grunt) {
             browserDisconnectTolerance: 3,
             browserNoActivityTimeout: 20000,
 
+            client: {
+                jasmine: {
+                    random: false
+                }
+            },
+
             browsers: ['ChromeHeadlessNoSandbox'],
             customLaunchers: {
                 ChromeHeadlessNoSandbox: {
