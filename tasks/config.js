@@ -41,6 +41,7 @@ module.exports = function(grunt){
     var MiniCssExtractPlugin = require('mini-css-extract-plugin');
     var { CleanWebpackPlugin } = require('clean-webpack-plugin');
     var CopyPlugin = require("copy-webpack-plugin");
+    var TerserPlugin = require('terser-webpack-plugin');
 
     grunt.initConfig({
         webpack: {
@@ -65,7 +66,18 @@ module.exports = function(grunt){
                         ],
                     }),
                 ],
-            }, grunt.option('production') ? {} : { devtool: 'cheap-source-map' })
+            }, grunt.option('production') ?
+              {
+                  optimization: {
+                      minimizer: [
+                          new TerserPlugin({
+                              terserOptions: {
+                                  mangle: false,
+                              },
+                          }),
+                      ],
+                  },
+              } : { devtool: 'cheap-source-map' })
         },
     });
 
