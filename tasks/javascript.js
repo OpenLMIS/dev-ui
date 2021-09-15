@@ -45,7 +45,7 @@ module.exports = function(grunt){
                 src = dirConfig.app.src;
             }
 
-            glob.sync('**/*.js', {
+            glob.sync('**/*.{js,jsx}', {
                 cwd: path.join(dir, src),
                 ignore: ['**/*.spec.js']
             }).forEach(function(file){
@@ -71,7 +71,7 @@ module.exports = function(grunt){
 
     grunt.registerTask('javascript:replace', function(){
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
-        fileReplace('**/*.js', tmp);
+        fileReplace('**/*.{js,jsx}', tmp);
     });
 
     grunt.registerTask('javascript:build', function(){
@@ -96,6 +96,7 @@ module.exports = function(grunt){
         addFiles(tmp, 'src/**/*.config.js');
         addFiles(tmp, 'src/**/*.routes.js');
         addFiles(tmp, 'src/*/**/*.js');
+        addFiles(tmp, 'src/*/**/*.wrapper.jsx');
 
         fs.writeFileSync(path.join(tmp, 'src', 'bundle.js'), imports);
 

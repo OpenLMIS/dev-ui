@@ -32,7 +32,7 @@ COPY .sass-lint.yml .
 COPY sonar.sh .
 COPY build.sh .
 COPY tasks/* ./tasks/
-COPY babel.config.json .
+COPY .babelrc .
 COPY webpack.config.js .
 
 # Javascript packages
