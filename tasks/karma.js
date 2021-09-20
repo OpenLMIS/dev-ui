@@ -48,6 +48,7 @@ module.exports = function(grunt) {
             basePath: './',
             frameworks: ['jasmine'],
             plugins: [
+                'karma-webpack',
                 'karma-jasmine',
                 'karma-coverage',
                 'karma-chrome-launcher',
@@ -98,20 +99,23 @@ module.exports = function(grunt) {
                 path.join(grunt.option('app.tmp'), 'node_modules/moment-timezone/moment-timezone.js'),
                 path.join(grunt.option('app.tmp'), 'node_modules/pouchdb/dist/pouchdb.js'),
                 path.join(grunt.option('app.tmp'), 'node_modules/underscore/underscore.js'),
-
-                path.join(grunt.option('app.tmp'), 'node_modules/bootstrap-sass/assets/javascripts/bootstrap.js'),
                 path.join(grunt.option('app.tmp'), 'node_modules/js-shortid/lib/js-shortid.js'),
                 path.join(grunt.option('app.tmp'), 'node_modules/perfect-scrollbar/dist/js/perfect-scrollbar.jquery.js'),
-
+                path.join(grunt.option('app.tmp'), 'node_modules/popper.js/dist/popper.js'),
+                
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/**/*.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.module.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/openlmis-config/*.js'),
+                path.join(grunt.option('app.tmp'), 'node_modules/popper.js/dist/popper.js'),
+                path.join(grunt.option('app.tmp'), 'node_modules/bootstrap/dist/js/bootstrap.bundle.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.constant.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.config.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.routes.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.js'),
                 path.join(tmp, '**/*builder.spec.js'),
-                path.join(tmp, testFilePattern)
+                path.join(tmp, testFilePattern),
+                path.join(grunt.option('app.tmp'), 'node_modules/bootstrap/dist/js/bootstrap.bundle.js'),
+                path.join(grunt.option('app.tmp'), 'node_modules/bootstrap-tour/build/js/bootstrap-tour-standalone.js')
             ]
         },
         unit: {
