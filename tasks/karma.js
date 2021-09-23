@@ -106,7 +106,6 @@ module.exports = function(grunt) {
                 path.join(grunt.option('app.tmp'), 'javascript/bower_components/**/*.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.module.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/openlmis-config/*.js'),
-                path.join(grunt.option('app.tmp'), 'node_modules/popper.js/dist/popper.js'),
                 path.join(grunt.option('app.tmp'), 'node_modules/bootstrap/dist/js/bootstrap.bundle.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.constant.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/**/*.config.js'),
@@ -115,7 +114,6 @@ module.exports = function(grunt) {
                 path.join(tmp, '**/*builder.spec.js'),
                 path.join(tmp, testFilePattern),
                 path.join(grunt.option('app.tmp'), 'node_modules/bootstrap/dist/js/bootstrap.bundle.js'),
-                path.join(grunt.option('app.tmp'), 'node_modules/bootstrap-tour/build/js/bootstrap-tour-standalone.js')
             ]
         },
         unit: {
