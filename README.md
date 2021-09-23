@@ -130,7 +130,7 @@ You can set the url back to the OpenLMIS server, which is located here by:
 
 ## Tech
 
-- Node 6.2
+- Node 12.13.0
 - NPM
 - Yarn
 - AngularJS 1.6.x
