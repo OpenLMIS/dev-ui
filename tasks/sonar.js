@@ -29,10 +29,11 @@ module.exports = function(grunt) {
     grunt.registerTask('sonar:lcov', function() {
         var lcovPath;
 
-        glob.sync(path.join(process.cwd(), grunt.option('build'), 'test/coverage', '**/lcov.info'))
-        .forEach(function(file) {
-            lcovPath = file;
-        });
+        var paths = glob.sync(path.join(process.cwd(), grunt.option('build'), 'test/coverage', '**/lcov.info'));
+
+        if (paths && paths.length) {
+            lcovPath = paths[0];
+        }
 
         if(lcovPath) {
             fs.copySync(lcovPath, path.join(grunt.option('app.tmp'), 'sonar', 'lcov.info'));
@@ -77,4 +78,4 @@ module.exports = function(grunt) {
     }
 
     grunt.config('sonarRunner', sonarConfig);
-}
+};
