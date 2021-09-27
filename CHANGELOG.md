@@ -4,6 +4,8 @@
 Breaking changes:
 * [OLMIS-7314](https://openlmis.atlassian.net/browse/OLMIS-7314): Add Webpack and migrate Grunt build to Webpack.
 
+Improvements:
+* [OLMIS-7379](https://openlmis.atlassian.net/browse/OLMIS-7379): Add support for viewport.
 
 9.0.2 / 2021-05-27
 ==================
