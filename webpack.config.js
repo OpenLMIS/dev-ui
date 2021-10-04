@@ -56,5 +56,8 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+    alias: {
+      react: '/app/.tmp/node_modules/react'
+    },
   },
 };
