@@ -69,7 +69,7 @@ module.exports = function(grunt){
                 resolve: {
                     extensions: ['.js', '.jsx'],
                     alias: {
-                        react: '/app/.tmp/node_modules/react'
+                        react: path.join(src, 'node_modules', 'react')
                     },
                 },
             }, grunt.option('production') ?
