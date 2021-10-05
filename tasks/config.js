@@ -66,6 +66,12 @@ module.exports = function(grunt){
                         ],
                     }),
                 ],
+                resolve: {
+                    extensions: ['.js', '.jsx'],
+                    alias: {
+                        react: '/app/.tmp/node_modules/react'
+                    },
+                },
             }, grunt.option('production') ?
               {
                   optimization: {
