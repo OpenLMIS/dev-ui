@@ -3,6 +3,7 @@
 
 Breaking changes:
 * [OLMIS-7314](https://openlmis.atlassian.net/browse/OLMIS-7314): Add Webpack and migrate Grunt build to Webpack.
+* [OLMIS-7315](https://openlmis.atlassian.net/browse/OLMIS-7315): Add manifest and service worker configuration for PWA.
 
 Improvements:
 * [OLMIS-7379](https://openlmis.atlassian.net/browse/OLMIS-7379): Add support for viewport.

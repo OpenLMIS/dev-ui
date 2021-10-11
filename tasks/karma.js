@@ -56,6 +56,7 @@ module.exports = function(grunt) {
             exclude: [
                 'app.js',
                 path.join(grunt.option('app.tmp'), 'javascript/src/index.js'),
+                path.join(grunt.option('app.tmp'), 'javascript/src/src-sw.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/bundle.js'),
                 path.join(grunt.option('app.tmp'), 'javascript/src/*vendors.js')
             ],

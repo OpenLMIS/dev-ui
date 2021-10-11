@@ -1,0 +1,21 @@
+{
+  "name": "OpenLMIS",
+  "short_name": "OpenLMIS",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/stockmanagement/physicalInventory",
+  "theme_color": "#49BAEB",
+  "background_color": "#E4E4E4",
+  "icons": [
+    {
+      "src": "/images/icons-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/images/icons-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

@@ -28,7 +28,7 @@ module.exports = function(grunt){
         fontExtentions = ['eot', 'woff', 'woff2', 'ttf', 'otf'],
         assetExtentions = imageExtentions.concat(fontExtentions);
 
-        var assetPatterns = [];
+        var assetPatterns = ['**/manifest.json'];
         assetExtentions.forEach(function(extention){
             assetPatterns.push('**/*.' + extention);
         });

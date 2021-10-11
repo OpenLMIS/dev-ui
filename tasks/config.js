@@ -36,12 +36,14 @@ module.exports = function(grunt){
     var webpackConfig = require('../webpack.config');
     var dest = path.join(process.cwd(), grunt.option('app.dest'));
     var src = path.join(process.cwd(), grunt.option('app.tmp'));
+    var assets = path.join(src, 'assets');
     var entry = path.join(src, 'javascript', 'src', 'index.js');
 
     var MiniCssExtractPlugin = require('mini-css-extract-plugin');
     var { CleanWebpackPlugin } = require('clean-webpack-plugin');
     var CopyPlugin = require("copy-webpack-plugin");
     var TerserPlugin = require('terser-webpack-plugin');
+    var WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 
     grunt.initConfig({
         webpack: {
@@ -60,10 +62,34 @@ module.exports = function(grunt){
                     new CopyPlugin({
                         patterns: [
                             {
-                                from: path.join(src, 'assets', 'favicon.ico'),
+                                from: path.join(assets, 'favicon.ico'),
+                                to: dest
+                            },
+                            {
+                                from: path.join(assets, 'favicon-32.png'),
+                                to: dest
+                            },
+                            {
+                                from: path.join(assets, 'favicon-156.png'),
+                                to: dest
+                            },
+                            {
+                                from: path.join(assets, 'icon-192.png'),
+                                to: dest
+                            },
+                            {
+                                from: path.join(assets, 'icon-512.png'),
+                                to: dest
+                            },
+                            {
+                                from: path.join(assets, 'manifest.json'),
                                 to: dest
                             },
                         ],
+                    }),
+                    new WorkboxWebpackPlugin.InjectManifest({
+                        swSrc: path.join(src, 'javascript', 'src', 'src-sw.js'),
+                        swDest: path.join(dest, 'sw.js')
                     }),
                 ],
                 resolve: {
