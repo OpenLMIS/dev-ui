@@ -3,7 +3,7 @@
   "short_name": "OpenLMIS",
   "display": "standalone",
   "scope": "/",
-  "start_url": "./stockmanagement/physicalInventoryMobile",
+  "start_url": "stockmanagement/physicalInventoryMobile",
   "theme_color": "#49BAEB",
   "background_color": "#E4E4E4",
   "icons": [
