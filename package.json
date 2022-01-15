@@ -43,7 +43,7 @@
     "karma-htmlfile-reporter": "~0.3",
     "karma-jasmine": "~0.1.0",
     "karma-junit-reporter": "~1.1.0",
-    "marked": "~0.3.12",
+    "marked": "~4.0.10",
     "mini-css-extract-plugin": "~1.6.2",
     "node-sass": "~4.14.1",
     "properties-parser": "~0.3.1",
