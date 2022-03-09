@@ -7,6 +7,7 @@ Breaking changes:
 
 Improvements:
 * [OLMIS-7379](https://openlmis.atlassian.net/browse/OLMIS-7379): Add support for viewport.
+* [OLMIS-6396](https://openlmis.atlassian.net/browse/OLMIS-6396): Update jquery to v3.5.0
 
 9.0.2 / 2021-05-27
 ==================
