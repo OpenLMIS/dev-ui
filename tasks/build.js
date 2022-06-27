@@ -34,6 +34,8 @@ module.exports = function(grunt){
     grunt.registerTask('build:app', function() {
         var buildTasks = [
             'messages',
+            'routes',
+            'reducers',
             'html',
             'css',
             'javascript',
