@@ -106,7 +106,7 @@ Passing flags in with the grunt command will overwrite base options set within.
 - `--serve` will run the development server along with any other command (and will keep the process alive). When this command is used, any URL configurations that start with `http` will be replaced with a proxy URL which will add CORS headers to the actual requested URL.
 - `--pullTransifex` causes the `grunt messages` command to attempt to pull locale specific message files from Transifex for the current directory. The sync will only occur if:
 -- A valid `transifexProject` name is defined in the `project.properties` file
--- A transifex username and password are supplied either as environment variables (`TRANSIFEX_USER`, `TRANSIFEX_PASSWORD`)
+-- A transifex token is supplied as environment variables (`TX_TOKEN`) (Changed into this mechanism due to migration of transifex CLI for having compatibility with the newest version of API) 
 - `--pushTransifex` makes `grunt messages` command push the translations to Transifex. Should be used in combination with `--pullTransifex`.
 
 ### Proxy URLs
