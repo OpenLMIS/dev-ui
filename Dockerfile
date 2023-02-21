@@ -5,7 +5,8 @@ WORKDIR /root
 # NOTE bzip2 is required by PhantomJS-prebuilt
 # NOTE buildessential is needed for node-sass (installed by gulp-sass)
 RUN echo 'deb http://deb.debian.org/debian stretch-backports main' > /etc/apt/sources.list.d/stretch-backports.list
-RUN apt-get update && apt-get install -y bash build-essential libfontconfig transifex-client git curl bzip2
+RUN apt-get update && apt-get install -y bash build-essential libfontconfig git curl bzip2
+RUN curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
 RUN apt-get install -t stretch-backports openjdk-8-jre-headless ca-certificates-java -y
 
 # Download Chrome dependencies
