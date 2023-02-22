@@ -111,6 +111,8 @@ module.exports = function(grunt){
             return;
         }
 
+        console.log('run commands to process translations');
+
         var commands = [
             "rm -rf .tx",
             "tx init",
