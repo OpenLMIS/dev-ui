@@ -114,19 +114,39 @@ module.exports = function(grunt){
         console.log('run commands to process translations');
         console.log('path where commands are going to be run: ', tmpDir);
 
-        var commands = [
-            "rm -rf .tx",
-            "./tx init",
-            "./tx add " 
-              + "--file-filter='" + filePattern + "' "
-              + "--type=KEYVALUEJSON "
-              + "--organization=openlmis "
-              + "--project=" + transifexProject + " "
-              + "--resource=messages "
-              + sourceFile,
-            "./tx push -s",
-            "./tx pull -a -f"
-        ];
+        // due to specific processing of paths in docker-compose run --entrypoint 
+        // run tx command from specific place, else process as usual 
+        if (tmpDir.includes('.tmp')) {
+            console.log('run tx command from specific place');
+            var commands = [
+                "rm -rf ../../.tx",
+                "../../tx init",
+                "../../tx add " 
+                + "--file-filter='" + filePattern + "' "
+                + "--type=KEYVALUEJSON "
+                + "--organization=openlmis "
+                + "--project=" + transifexProject + " "
+                + "--resource=messages "
+                + sourceFile,
+                "../../tx push -s",
+                "../../tx pull -a -f"
+            ];
+        } else {
+            console.log('run tx command from usual place');
+            var commands = [
+                "rm -rf .tx",
+                "tx init",
+                "tx add " 
+                + "--file-filter='" + filePattern + "' "
+                + "--type=KEYVALUEJSON "
+                + "--organization=openlmis "
+                + "--project=" + transifexProject + " "
+                + "--resource=messages "
+                + sourceFile,
+                "tx push -s",
+                "tx pull -a -f"
+            ];
+        }
         
         if(!grunt.option('pushTransifex')) {
             commands.splice(3, 1);
