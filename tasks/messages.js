@@ -119,7 +119,7 @@ module.exports = function(grunt){
         if (tmpDir.includes('.tmp')) {
             console.log('run tx command from specific place');
             var commands = [
-                "rm -rf ../../.tx",
+                "rm -rf .tx",
                 "../../tx init",
                 "../../tx add " 
                 + "--file-filter='" + filePattern + "' "
