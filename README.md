@@ -127,6 +127,39 @@ You can set the url back to the OpenLMIS server, which is located here by:
 > grunt build --openlmisServerUrl=http://somewhere.over.the/rainbow
 ```
 
+## Transifex CLI
+The new Transifex CLI is installed within this package due to (info from transifex dashboard page): 
+```
+Deprecation period of API 2.0/2.5 and old Python Transifex CLI came to an end which causes calls to these APIs and any scripts that depend on them may not work after Nov 30 2022. 
+```
+This library presents a whole new Transifex CLI based on API v3 therefore we had to update some commands and the way of pull/push translations. In order to have working 'messages:transifex' task you have to pass special environmental variable called 'TX_TOKEN' which represent the authorization token to API. You can obtain this token from transifex.com app in user settings. Moreover old transifex-client python library is removed from this repository and is no more installed in new docker images of dev-ui from >= 9.0.5 version. 
+
+This new Transifex CLI is available from 9.0.5 version of the dev-ui module. OpenLMIS process Transifex API Token by using special environmental variable called TX_TOKEN.
+
+### How to update another modules/implementations to have compatibility with new CLI?
+In order to have the new mechanism of translation available on another builds you have to update your dev-ui in docker-compose.yml into >= 9.0.5. When you have this token passed in you env and you have updated docker-compose.yml you should have working translations based on new Transifex CLI.   
+
+### How to update token for Jenkins build jobs - for core modules? 
+1. Create file with your credentials on your computer
+2. Within this file add TX_TOKEN with API Token obtained from transifex app
+3. Go into Jenkins instance and sign in
+4. Select 'Manage Jenkins'
+5. Go into 'Security' tab and select 'Manage credentials'
+6. Click 'Jenkins' under the Stores scoped to 'Jenkins' heading.
+7. Click 'Global credentials (unrestricted)' under the System heading.
+8. Click Add credentials 
+9. Select type: 'Secret file', add 'id' of this credential, select scope: 'System (Jenkins and nodes only)', add description to indicate the purpose of this credential
+10. Update jenkinsfile in every UI modules in 'build' section. Please update 'id' of the credential.
+11. Run Jenkins job  responsible for particular building UI module to check if works.
+12. See logs of Jenkins job - you should see information about push/pull operations.
+
+### How to update token for Jenkins build jobs - for implementations?
+1. Go into config repository of particular implementation
+2. Add your token as TX_TOKEN env variable into one of the particular files. It could be test.env or production.env - depends where you want to deploy changes: either test, dev or production one.
+3. Update version of dev-ui module (>=9.0.5) in the same repository or in UI one (depends on implementations)
+4. Run Jenkins job responsible for building UI app.
+5. See logs of Jenkins job - you should see information about push/pull operations.
+
 
 ## Tech
 
