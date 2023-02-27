@@ -127,6 +127,18 @@ You can set the url back to the OpenLMIS server, which is located here by:
 > grunt build --openlmisServerUrl=http://somewhere.over.the/rainbow
 ```
 
+## Transifex CLI
+The new Transifex CLI is installed within this package due to (info from transifex dashboard page): 
+```
+Deprecation period of API 2.0/2.5 and old Python Transifex CLI came to an end which causes calls to these APIs and any scripts that depend on them may not work after Nov 30 2022. 
+```
+This library presents a whole new Transifex CLI based on API v3 therefore we had to update some commands and the way of pull/push translations. In order to have working 'messages:transifex' task you have to pass special environmental variable called 'TX_TOKEN' which represent the authorization token to API. You can obtain this token from transifex.com app in user settings. Moreover old transifex-client python library is removed from this repository and is no more installed in new docker images of dev-ui from >= 9.0.5 version. 
+
+This new Transifex CLI is available from 9.0.5 version of the dev-ui module. OpenLMIS process Transifex API Token by using special environmental variable called TX_TOKEN.
+
+### How to update another modules/implementations to have compatibility with new CLI?
+In order to have the new mechanism of translation available on another builds you have to update your dev-ui in docker-compose.yml into >= 9.0.5. When you have this token passed in you env and you have updated docker-compose.yml you should have working translations based on new Transifex CLI.   
+
 
 ## Tech
 
