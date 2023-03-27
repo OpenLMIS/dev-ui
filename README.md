@@ -106,7 +106,7 @@ Passing flags in with the grunt command will overwrite base options set within.
 - `--serve` will run the development server along with any other command (and will keep the process alive). When this command is used, any URL configurations that start with `http` will be replaced with a proxy URL which will add CORS headers to the actual requested URL.
 - `--pullTransifex` causes the `grunt messages` command to attempt to pull locale specific message files from Transifex for the current directory. The sync will only occur if:
 -- A valid `transifexProject` name is defined in the `project.properties` file
--- A transifex username and password are supplied either as environment variables (`TRANSIFEX_USER`, `TRANSIFEX_PASSWORD`)
+-- A transifex token is supplied as environment variables (`TX_TOKEN`) (Changed into this mechanism due to migration of transifex CLI for having compatibility with the newest version of API) 
 - `--pushTransifex` makes `grunt messages` command push the translations to Transifex. Should be used in combination with `--pullTransifex`.
 
 ### Proxy URLs
@@ -126,6 +126,18 @@ You can set the url back to the OpenLMIS server, which is located here by:
 //or passing the following flag to your build command
 > grunt build --openlmisServerUrl=http://somewhere.over.the/rainbow
 ```
+
+## Transifex CLI
+The new Transifex CLI is installed within this package due to (info from transifex dashboard page): 
+```
+Deprecation period of API 2.0/2.5 and old Python Transifex CLI came to an end which causes calls to these APIs and any scripts that depend on them may not work after Nov 30 2022. 
+```
+This library presents a whole new Transifex CLI based on API v3 therefore we had to update some commands and the way of pull/push translations. In order to have working 'messages:transifex' task you have to pass special environmental variable called 'TX_TOKEN' which represent the authorization token to API. You can obtain this token from transifex.com app in user settings. Moreover old transifex-client python library is removed from this repository and is no more installed in new docker images of dev-ui from >= 9.0.5 version. 
+
+This new Transifex CLI is available from 9.0.5 version of the dev-ui module. OpenLMIS process Transifex API Token by using special environmental variable called TX_TOKEN.
+
+### How to update another modules/implementations to have compatibility with new CLI?
+In order to have the new mechanism of translation available on another builds you have to update your dev-ui in docker-compose.yml into >= 9.0.5. When you have this token passed in you env and you have updated docker-compose.yml you should have working translations based on new Transifex CLI.   
 
 
 ## Tech

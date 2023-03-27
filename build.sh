@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# install transifex cli in case of not installed yet
+rm -f tx
+curl -o- https://raw.githubusercontent.com/transifex/cli/master/install.sh | bash
+
 # Update everything (just in case)
 npm rebuild
 npm install
