@@ -38,7 +38,7 @@
     "grunt-sonar-runner": "2.4.8",
     "grunt-webpack": "~4.0.3",
     "json2csv": "~3.8.0",
-    "karma": "~1",
+    "karma": "~6",
     "karma-chrome-launcher": "~2.2.0",
     "karma-coverage": "~1",
     "karma-htmlfile-reporter": "~0.3",
