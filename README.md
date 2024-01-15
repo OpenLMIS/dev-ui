@@ -64,6 +64,9 @@ $ npm install
 $ grunt build --serve
 ``` 
 
+NOTE: Currently, Node v6.14.1 is installed via docker compose. For this reason, there are many problems related to run the 'grunt' command.
+For development purposes, it is possible to run commands from the dev-ui folder, such as 'grunt build'
+
 ## Building & Testing
 The OpenLMIS-UI designed to be built from multiple repositories, enforcing a modular and extensible code base. To enable this, we use docker-compose to pull together different modules, and the dev-ui build process stitches these repositories together and configures tooling for development or production.
 
