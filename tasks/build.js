@@ -13,10 +13,10 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-module.exports = function(grunt){
+module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-force-task');
 
-    grunt.registerTask('build', function(){
+    grunt.registerTask('build', function() {
         var buildTasks = [
             'build:app'
         ];
@@ -24,7 +24,7 @@ module.exports = function(grunt){
         // If the serve command was passed,
         // don't let the task end, because
         // the serve will end...
-        if(grunt.option('serve')){
+        if (grunt.option('serve')) {
             buildTasks.push('build:keepAlive');
         }
 
@@ -42,6 +42,7 @@ module.exports = function(grunt){
             'assets',
             'webpack',
             'index.html',
+            'watch',
             // 'appcache'
         ];
 
@@ -49,15 +50,15 @@ module.exports = function(grunt){
             buildTasks.unshift('eslint');
         }
 
-        if(!grunt.option('noTest')){
+        if (!grunt.option('noTest')) {
             buildTasks.push('test');
         }
 
-        if(!grunt.option('noStyleguide')){
+        if (!grunt.option('noStyleguide')) {
             buildTasks.push('styleguide');
         }
 
-        if(!grunt.option('noDocs')){
+        if (!grunt.option('noDocs')) {
             buildTasks.push('docs');
         }
 
@@ -65,8 +66,10 @@ module.exports = function(grunt){
 
     });
 
-    grunt.registerTask('build:keepAlive', function(){
+    grunt.registerTask('build:keepAlive', function() {
         this.async();
     });
+
+    grunt.registerTask('watch', ['watch:javascript', 'watch:css', 'watch:messages', 'watch:html']);
 
 };
