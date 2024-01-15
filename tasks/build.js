@@ -28,6 +28,10 @@ module.exports = function(grunt) {
             buildTasks.push('build:keepAlive');
         }
 
+        if (grunt.option('watcher')) {
+            buildTasks.push('watch');
+        }
+
         grunt.task.run(buildTasks);
     });
 
@@ -42,7 +46,6 @@ module.exports = function(grunt) {
             'assets',
             'webpack',
             'index.html',
-            'watch',
             // 'appcache'
         ];
 
@@ -69,7 +72,4 @@ module.exports = function(grunt) {
     grunt.registerTask('build:keepAlive', function() {
         this.async();
     });
-
-    grunt.registerTask('watch', ['watch:javascript', 'watch:css', 'watch:messages', 'watch:html']);
-
 };
