@@ -64,6 +64,9 @@ $ npm install
 $ grunt build --serve
 ``` 
 
+NOTE: Currently, Node v6.14.1 is installed via docker compose. For this reason, there are many problems related to run the 'grunt' command.
+For development purposes, it is possible to run commands from the dev-ui folder, such as 'grunt build'
+
 ## Building & Testing
 The OpenLMIS-UI designed to be built from multiple repositories, enforcing a modular and extensible code base. To enable this, we use docker-compose to pull together different modules, and the dev-ui build process stitches these repositories together and configures tooling for development or production.
 
@@ -108,6 +111,7 @@ Passing flags in with the grunt command will overwrite base options set within.
 -- A valid `transifexProject` name is defined in the `project.properties` file
 -- A transifex token is supplied as environment variables (`TX_TOKEN`) (Changed into this mechanism due to migration of transifex CLI for having compatibility with the newest version of API) 
 - `--pushTransifex` makes `grunt messages` command push the translations to Transifex. Should be used in combination with `--pullTransifex`.
+- `--watcher` will start a process that waits for changes to files, and then rebuilds the UI
 
 ### Proxy URLs
 Working with OpenLMIS servers or services will require CORS Headers to get data across domains. To ease development the OpenLMIS-UI dev server will create a local proxy URL and replace the variable with a foreign URL.
