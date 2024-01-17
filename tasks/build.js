@@ -24,7 +24,11 @@ module.exports = function(grunt) {
         // If the serve command was passed,
         // don't let the task end, because
         // the serve will end...
-        if (grunt.option('serve')) {
+        if (grunt.option('serve') && !grunt.option('watcher')) {
+            buildTasks.push('build:keepAlive');
+        }
+
+        if (grunt.option('serve') && grunt.option('watcher')) {
             buildTasks.push('watch');
         }
 
@@ -63,6 +67,10 @@ module.exports = function(grunt) {
 
         grunt.task.run(buildTasks);
 
+    });
+
+    grunt.registerTask('build:keepAlive', function() {
+        this.async();
     });
 
 };
