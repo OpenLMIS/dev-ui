@@ -25,10 +25,6 @@ module.exports = function(grunt) {
         // don't let the task end, because
         // the serve will end...
         if (grunt.option('serve')) {
-            buildTasks.push('build:keepAlive');
-        }
-
-        if (grunt.option('watcher')) {
             buildTasks.push('watch');
         }
 
@@ -45,7 +41,7 @@ module.exports = function(grunt) {
             'javascript',
             'assets',
             'webpack',
-            'index.html',
+            'index.html'
             // 'appcache'
         ];
 
@@ -69,7 +65,4 @@ module.exports = function(grunt) {
 
     });
 
-    grunt.registerTask('build:keepAlive', function() {
-        this.async();
-    });
 };

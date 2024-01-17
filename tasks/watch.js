@@ -5,17 +5,16 @@
  * This program is free software: you can redistribute it and/or modify it under the terms
  * of the GNU Affero General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- *  
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Affero General Public License for more details. You should have received a copy of
  * the GNU Affero General Public License along with this program. If not, see
- * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
+ * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
  */
+var path = require('path');
 
-module.exports = function(grunt){
-    var path = require('path');
-
+module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-notify');
 
@@ -23,14 +22,14 @@ module.exports = function(grunt){
         spawn: false
     };
 
-    var jsTasks = ['javascript'];
+    var jsTasks = ['javascript', 'webpack'];
     if (!grunt.option('noTest')) {
         jsTasks.push('test');
     }
     if (!grunt.option('noDocs')) {
         jsTasks.push('docs');
     }
-    if(!grunt.option('noStyleguide')){
+    if (!grunt.option('noStyleguide')) {
         jsTasks.push('styleguide');
     }
     addNotify(jsTasks);
@@ -39,7 +38,7 @@ module.exports = function(grunt){
     if (!grunt.option('noDocs')) {
         cssTasks.push('docs');
     }
-    if(!grunt.option('noStyleguide')){
+    if (!grunt.option('noStyleguide')) {
         cssTasks.push('styleguide');
     }
     addNotify(cssTasks);
@@ -57,7 +56,7 @@ module.exports = function(grunt){
             options: watchOptions
         },
         css: {
-            files: srcFilesWithExtensions(['.scss','.css']),
+            files: srcFilesWithExtensions(['.scss', '.css']),
             tasks: cssTasks,
             options: watchOptions
 
@@ -90,8 +89,8 @@ module.exports = function(grunt){
         for (i = 0; i < extensions.length; i++) {
             var ext = extensions[i];
             files = files.concat([
-              path.join(grunt.option('app.src'), '/**/*' + ext),
-              path.join(grunt.option('app.src'), '/*' + ext)
+                path.join(grunt.option('app.src'), '/**/*' + ext),
+                path.join(grunt.option('app.src'), '/*' + ext)
             ]);
         }
         return files;
