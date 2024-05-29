@@ -22,9 +22,12 @@ module.exports = function(grunt) {
     grunt.config('eslint', {
         options: {
             configFile: configFile,
-            fix: grunt.option('fixLint')
+            fix: grunt.option('fixLint'),
+            formatter: 'stylish' // Optional: specify a formatter
         },
         target: [grunt.option('app.src') + '/**/*.{js,jsx,ts,tsx}']
     });
 
+    // Default task
+    grunt.registerTask('default', ['eslint']);
 };
