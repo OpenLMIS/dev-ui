@@ -15,7 +15,6 @@
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const { ESBuildMinifyPlugin } = require('esbuild-loader');
 
 module.exports = {
   mode: 'production',
@@ -33,7 +32,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$|jsx/,
+        test: /\.m?js$|jsx/,
         exclude: /node_modules|bower_components/,
         use: {
           loader: 'babel-loader',
@@ -53,25 +52,7 @@ module.exports = {
         options: {
           limit: 8192,
         },
-      },
-      {
-        test: /\.m?js$/,
-        exclude: /(node_modules)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: ['@babel/plugin-proposal-optional-chaining']
-          }
-        }
-      },
-    ]
-  },
-  optimization: {
-    minimizer: [
-      new ESBuildMinifyPlugin({
-        target: 'es2015'
-      })
+      }
     ]
   },
 };
