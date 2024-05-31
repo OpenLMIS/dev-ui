@@ -15,6 +15,7 @@
 
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { GenerateSW } = require('workbox-webpack-plugin');
 
 module.exports = {
   mode: 'production',
@@ -27,6 +28,9 @@ module.exports = {
     new CleanWebpackPlugin(),
     new MiniCssExtractPlugin({
       filename: 'openlmis.css',
+    }),
+    new GenerateSW({
+      maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10 MB limit
     }),
   ],
   module: {
