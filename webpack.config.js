@@ -56,17 +56,6 @@ module.exports = {
         options: {
           limit: 8192,
         },
-      },
-      {
-        test: /\.m?js$/,
-        include: /node_modules\/@adobe\/css-tools/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: ['@babel/plugin-proposal-optional-chaining']
-          }
-        }
       }
     ]
   },

@@ -93,7 +93,7 @@ module.exports = function(grunt){
                     }),
                 ],
                 resolve: {
-                    extensions: ['.js', '.jsx'],
+                    extensions: ['.js', '.jsx', '.mjs'],
                     alias: {
                         react: path.join(src, 'node_modules', 'react')
                     },
