@@ -121,7 +121,7 @@ module.exports = function(grunt) {
     };
 
     configuration.options.preprocessors = {};
-    configuration.options.preprocessors[path.join(grunt.option('app.tmp'), 'javascript/src/**/*.js')] = ['coverage', 'babel'];
+    configuration.options.preprocessors[path.join(grunt.option('app.tmp'), 'javascript/src/**/*.js')] = ['coverage'];
 
     grunt.config('karma', configuration);
 };

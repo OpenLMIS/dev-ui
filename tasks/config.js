@@ -13,7 +13,6 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-const {GenerateSW} = require("workbox-webpack-plugin");
 module.exports = function(grunt){
     var extend = require('extend'),
         path = require('path'),
@@ -44,7 +43,7 @@ module.exports = function(grunt){
     var { CleanWebpackPlugin } = require('clean-webpack-plugin');
     var CopyPlugin = require("copy-webpack-plugin");
     var TerserPlugin = require('terser-webpack-plugin');
-    var WorkboxWebpackPlugin, { GenerateSW } = require("workbox-webpack-plugin");
+    var WorkboxWebpackPlugin = require("workbox-webpack-plugin");
 
     grunt.initConfig({
         webpack: {
@@ -59,9 +58,6 @@ module.exports = function(grunt){
                     new CleanWebpackPlugin(),
                     new MiniCssExtractPlugin({
                         filename: 'openlmis.css',
-                    }),
-                    new GenerateSW({
-                        maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, // 10 MB limit
                     }),
                     new CopyPlugin({
                         patterns: [
@@ -97,7 +93,7 @@ module.exports = function(grunt){
                     }),
                 ],
                 resolve: {
-                    extensions: ['.js', '.jsx', '.mjs'],
+                    extensions: ['.js', '.jsx'],
                     alias: {
                         react: path.join(src, 'node_modules', 'react')
                     },

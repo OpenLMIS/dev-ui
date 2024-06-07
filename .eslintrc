@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "eslint:recommended",
-    "plugin:react/recommended"
-  ],
+  "extends": ["eslint:recommended"],
   "rules": {
     "no-irregular-whitespace": "off",
     "no-mixed-spaces-and-tabs": "off",
@@ -80,11 +77,5 @@
     "dollar-sign",
     "jquery",
     "jasmine"
-  ],
-  "settings": {
-    "react": {
-      "version": "detect"
-    }
-  },
-  "parser": "@babel/eslint-parser"
+  ]
 }
