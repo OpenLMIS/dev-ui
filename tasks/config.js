@@ -101,13 +101,10 @@ module.exports = function(grunt){
             }, grunt.option('production') ?
               {
                   optimization: {
+                      minimize: true,
                       minimizer: [
-                          new TerserPlugin({
-                              terserOptions: {
-                                  mangle: false,
-                              },
-                          }),
-                      ],
+                          new TerserPlugin()
+                      ]
                   },
               } : { devtool: 'cheap-source-map' })
         },
