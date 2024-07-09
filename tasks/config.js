@@ -106,7 +106,7 @@ module.exports = function(grunt){
                           new TerserPlugin()
                       ]
                   },
-              } : { devtool: 'cheap-source-map', watch: true })
+              } : { devtool: 'cheap-source-map' })
         },
     });
 
