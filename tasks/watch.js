@@ -47,7 +47,7 @@ module.exports = function (grunt) {
     messageTasks = messageTasks.concat(jsTasks);
 
     var htmlTasks = ['html'];
-    htmlTasks = htmlTasks.concat(jsTasks);
+    // htmlTasks = htmlTasks.concat(jsTasks);
 
     grunt.config('watch', {
         javascript: {

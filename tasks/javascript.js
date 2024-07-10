@@ -13,8 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-
-module.exports = function(grunt){
+module.exports = function(grunt) {
     var fs = require('fs-extra'),
     path = require('path'),
     wiredep = require('wiredep-away'),
@@ -30,25 +29,25 @@ module.exports = function(grunt){
         'javascript:app.js',
         'javascript:replace',
         'javascript:build'
-        ]);
+    ]);
 
-    grunt.registerTask('javascript:clean', function(){
+    grunt.registerTask('javascript:clean', function() {
         fs.emptyDirSync(path.join(process.cwd(), grunt.option('app.tmp'), 'javascript'));
     });
 
-    grunt.registerTask('javascript:copy', function(){
+    grunt.registerTask('javascript:copy', function() {
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
 
-        inEachAppDir(function(dir, dirConfig){
+        inEachAppDir(function(dir, dirConfig) {
             var src = grunt.option('app.src');
-            if(dirConfig && dirConfig.app && dirConfig.app.src){
+            if (dirConfig && dirConfig.app && dirConfig.app.src) {
                 src = dirConfig.app.src;
             }
 
             glob.sync('**/*.{js,jsx}', {
                 cwd: path.join(dir, src),
                 ignore: ['**/*.spec.js']
-            }).forEach(function(file){
+            }).forEach(function(file) {
                 fs.copySync(path.join(dir, src, file), path.join(tmp, file));
             });
         });
@@ -59,9 +58,9 @@ module.exports = function(grunt){
         process.chdir(grunt.option('app.tmp'));
 
         var bowerFiles = wiredep().js || [];
-        bowerFiles.forEach(function(file){
+        bowerFiles.forEach(function(file) {
             // copy each file into a directory called bower_components
-            var bowerPath = file.substring(file.indexOf("bower_components"));
+            var bowerPath = file.substring(file.indexOf('bower_components'));
             fs.copySync(file, path.join(tmp, bowerPath));
         });
 
@@ -69,16 +68,18 @@ module.exports = function(grunt){
 
     });
 
-    grunt.registerTask('javascript:replace', function(){
+    grunt.registerTask('javascript:replace', function() {
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
         fileReplace('**/*.{js,jsx}', tmp);
     });
 
-    grunt.registerTask('javascript:build', function(){
+    grunt.registerTask('javascript:build', function() {
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), 'javascript'),
-        ignorePatterns = [ // storing patterns to ignore
-            'app.js' // must be last
-        ];
+            ignorePatterns = [
+                // storing patterns to ignore
+                // must be last
+                'app.js'
+            ];
 
         var imports = '';
 
@@ -100,9 +101,8 @@ module.exports = function(grunt){
 
         fs.writeFileSync(path.join(tmp, 'src', 'bundle.js'), imports);
 
-
         // Helper function to keep ordered file adding clear
-        function addFiles(dir, pattern){
+        function addFiles(dir, pattern) {
             glob.sync(pattern, {
                 cwd: dir,
                 ignore: ignorePatterns
@@ -120,9 +120,9 @@ module.exports = function(grunt){
         }
     });
 
-    grunt.registerTask('javascript:copyright', function(){
+    grunt.registerTask('javascript:copyright', function() {
         if (grunt.option('ignore-copyright')) {
-            grunt.log.writeln("--ignore-copyright passed, skipping copyright check.");
+            grunt.log.writeln('--ignore-copyright passed, skipping copyright check.');
             return;
         }
 
@@ -142,11 +142,11 @@ module.exports = function(grunt){
 
         grunt.log.writeln('Checking copyright headers against ' + copyrightFile);
 
-        var copyright = fs.readFileSync(copyrightFile, "utf8");
+        var copyright = fs.readFileSync(copyrightFile, 'utf8');
 
         inEachAppDir(function(dir, dirConfig) {
             var src = grunt.option('app.src');
-            if(dirConfig && dirConfig.app && dirConfig.app.src){
+            if (dirConfig && dirConfig.app && dirConfig.app.src) {
                 src = dirConfig.app.src;
             }
             var cwd = path.join(dir, src);
@@ -154,9 +154,9 @@ module.exports = function(grunt){
 
             glob.sync('**/*.js', {
                 cwd: cwd
-            }).forEach(function(file){
+            }).forEach(function(file) {
                 var filePath = path.join(cwd, file);
-                var fileContents = fs.readFileSync(filePath, "utf8");
+                var fileContents = fs.readFileSync(filePath, 'utf8');
 
                 if (!fileContents.startsWith(copyright)) {
                     failed = true;
@@ -171,18 +171,18 @@ module.exports = function(grunt){
         });
     });
 
-    grunt.registerTask('javascript:app.js', function(){
+    grunt.registerTask('javascript:app.js', function() {
         var tmpSrc = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir);
 
         var appModules = [];
-        fs.readdirSync(tmpSrc).forEach(function(filePath){
+        fs.readdirSync(tmpSrc).forEach(function(filePath) {
             var fullFilePath = path.join(tmpSrc, filePath);
-            if(fs.statSync(fullFilePath).isDirectory() && filePath != 'bower_components' && filePath != 'node_modules'){
+            if (fs.statSync(fullFilePath).isDirectory() && filePath != 'bower_components' && filePath != 'node_modules') {
                 appModules.push(filePath);
             }
         });
 
-        var fileContents = '(function(){' + '\n';
+        var fileContents = '(function() {' + '\n';
         fileContents += 'angular.module("openlmis", ' +  JSON.stringify(appModules, null, 2) + ');' + '\n';
         fileContents += '})();';
 

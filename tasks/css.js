@@ -13,32 +13,31 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-
-module.exports = function(grunt){
+module.exports = function(grunt) {
     var fs = require('fs-extra'),
-    path = require('path'),
-    wiredep = require('wiredep-away'),
-    glob = require('glob'),
-    inEachAppDir = require('../ordered-application-directory'),
-    fileReplace = require('./replace.js')(grunt);
+        path = require('path'),
+        wiredep = require('wiredep-away'),
+        glob = require('glob'),
+        inEachAppDir = require('../ordered-application-directory'),
+        fileReplace = require('./replace.js')(grunt);
 
     var tmpDir = 'css';
 
     grunt.registerTask('css', ['css:copy', 'css:replace', 'css:build']);
 
-    grunt.registerTask('css:copy', function(){
+    grunt.registerTask('css:copy', function() {
         var dest = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
 
-        inEachAppDir(function(dir){
+        inEachAppDir(function(dir) {
             var src = grunt.option('app.src');
             var config = grunt.file.readJSON(path.join(dir, 'config.json'));
-            if(config && config.app && config.app.src) {
+            if (config && config.app && config.app.src) {
                 src = config.app.src;
             }
 
             glob.sync('**/*.scss', {
                 cwd: path.join(dir, src)
-            }).forEach(function(file){
+            }).forEach(function(file) {
                 fs.copySync(path.join(dir, src, file), path.join(dest, file));
             });
         });
@@ -48,27 +47,27 @@ module.exports = function(grunt){
 
         var bowerCss = wiredep().css || [];
         var bowerScss = wiredep().scss || [];
-        bowerCss.concat(bowerScss).forEach(function(file){
-            var bowerPath = file.substring(file.indexOf("bower_components"));
+        bowerCss.concat(bowerScss).forEach(function(file) {
+            var bowerPath = file.substring(file.indexOf('bower_components'));
             fs.copySync(file, path.join(dest, bowerPath));
         });
 
         process.chdir(cwd);
     });
 
-    grunt.registerTask('css:replace', function(){
+    grunt.registerTask('css:replace', function() {
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
         fileReplace('**/*.{scss,css}', tmp);
     });
 
-    grunt.registerTask('css:build', function(){
+    grunt.registerTask('css:build', function() {
         var tmp = path.join(grunt.option('app.tmp'), tmpDir);
 
         buildScss('openlmis.scss', tmp);
 
     });
 
-    function buildScss(fileName, dest){
+    function buildScss(fileName, dest) {
         var tmp = path.join(process.cwd(), grunt.option('app.tmp'), tmpDir, 'src');
 
         var imports = '';
@@ -76,7 +75,7 @@ module.exports = function(grunt){
         var ignorePatterns = [];
         // Helper function to keep ordered file adding clear
         // We are creating an SCSS file that imports all the others
-        function addFiles(pattern, extraIgnore){
+        function addFiles(pattern, extraIgnore) {
             if (!extraIgnore) {
                 extraIgnore = [];
             }
@@ -84,7 +83,7 @@ module.exports = function(grunt){
             glob.sync(pattern, {
                 cwd: tmp,
                 ignore: ignorePatterns.concat(extraIgnore)
-            }).forEach(function(file){
+            }).forEach(function(file) {
                 var filePath = path.join(tmp, file);
 
                 // Don't let previously added patterns be added again

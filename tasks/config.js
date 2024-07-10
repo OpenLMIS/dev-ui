@@ -13,16 +13,16 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-module.exports = function(grunt){
+module.exports = function(grunt) {
     var extend = require('extend'),
         path = require('path'),
         changeCase = require('change-case'),
         inEachDir = require('../ordered-application-directory');
 
     var config = {};
-    inEachDir(function(dir){
+    inEachDir(function(dir) {
         var json = grunt.file.readJSON(path.join(dir, 'config.json'));
-        if(json){
+        if (json) {
             config = extend(true, config, json);
         }
     });
