@@ -28,6 +28,7 @@ COPY .csslintrc .
 COPY .eslintrc .
 COPY .htmlhintrc .
 COPY .sass-lint.yml .
+COPY .stylelintrc .
 
 # Build process
 COPY sonar.sh .
