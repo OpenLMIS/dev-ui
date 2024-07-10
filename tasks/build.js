@@ -51,6 +51,7 @@ module.exports = function(grunt) {
 
         if (!grunt.option('noLint')) {
             buildTasks.unshift('eslint');
+            buildTasks.unshift('stylelint');
         }
 
         if (!grunt.option('noTest')) {
