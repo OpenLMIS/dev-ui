@@ -30,6 +30,9 @@ COPY .htmlhintrc .
 COPY .sass-lint.yml .
 COPY .stylelintrc .
 
+# Linter Custom Rules
+COPY stylelint-rules ./stylelint-rules
+
 # Build process
 COPY sonar.sh .
 COPY build.sh .
