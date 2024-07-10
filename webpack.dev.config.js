@@ -19,8 +19,9 @@ const {
 } = require('clean-webpack-plugin');
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     entry: '../.tmp/javascript/src/index.js',
+    stats: 'verbose',
     output: {
         path: '../build/webapp',
         filename: 'openlmis.js'

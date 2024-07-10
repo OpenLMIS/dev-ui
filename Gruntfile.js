@@ -13,7 +13,7 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-module.exports = function(grunt){
+module.exports = function(grunt) {
     var configSetup = require('./tasks/config.js');
     configSetup(grunt);
 
