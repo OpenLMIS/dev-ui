@@ -34,8 +34,7 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-webpack');
 
-    var webpackConfig = grunt.option('production') ?
-        require('../webpack.config') : require('../webpack.dev.config');
+    var webpackConfig = require('../webpack.config');
     var dest = path.join(process.cwd(), grunt.option('app.dest'));
     var src = path.join(process.cwd(), grunt.option('app.tmp'));
     var assets = path.join(src, 'assets');
@@ -112,7 +111,6 @@ module.exports = function(grunt) {
                     }
                 } : {
                     devtool: 'cheap-source-map',
-                    watch: true
                 })
         }
     });

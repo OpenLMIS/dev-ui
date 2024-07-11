@@ -13,11 +13,12 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-module.exports = function(grunt){
+/* eslint no-undef: 0 */
+module.exports = function(grunt) {
     var path = require('path'),
-    fs = require('fs-extra'),
-    glob = require('glob'),
-    inEachAppDir = require('../ordered-application-directory');
+        fs = require('fs-extra'),
+        glob = require('glob'),
+        inEachAppDir = require('../ordered-application-directory');
 
     grunt.loadNpmTasks('grunt-kss');
 
@@ -38,22 +39,22 @@ module.exports = function(grunt){
         }
     });
 
-    grunt.registerTask('styleguide', function(){
-        if(!grunt.option('appOnly') && !grunt.option('noStyleguide')){
+    grunt.registerTask('styleguide', function() {
+        if (!grunt.option('appOnly') && !grunt.option('noStyleguide')) {
             grunt.task.run(['styleguide:copy', 'kss']);
         }
     });
 
-    grunt.registerTask('styleguide:copy', function(){
+    grunt.registerTask('styleguide:copy', function() {
         fs.mkdirsSync(tmpDir);
         fs.mkdirsSync(dest);
 
         fs.copySync(path.join(process.cwd(), 'node_modules/kss/builder/handlebars'), tmpDir);
-        inEachAppDir(function(dir){
+        inEachAppDir(function(dir) {
             indexHbs = path.join(dir, 'styleguide/index.hbs');
-            if(fs.existsSync(indexHbs)){
+            if (fs.existsSync(indexHbs)) {
                 fs.copySync(indexHbs, path.join(tmpDir, 'index.hbs'), {
-                   clobber: true
+                    clobber: true
                 });
             }
         });
@@ -65,9 +66,9 @@ module.exports = function(grunt){
             ],
             nodir: true,
             cwd: path.join(process.cwd(), grunt.option('app.dest'))
-        }).forEach(function(filePath){
+        }).forEach(function(filePath) {
             fs.copySync(path.join(process.cwd(), grunt.option('app.dest'), filePath), path.join(dest, filePath));
         });
 
     });
-}
+};

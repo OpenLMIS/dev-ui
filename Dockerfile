@@ -38,7 +38,6 @@ COPY sonar.sh .
 COPY build.sh .
 COPY tasks/* ./tasks/
 COPY webpack.config.js .
-COPY webpack.dev.config.js .
 
 # Javascript packages
 COPY package.json .
