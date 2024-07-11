@@ -14,7 +14,7 @@
  */
 var path = require('path');
 
-module.exports = function (grunt) {
+module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-notify');
 
@@ -23,6 +23,7 @@ module.exports = function (grunt) {
     };
 
     var jsTasks = ['javascript', 'webpack'];
+    var cssTasks = ['css'];
     if (!grunt.option('noTest')) {
         jsTasks.push('test');
     }
@@ -31,16 +32,9 @@ module.exports = function (grunt) {
     }
     if (!grunt.option('noStyleguide')) {
         jsTasks.push('styleguide');
-    }
-    addNotify(jsTasks);
-
-    var cssTasks = ['css'];
-    if (!grunt.option('noDocs')) {
-        cssTasks.push('docs');
-    }
-    if (!grunt.option('noStyleguide')) {
         cssTasks.push('styleguide');
     }
+    addNotify(jsTasks);
     addNotify(cssTasks);
 
     var messageTasks = ['messages'];

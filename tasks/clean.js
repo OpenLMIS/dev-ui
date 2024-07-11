@@ -13,10 +13,10 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-module.exports = function(grunt){
+module.exports = function(grunt) {
 	var fs = require('fs-extra');
 
-	grunt.registerTask('clean', function(){
+	grunt.registerTask('clean', function () {
 		fs.emptyDirSync(grunt.option('app.dest'));
 		fs.emptyDirSync(grunt.option('app.tmp'));
 		fs.emptyDirSync(grunt.option('styleguide.dest'));

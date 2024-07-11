@@ -13,16 +13,17 @@
  * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 
-module.exports = function(grunt){
+/* eslint no-undef: 0 */
+module.exports = function(grunt) {
     var extend = require('extend'),
         path = require('path'),
         changeCase = require('change-case'),
         inEachDir = require('../ordered-application-directory');
 
     var config = {};
-    inEachDir(function(dir){
+    inEachDir(function(dir) {
         var json = grunt.file.readJSON(path.join(dir, 'config.json'));
-        if(json){
+        if (json) {
             config = extend(true, config, json);
         }
     });
@@ -33,17 +34,20 @@ module.exports = function(grunt){
 
     grunt.loadNpmTasks('grunt-webpack');
 
-    var webpackConfig = require('../webpack.config');
+    var webpackConfig = grunt.option('production') ?
+        require('../webpack.config') : require('../webpack.dev.config');
     var dest = path.join(process.cwd(), grunt.option('app.dest'));
     var src = path.join(process.cwd(), grunt.option('app.tmp'));
     var assets = path.join(src, 'assets');
     var entry = path.join(src, 'javascript', 'src', 'index.js');
 
     var MiniCssExtractPlugin = require('mini-css-extract-plugin');
-    var { CleanWebpackPlugin } = require('clean-webpack-plugin');
-    var CopyPlugin = require("copy-webpack-plugin");
+    var {
+        CleanWebpackPlugin
+    } = require('clean-webpack-plugin');
+    var CopyPlugin = require('copy-webpack-plugin');
     var TerserPlugin = require('terser-webpack-plugin');
-    var WorkboxWebpackPlugin = require("workbox-webpack-plugin");
+    var WorkboxWebpackPlugin = require('workbox-webpack-plugin');
 
     grunt.initConfig({
         webpack: {
@@ -52,12 +56,12 @@ module.exports = function(grunt){
                 entry: entry,
                 output: {
                     path: dest,
-                    filename: 'openlmis.js',
+                    filename: 'openlmis.js'
                 },
                 plugins: [
                     new CleanWebpackPlugin(),
                     new MiniCssExtractPlugin({
-                        filename: 'openlmis.css',
+                        filename: 'openlmis.css'
                     }),
                     new CopyPlugin({
                         patterns: [
@@ -84,56 +88,54 @@ module.exports = function(grunt){
                             {
                                 from: path.join(assets, 'manifest.json'),
                                 to: dest
-                            },
-                        ],
+                            }
+                        ]
                     }),
                     new WorkboxWebpackPlugin.InjectManifest({
                         swSrc: path.join(src, 'javascript', 'src', 'src-sw.js'),
                         swDest: path.join(dest, 'sw.js')
-                    }),
+                    })
                 ],
                 resolve: {
                     extensions: ['.js', '.jsx'],
                     alias: {
                         react: path.join(src, 'node_modules', 'react')
-                    },
-                },
-            }, grunt.option('production') ?
-              {
-                  optimization: {
-                      minimize: true,
-                      minimizer: [
-                          new TerserPlugin()
-                      ]
-                  },
-              } : { devtool: 'cheap-source-map' })
-        },
-    });
-
-    function setGruntOptions(config, prefix){
-        var configKey = '',
-            constKey = '';
-        for(var key in config){
-            if (prefix) {
-                configKey = [prefix, key].join('.');
-            } else {
-                configKey = key;
-            }
-            if(config[key] !== null && typeof config[key] === 'object' && !Array.isArray(config[key])){
-                setGruntOptions(config[key], configKey);
-            } else {
-                // Don't set values that are already set,
-                // they might be from the command line
-                if(grunt.option(configKey) === undefined || grunt.option(configKey) === null) {
-                    constKey = changeCase.constantCase(configKey);
-                    // If an environment variable matches a config.json value,
-                    // the environment variable overwrites the config.json property
-                    if(process.env[constKey]) {
-                        grunt.option(configKey, process.env[constKey]);
-                    } else {
-                        grunt.option(configKey, config[key]);
                     }
                 }
+            }, grunt.option('production') ?
+                {
+                    optimization: {
+                        minimize: true,
+                        minimizer: [
+                            new TerserPlugin()
+                        ]
+                    }
+                } : {
+                    devtool: 'cheap-source-map',
+                    watch: true
+                })
+        }
+    });
+
+    function setGruntOptions(config, prefix) {
+        var configKey = '',
+            constKey = '';
+        for (var key in config) {
+            configKey = prefix ? [prefix, key].join('.') : key;
+
+            if (config[key] !== null && typeof config[key] === 'object' && !Array.isArray(config[key])) {
+                setGruntOptions(config[key], configKey);
+            } else if (grunt.option(configKey) === undefined || grunt.option(configKey) === null) {
+                // Don't set values that are already set,
+                // they might be from the command line
+                constKey = changeCase.constantCase(configKey);
+                // If an environment variable matches a config.json value,
+                // the environment variable overwrites the config.json property
+                if (process.env[constKey]) {
+                    grunt.option(configKey, process.env[constKey]);
+                    continue;
+                }
+                grunt.option(configKey, config[key]);
             }
 
         }
