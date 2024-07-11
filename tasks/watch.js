@@ -23,7 +23,7 @@ module.exports = function(grunt) {
     };
 
     var jsTasks = ['javascript', 'webpack'];
-    var cssTasks = ['stylelint', 'css'];
+    var cssTasks = ['stylelint', 'css', 'webpack'];
     if (!grunt.option('noTest')) {
         jsTasks.push('test');
     }
