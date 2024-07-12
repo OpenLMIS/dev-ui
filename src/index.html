@@ -22,7 +22,22 @@
         <script type="text/javascript" src="openlmis.js" async="true"></script>
         <link rel="manifest" href="manifest.json" />
     </head>
-    <body >
+    <body>
+        <div style="display: none;" id="rtlLanguagesDiv">@@SUPPORTED_RTL_LANGUAGES</div>
         <div ui-view></div>
+        <script>
+             function setPageDirection() {
+                const rtlLanguagesDiv = document.getElementById('rtlLanguagesDiv');
+                const rtlLanguages = rtlLanguagesDiv.innerText.split(',');
+                const currrentLanguage = localStorage.getItem('openlmis.current_locale');
+                let pageDirection = 'ltr'
+                if (currrentLanguage && rtlLanguages.includes(currrentLanguage)) {
+                    pageDirection = 'rtl';
+                }
+
+                document.documentElement.setAttribute('dir', pageDirection);
+            }
+            setPageDirection();
+        </script>
     </body>
 </html>

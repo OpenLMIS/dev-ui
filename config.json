@@ -22,5 +22,5 @@
   },
   "applicationTitle": "OpenLMIS",
   "defaultLanguage": "en",
-  "supportedRTLLanguages": ["pt"]
+  "supportedRTLLanguages": []
 }
