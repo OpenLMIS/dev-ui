@@ -18,6 +18,7 @@ module.exports = function(grunt) {
 
     var configFile = fs.existsSync('/app/.stylelintrc') ? '/app/.stylelintrc' : '/dev-ui/.stylelintrc';
 
+    grunt.loadNpmTasks('grunt-stylelint');
     grunt.config('stylelint', {
         options: {
             configFile: configFile,
@@ -26,6 +27,4 @@ module.exports = function(grunt) {
         },
         src: [grunt.option('app.src') + '/**/*.{css,scss}']
     });
-
-    grunt.loadNpmTasks('grunt-stylelint');
 };

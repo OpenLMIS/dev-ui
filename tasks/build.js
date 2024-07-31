@@ -15,6 +15,7 @@
 
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-force-task');
+    grunt.loadNpmTasks('grunt-stylelint');
 
     grunt.registerTask('build', function() {
         var buildTasks = [
@@ -35,7 +36,6 @@ module.exports = function(grunt) {
         grunt.task.run(buildTasks);
     });
 
-    grunt.registerTask('build:app', ['stylelint']);
     grunt.registerTask('build:app', function() {
         var buildTasks = [
             'messages',
@@ -45,7 +45,6 @@ module.exports = function(grunt) {
             'css',
             'javascript',
             'assets',
-            'stylelint',
             'webpack',
             'index.html'
             // 'appcache'
