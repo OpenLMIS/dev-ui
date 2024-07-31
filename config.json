@@ -21,6 +21,5 @@
     "title": "OpenLMIS-UI Documentation"
   },
   "applicationTitle": "OpenLMIS",
-  "defaultLanguage": "en",
-  "supportedRTLLanguages": ["pt"]
+  "defaultLanguage": "en"
 }

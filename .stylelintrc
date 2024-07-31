@@ -1,8 +1,0 @@
-{
-  "plugins": [
-    "./stylelint-rules/no-fixed-direction-styles.js"
-  ],
-  "rules": {
-    "custom/no-fixed-direction-styles": true
-  }
-}

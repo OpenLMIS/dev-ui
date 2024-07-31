@@ -63,8 +63,7 @@
   "env": {
     "browser": true,
     "jasmine": true,
-    "jquery": true,
-    "es6": true
+    "jquery": true
   },
   "globals": {
     "angular": true,

@@ -5,12 +5,12 @@
  * This program is free software: you can redistribute it and/or modify it under the terms
  * of the GNU Affero General Public License as published by the Free Software Foundation, either
  * version 3 of the License, or (at your option) any later version.
- *
+ *  
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
  * See the GNU Affero General Public License for more details. You should have received a copy of
  * the GNU Affero General Public License along with this program. If not, see
- * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org.
+ * http://www.gnu.org/licenses.  For additional information contact info@OpenLMIS.org. 
  */
 var path = require('path');
 
@@ -22,8 +22,7 @@ module.exports = function(grunt) {
         spawn: false
     };
 
-    var jsTasks = ['javascript', 'webpack'];
-    var cssTasks = ['stylelint', 'css', 'webpack'];
+    var jsTasks = ['javascript'];
     if (!grunt.option('noTest')) {
         jsTasks.push('test');
     }
@@ -32,9 +31,16 @@ module.exports = function(grunt) {
     }
     if (!grunt.option('noStyleguide')) {
         jsTasks.push('styleguide');
-        cssTasks.push('styleguide');
     }
     addNotify(jsTasks);
+
+    var cssTasks = ['css'];
+    if (!grunt.option('noDocs')) {
+        cssTasks.push('docs');
+    }
+    if(!grunt.option('noStyleguide')){
+        cssTasks.push('styleguide');
+    }
     addNotify(cssTasks);
 
     var messageTasks = ['messages'];

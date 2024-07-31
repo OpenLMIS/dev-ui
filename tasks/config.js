@@ -102,38 +102,44 @@ module.exports = function(grunt) {
                     }
                 }
             }, grunt.option('production') ?
-                {
-                    optimization: {
-                        minimize: true,
-                        minimizer: [
-                            new TerserPlugin()
-                        ]
-                    }
-                } : {
-                    devtool: 'cheap-source-map',
-                })
-        }
+              {
+                  optimization: {
+                      minimizer: [
+                          new TerserPlugin({
+                              terserOptions: {
+                                  mangle: false,
+                              },
+                          }),
+                      ],
+                  },
+              } : { devtool: 'cheap-source-map' })
+        },
     });
 
     function setGruntOptions(config, prefix) {
         var configKey = '',
             constKey = '';
-        for (var key in config) {
-            configKey = prefix ? [prefix, key].join('.') : key;
-
-            if (config[key] !== null && typeof config[key] === 'object' && !Array.isArray(config[key])) {
+        for(var key in config){
+            if (prefix) {
+                configKey = [prefix, key].join('.');
+            } else {
+                configKey = key;
+            }
+            if(config[key] !== null && typeof config[key] === 'object' && !Array.isArray(config[key])){
                 setGruntOptions(config[key], configKey);
-            } else if (grunt.option(configKey) === undefined || grunt.option(configKey) === null) {
+            } else {
                 // Don't set values that are already set,
                 // they might be from the command line
-                constKey = changeCase.constantCase(configKey);
-                // If an environment variable matches a config.json value,
-                // the environment variable overwrites the config.json property
-                if (process.env[constKey]) {
-                    grunt.option(configKey, process.env[constKey]);
-                    continue;
+                if(grunt.option(configKey) === undefined || grunt.option(configKey) === null) {
+                    constKey = changeCase.constantCase(configKey);
+                    // If an environment variable matches a config.json value,
+                    // the environment variable overwrites the config.json property
+                    if(process.env[constKey]) {
+                        grunt.option(configKey, process.env[constKey]);
+                    } else {
+                        grunt.option(configKey, config[key]);
+                    }
                 }
-                grunt.option(configKey, config[key]);
             }
 
         }

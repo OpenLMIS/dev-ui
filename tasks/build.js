@@ -24,12 +24,8 @@ module.exports = function(grunt) {
         // If the serve command was passed,
         // don't let the task end, because
         // the serve will end...
-        if (grunt.option('serve') && !grunt.option('watcher')) {
+        if(grunt.option('serve')){
             buildTasks.push('build:keepAlive');
-        }
-
-        if (grunt.option('serve') && grunt.option('watcher')) {
-            buildTasks.push('watch');
         }
 
         grunt.task.run(buildTasks);
@@ -51,9 +47,6 @@ module.exports = function(grunt) {
 
         if (!grunt.option('noLint')) {
             buildTasks.unshift('eslint');
-            // TOODO: this task ruins the build cause of not downloaded grunt-stylelint dependency
-            // Fix that in future in order to attach that to the build
-            // buildTasks.unshift('stylelint');
         }
 
         if (!grunt.option('noTest')) {
