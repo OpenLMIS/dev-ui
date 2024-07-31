@@ -16,8 +16,6 @@
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-force-task');
 
-    grunt.registerTask('default', ['stylelint']);
-
     grunt.registerTask('build', function() {
         var buildTasks = [
             'build:app'
@@ -37,6 +35,7 @@ module.exports = function(grunt) {
         grunt.task.run(buildTasks);
     });
 
+    grunt.registerTask('build:app', ['stylelint']);
     grunt.registerTask('build:app', function() {
         var buildTasks = [
             'messages',
