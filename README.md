@@ -144,6 +144,12 @@ This new Transifex CLI is available from 9.0.5 version of the dev-ui module. Ope
 In order to have the new mechanism of translation available on another builds you have to update your dev-ui in docker-compose.yml into >= 9.0.5. When you have this token passed in you env and you have updated docker-compose.yml you should have working translations based on new Transifex CLI.   
 
 
+### Testing changes on dev-ui
+
+- Once the changes are pushed to master, a jenkins job `OpenLMIS-dev-ui-pipeline` will run automatically
+- If the job is finished you have to manually start `OpenLMIS-reference-ui-pipeline` and once it is finished with success `OpenLMIS-reference-ui-deploy-to-test` will run automatically
+- When all the pipelines passed, build changes to your desired core instance for example. `OpenLMIS-3.x-deploy-to-test` or `OpenLMIS-3.x-deploy-to-uat`
+
 ## Tech
 
 - Node 12.13.0
