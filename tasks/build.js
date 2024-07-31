@@ -15,7 +15,6 @@
 
 module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-force-task');
-    grunt.loadNpmTasks('grunt-stylelint');
 
     grunt.registerTask('build', function() {
         var buildTasks = [
@@ -52,9 +51,9 @@ module.exports = function(grunt) {
 
         if (!grunt.option('noLint')) {
             buildTasks.unshift('eslint');
-            // TOODO: this task ruins the build cause of not downloaded grunt-stylelint dependency
+            // TODO: this task ruins the build cause of not downloaded grunt-stylelint dependency
             // Fix that in future in order to attach that to the build
-            buildTasks.unshift('stylelint');
+            // buildTasks.unshift('stylelint');
         }
 
         if (!grunt.option('noTest')) {
