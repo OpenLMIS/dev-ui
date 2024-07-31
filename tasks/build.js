@@ -45,6 +45,7 @@ module.exports = function(grunt) {
             'javascript',
             'assets',
             'webpack',
+            'stylelint',
             'index.html'
             // 'appcache'
         ];
