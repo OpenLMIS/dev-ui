@@ -53,7 +53,7 @@ module.exports = function(grunt) {
             buildTasks.unshift('eslint');
             // TOODO: this task ruins the build cause of not downloaded grunt-stylelint dependency
             // Fix that in future in order to attach that to the build
-            // buildTasks.unshift('stylelint');
+            buildTasks.unshift('stylelint');
         }
 
         if (!grunt.option('noTest')) {
