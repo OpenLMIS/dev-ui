@@ -20,6 +20,8 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-stylelint');
 
+    grunt.registerTask('stylelint', ['stylelint']);
+
     grunt.config('stylelint', {
         options: {
             configFile: configFile,
