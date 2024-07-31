@@ -22,7 +22,8 @@ module.exports = function(grunt) {
         spawn: false
     };
 
-    var jsTasks = ['javascript'];
+    var jsTasks = ['javascript', 'webpack'];
+    var cssTasks = ['stylelint', 'css', 'webpack'];
     if (!grunt.option('noTest')) {
         jsTasks.push('test');
     }
@@ -31,16 +32,9 @@ module.exports = function(grunt) {
     }
     if (!grunt.option('noStyleguide')) {
         jsTasks.push('styleguide');
-    }
-    addNotify(jsTasks);
-
-    var cssTasks = ['css'];
-    if (!grunt.option('noDocs')) {
-        cssTasks.push('docs');
-    }
-    if(!grunt.option('noStyleguide')){
         cssTasks.push('styleguide');
     }
+    addNotify(jsTasks);
     addNotify(cssTasks);
 
     var messageTasks = ['messages'];
