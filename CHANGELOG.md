@@ -1,10 +1,9 @@
-9.0.7 / wip
+9.0.7 / 2024-10-31
+==================
+
 New functionality added in a backwards-compatible manner:
 * [CQI-19](https://openlmis.atlassian.net/browse/CQI-19): Added watcher option to the grunt build task.
 * [CQI-19](https://openlmis.atlassian.net/browse/CQI-19): Added ES6 support for the front-end modules
-
-
-==================
 
 9.0.6 / 2023-11-07
 ==================
