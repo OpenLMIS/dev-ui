@@ -19,10 +19,13 @@ window.$ = require('jquery');
 window.jquery = window.$;
 window.jQuery = window.$;
 
-window._ = require('underscore');
+Object.defineProperty(window, '_', {
+  value: require('underscore'),
+  writable: false,
+  configurable: false
+});
 
 require('./vendors');
-
 require('./app');
 require('./bundle');
 
