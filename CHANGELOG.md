@@ -1,3 +1,9 @@
+Upcoming Version (WIP)
+==================
+
+Big Fixes:
+* [OE-138](https://openlmis.atlassian.net/browse/OE-138): Locked global _ to Underscore to prevent Lodash override
+
 9.0.7 / 2024-10-31
 ==================
 
