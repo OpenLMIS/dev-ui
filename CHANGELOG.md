@@ -1,12 +1,13 @@
-9.0.8 / 2025-11-27
+Upcoming Version (WIP)
 ==================
 
+9.0.8 / 2025-11-27
+==================
 Big Fixes:
 * [OE-138](https://openlmis.atlassian.net/browse/OE-138): Locked global _ to Underscore to prevent Lodash override
 
 9.0.7 / 2024-10-31
 ==================
-
 New functionality added in a backwards-compatible manner:
 * [CQI-19](https://openlmis.atlassian.net/browse/CQI-19): Added watcher option to the grunt build task.
 * [CQI-19](https://openlmis.atlassian.net/browse/CQI-19): Added ES6 support for the front-end modules
