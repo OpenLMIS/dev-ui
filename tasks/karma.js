@@ -25,7 +25,7 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-karma');
 
-    grunt.registerTask('test', ['test:copy', 'karma:unit']);
+    grunt.registerTask('test', ['test:copy', 'test:react', 'karma:unit']);
 
     grunt.registerTask('test:copy', function() {
         inEachAppDir(function(dir) {

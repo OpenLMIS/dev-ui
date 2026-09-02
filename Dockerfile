@@ -38,6 +38,7 @@ COPY sonar.sh .
 COPY build.sh .
 COPY tasks/* ./tasks/
 COPY webpack.config.js .
+COPY istanbul-loader.js .
 
 # Javascript packages
 COPY package.json .
