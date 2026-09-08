@@ -2,6 +2,7 @@ Upcoming Version (WIP)
 ==================
 Improvements:
 * [OLMIS-8298](https://openlmis.atlassian.net/browse/OLMIS-8298): Karma now runs the specs of the React components: every `*.spec.jsx` file of each application directory is bundled and instrumented before the browser sees it, so the `.jsx` sources report real test coverage.
+* [OLMIS-8298](https://openlmis.atlassian.net/browse/OLMIS-8298): Docker build fixed after Debian 11 end-of-life: the base image is now `node:14-bullseye` (the NodeSource `setup_14.x` repository is no longer signed with a published key) and apt is pinned to the last snapshot of the bullseye archive.
 
 9.0.8 / 2025-11-27
 ==================
