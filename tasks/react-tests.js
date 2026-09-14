@@ -82,7 +82,12 @@ module.exports = function(grunt) {
         }
     }
 
-    /* The React sources sit next to the Angular ones, in the src directory of each app dir. */
+    /*
+     * The React sources sit next to the Angular ones, in the src directory of each app dir. The app
+     * dir itself is kept as well: coverage is reported relative to it, so a module's sources land on
+     * `src/...` whether the build runs in that module or in a distro that mounts it as a sibling of
+     * the working directory.
+     */
     function applicationSourceDirectories() {
         var dirs = [];
 
@@ -92,7 +97,10 @@ module.exports = function(grunt) {
                 src = dirConfig.app.src;
             }
 
-            dirs.push(path.join(dir, src));
+            dirs.push({
+                root: dir,
+                src: path.join(dir, src)
+            });
         });
 
         return dirs;
@@ -101,10 +109,10 @@ module.exports = function(grunt) {
     function findSpecs(sourceDirs) {
         return sourceDirs.reduce(function(specs, dir) {
             return specs.concat(glob.sync(specPattern, {
-                cwd: dir
+                cwd: dir.src
             })
                 .map(function(spec) {
-                    return path.join(dir, spec);
+                    return path.join(dir.src, spec);
                 }));
         }, []);
     }
@@ -149,23 +157,24 @@ module.exports = function(grunt) {
                     parser: {
                         amd: false
                     }
-                }, {
-                    include: sourceDirs,
-                    oneOf: [
-                        {
-                            /* The specs themselves are not part of the coverage figure. */
-                            test: /\.spec\.jsx$/,
-                            use: [babelLoader()]
-                        },
-                        {
-                            test: /\.jsx?$/,
-                            use: [
-                                path.join(devUiDir, 'istanbul-loader.js'),
-                                babelLoader()
-                            ]
+                }].concat(sourceDirs.map(sourceRule), [
+                    /*
+                     * The same stylesheet and asset handling the application bundle has. Components
+                     * import their stylesheets, so without these a spec that reaches one fails the
+                     * whole build with a parse error rather than a test failure.
+                     */
+                    {
+                        test: /\.(sa|sc|c)ss$/,
+                        use: [require.resolve('css-loader'), require.resolve('sass-loader')]
+                    },
+                    {
+                        test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i,
+                        loader: require.resolve('url-loader'),
+                        options: {
+                            limit: 8192
                         }
-                    ]
-                }]
+                    }
+                ])
             },
             /* Karma already has angular and jQuery on the page. */
             externals: {
@@ -176,6 +185,35 @@ module.exports = function(grunt) {
                 hints: false
             },
             stats: 'errors-warnings'
+        };
+    }
+
+    /*
+     * One rule per application directory, so the istanbul loader can report each module's sources
+     * relative to the directory they belong to.
+     */
+    function sourceRule(sourceDir) {
+        return {
+            include: sourceDir.src,
+            oneOf: [
+                {
+                    /* The specs themselves are not part of the coverage figure. */
+                    test: /\.spec\.jsx$/,
+                    use: [babelLoader()]
+                },
+                {
+                    test: /\.jsx?$/,
+                    use: [
+                        {
+                            loader: path.join(devUiDir, 'istanbul-loader.js'),
+                            options: {
+                                appDir: sourceDir.root
+                            }
+                        },
+                        babelLoader()
+                    ]
+                }
+            ]
         };
     }
 

@@ -38,9 +38,14 @@ module.exports = function(source) {
     });
 
     /*
-     * Report against the path the application is built from. karma-coverage writes whatever it is
-     * given straight into the lcov SF: lines, and sonar.sources is `src`, so `src/foo/bar.jsx`
-     * lands on the right file without the analysis having to rewrite anything.
+     * Report against the application directory the source belongs to, which the task passes in.
+     * karma-coverage writes whatever it is given straight into the lcov SF: lines, and
+     * sonar.sources is `src`, so `src/foo/bar.jsx` lands on the right file without the analysis
+     * having to rewrite anything. Taking the working directory instead would be right only for a
+     * single application: a distro mounts the others as siblings of it, and their sources would be
+     * reported as `../some-ui/src/foo/bar.jsx`, outside the project being analysed.
      */
-    return instrumenter.instrumentSync(source, path.relative(process.cwd(), this.resourcePath));
+    var appDir = (this.query && this.query.appDir) || process.cwd();
+
+    return instrumenter.instrumentSync(source, path.relative(appDir, this.resourcePath));
 };

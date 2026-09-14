@@ -46,7 +46,7 @@ module.exports = function(grunt) {
 
             glob.sync('**/*.{js,jsx}', {
                 cwd: path.join(dir, src),
-                ignore: ['**/*.spec.js']
+                ignore: ['**/*.spec.js?(x)']
             }).forEach(function(file) {
                 fs.copySync(path.join(dir, src, file), path.join(tmp, file));
             });
