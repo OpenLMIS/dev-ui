@@ -97,7 +97,9 @@ Here is a short list of all the commands you might need to know. These commands 
 - `grunt serve` will run the development server, which serves the `./build/` directory
 - `grunt clean` empties the build and temporary directories
 - `grunt yarn` will loop through all application build directories and install the yarn packages defined in each directory’s `package-yarn.json` file
+- `grunt test` runs the Jasmine unit tests: it collects the `*.spec.js` files of every application directory, bundles the `*.spec.jsx` ones with `test:react`, and hands both to `karma:unit`.
 - `grunt karma:unit` to run Jasmine unit tests.
+- `grunt test:react` bundles the React specs (`*.spec.jsx`) so karma can load them, instrumenting the sources they import for coverage. Applications without React specs skip it. The bundle handles JavaScript only, so a spec that reaches an imported stylesheet needs a loader for it adding to `tasks/react-tests.js`.
 - `grunt karma:tdd` run Jasmine unit tests in test driven development mode, where test will automatically rerun when openlmis.js is rebuilt or any test file is updated.
 
 ### Flags
