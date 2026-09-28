@@ -1,4 +1,4 @@
-Upcoming Version (WIP)
+9.1.0 / 2026-09-28
 ==================
 Improvements:
 * [OLMIS-8298](https://openlmis.atlassian.net/browse/OLMIS-8298): Karma now runs the specs of the React components: every `*.spec.jsx` file of each application directory is bundled and instrumented before the browser sees it, so the `.jsx` sources report real test coverage.
